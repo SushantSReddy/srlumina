@@ -34,11 +34,9 @@ function Home() {
   const navigate = useNavigate();
   const getProfileFn = useServerFn(getProfile);
   const getTodayFn = useServerFn(getTodaySummary);
-  const getStreakFn = useServerFn(getStreak);
 
   const profileQ = useQuery({ queryKey: ["profile"], queryFn: () => getProfileFn() });
   const todayQ = useQuery({ queryKey: ["today"], queryFn: () => getTodayFn() });
-  const streakQ = useQuery({ queryKey: ["streak"], queryFn: () => getStreakFn() });
 
   useEffect(() => {
     if (profileQ.data && (!profileQ.data.stream || !profileQ.data.class_level || !profileQ.data.target_year)) {
@@ -51,32 +49,14 @@ function Home() {
   const subjects = profileQ.data?.stream === "neet" ? NEET_SUBJECTS : JEE_SUBJECTS;
   const goal = profileQ.data?.daily_goal ?? 50;
   const total = todayQ.data?.total ?? 0;
-  const streak = streakQ.data?.streak ?? 0;
-  const name = profileQ.data?.display_name?.split(" ")[0];
   const stream = (profileQ.data?.stream as Stream | null) ?? null;
   const year = profileQ.data?.target_year ?? null;
-
-  const now = new Date();
-  const greet = now.getHours() < 12 ? "Good morning" : now.getHours() < 18 ? "Good afternoon" : "Good evening";
 
   return (
     <div className="min-h-dvh pb-28 relative">
       <MeshBackground />
 
-      {/* Header */}
-      <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <Logo size={36} />
-          <div className="min-w-0">
-            <p className="text-xs text-muted-foreground truncate">{greet}{name ? "," : ""}</p>
-            <h1 className="text-2xl font-bold tracking-tight truncate">{name ?? "Today"}</h1>
-          </div>
-        </div>
-        <div className="glass rounded-full px-3 py-1.5 flex items-center gap-1.5 text-sm font-semibold shrink-0">
-          <Flame className="h-4 w-4 text-[var(--ios-orange)] flame-flicker" fill="currentColor" />
-          <span className="tabular-nums">{streak}</span>
-        </div>
-      </header>
+      <TopHeader />
 
       {/* Exam countdown */}
       {stream && year && (
