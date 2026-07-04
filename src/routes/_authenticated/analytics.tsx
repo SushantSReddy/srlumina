@@ -5,6 +5,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { BarChart, Bar, ResponsiveContainer, XAxis, Tooltip, CartesianGrid } from "recharts";
 import { getAnalytics, getProfile, listSources, type Subject, type ExamLevel } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
+import { TopHeader } from "@/components/tracker/TopHeader";
+import { Footer } from "@/components/tracker/Footer";
+import { MeshBackground } from "@/components/tracker/MeshBackground";
 
 export const Route = createFileRoute("/_authenticated/analytics")({
   component: Analytics,
