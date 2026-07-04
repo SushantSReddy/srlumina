@@ -147,7 +147,7 @@
 }
 
 @utility tap {
-  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 260ms, background-color 200ms, box-shadow 260ms;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms, background-color 160ms, box-shadow 180ms, color 160ms;
 }
 @utility tap-active {
   transform: scale(0.97);
