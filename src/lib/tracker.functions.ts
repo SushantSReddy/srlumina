@@ -12,7 +12,7 @@ export const getProfile = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("profiles")
-      .select("id, display_name, avatar_url, stream, daily_goal")
+      .select("id, display_name, avatar_url, stream, daily_goal, class_level, target_year")
       .eq("id", context.userId)
       .maybeSingle();
     if (error) throw new Error(error.message);
@@ -26,6 +26,8 @@ export const updateProfile = createServerFn({ method: "POST" })
       display_name: z.string().min(1).max(60).optional(),
       stream: z.enum(["jee", "neet"]).optional(),
       daily_goal: z.number().int().min(1).max(1000).optional(),
+      class_level: z.enum(["class_9", "class_10", "class_11", "class_12", "dropper"]).optional(),
+      target_year: z.number().int().min(2025).max(2035).optional(),
     }).parse(input),
   )
   .handler(async ({ data, context }) => {

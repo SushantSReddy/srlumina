@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -7,6 +7,8 @@ import { Trash2, LogOut, Plus } from "lucide-react";
 import { addCustomSource, deleteSource, getProfile, listSources, updateProfile } from "@/lib/tracker.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNav } from "@/components/tracker/BottomNav";
+import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: Settings,
@@ -37,8 +39,13 @@ function Settings() {
   }, [profileQ.data]);
 
   const saveMut = useMutation({
-    mutationFn: (patch: { display_name?: string; stream?: "jee" | "neet"; daily_goal?: number }) =>
-      updateFn({ data: patch }),
+    mutationFn: (patch: {
+      display_name?: string;
+      stream?: "jee" | "neet";
+      daily_goal?: number;
+      class_level?: ClassLevel;
+      target_year?: number;
+    }) => updateFn({ data: patch }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["profile"] });
       qc.invalidateQueries({ queryKey: ["today"] });
@@ -66,9 +73,14 @@ function Settings() {
   }
 
   const stream = profileQ.data?.stream;
+  const clsLevel = profileQ.data?.class_level;
+  const targetYear = profileQ.data?.target_year;
+  const currentYear = new Date().getFullYear();
+  const years = useMemo(() => Array.from({ length: 5 }, (_, i) => currentYear + i), [currentYear]);
 
   return (
-    <div className="min-h-dvh pb-28">
+    <div className="min-h-dvh pb-28 relative">
+      <MeshBackground />
       <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4">
         <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
       </header>
@@ -89,12 +101,41 @@ function Settings() {
             {(["jee", "neet"] as const).map((s) => (
               <button key={s}
                 onClick={() => stream !== s && saveMut.mutate({ stream: s })}
-                className={`rounded-lg py-2 text-sm font-medium uppercase ${stream === s ? "bg-surface shadow-sm" : "text-muted-foreground"}`}>
+                className={`rounded-lg py-2 text-sm font-medium uppercase tap active:tap-active ${stream === s ? "bg-surface shadow-sm" : "text-muted-foreground"}`}>
                 {s}
               </button>
             ))}
           </div>
         </Group>
+
+        <Group title="Class">
+          <div className="flex flex-wrap gap-2">
+            {CLASS_OPTIONS.map((c) => (
+              <button key={c.id}
+                onClick={() => clsLevel !== c.id && saveMut.mutate({ class_level: c.id })}
+                className={`rounded-full px-3.5 py-1.5 text-sm font-medium border tap active:tap-active transition-colors ${
+                  clsLevel === c.id ? "bg-[var(--ios-blue)] text-white border-transparent" : "bg-surface border-border text-foreground"
+                }`}>
+                {c.label}
+              </button>
+            ))}
+          </div>
+        </Group>
+
+        <Group title="Target exam year">
+          <div className="flex flex-wrap gap-2">
+            {years.map((y) => (
+              <button key={y}
+                onClick={() => targetYear !== y && saveMut.mutate({ target_year: y })}
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold border tap active:tap-active transition-colors ${
+                  targetYear === y ? "bg-[var(--ios-blue)] text-white border-transparent" : "bg-surface border-border text-foreground"
+                }`}>
+                {y}
+              </button>
+            ))}
+          </div>
+        </Group>
+
 
         <Group title="Daily goal">
           <div className="flex items-center gap-3">
