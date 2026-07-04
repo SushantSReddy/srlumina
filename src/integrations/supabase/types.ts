@@ -14,7 +14,101 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          daily_goal: number
+          display_name: string | null
+          id: string
+          stream: Database["public"]["Enums"]["app_stream"] | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          daily_goal?: number
+          display_name?: string | null
+          id: string
+          stream?: Database["public"]["Enums"]["app_stream"] | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          daily_goal?: number
+          display_name?: string | null
+          id?: string
+          stream?: Database["public"]["Enums"]["app_stream"] | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      question_logs: {
+        Row: {
+          count: number
+          created_at: string
+          exam_level: Database["public"]["Enums"]["app_exam_level"] | null
+          id: string
+          logged_on: string
+          source_id: string | null
+          subject: Database["public"]["Enums"]["app_subject"]
+          user_id: string
+        }
+        Insert: {
+          count: number
+          created_at?: string
+          exam_level?: Database["public"]["Enums"]["app_exam_level"] | null
+          id?: string
+          logged_on?: string
+          source_id?: string | null
+          subject: Database["public"]["Enums"]["app_subject"]
+          user_id: string
+        }
+        Update: {
+          count?: number
+          created_at?: string
+          exam_level?: Database["public"]["Enums"]["app_exam_level"] | null
+          id?: string
+          logged_on?: string
+          source_id?: string | null
+          subject?: Database["public"]["Enums"]["app_subject"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_logs_source_id_fkey"
+            columns: ["source_id"]
+            isOneToOne: false
+            referencedRelation: "sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sources: {
+        Row: {
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +117,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      app_exam_level: "main" | "advanced" | "section_a" | "section_b"
+      app_stream: "jee" | "neet"
+      app_subject: "physics" | "chemistry" | "math" | "biology"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +246,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_exam_level: ["main", "advanced", "section_a", "section_b"],
+      app_stream: ["jee", "neet"],
+      app_subject: ["physics", "chemistry", "math", "biology"],
+    },
   },
 } as const
