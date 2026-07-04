@@ -182,6 +182,7 @@ function Onboarding() {
           {mut.isPending ? "Saving…" : step === 2 ? (<><Check className="h-5 w-5" /> Start</>) : (<>Continue <ArrowRight className="h-5 w-5" /></>)}
         </button>
       </div>
+      <Footer />
     </div>
   );
 }
