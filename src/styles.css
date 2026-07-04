@@ -147,7 +147,7 @@
 }
 
 @utility tap {
-  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 260ms, background-color 200ms, box-shadow 260ms;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms, background-color 160ms, box-shadow 180ms, color 160ms;
 }
 @utility tap-active {
   transform: scale(0.97);
@@ -195,6 +195,6 @@
   50% { transform: scale(1.08) rotate(2deg); }
 }
 
-.spring-in { animation: springIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.pop-in { animation: popIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.flame-flicker { animation: flameFlicker 1.8s ease-in-out infinite; transform-origin: center; }
+.spring-in { animation: springIn 340ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.pop-in { animation: popIn 300ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.flame-flicker { animation: flameFlicker 1.6s ease-in-out infinite; transform-origin: center; }

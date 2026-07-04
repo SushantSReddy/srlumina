@@ -90,7 +90,11 @@ function RootComponent() {
   useEffect(() => {
     // Theme: honor system preference
     const mql = window.matchMedia("(prefers-color-scheme: dark)");
-    const apply = () => document.documentElement.classList.toggle("dark", mql.matches);
+    const apply = () => {
+      const stored = localStorage.getItem("theme");
+      const dark = stored ? stored === "dark" : mql.matches;
+      document.documentElement.classList.toggle("dark", dark);
+    };
     apply();
     mql.addEventListener("change", apply);
 

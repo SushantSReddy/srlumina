@@ -8,6 +8,8 @@ import { addCustomSource, deleteSource, getProfile, listSources, updateProfile }
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNav } from "@/components/tracker/BottomNav";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { TopHeader } from "@/components/tracker/TopHeader";
+import { Footer } from "@/components/tracker/Footer";
 import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/settings")({
@@ -81,9 +83,7 @@ function Settings() {
   return (
     <div className="min-h-dvh pb-28 relative">
       <MeshBackground />
-      <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4">
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-      </header>
+      <TopHeader title="Settings" subtitle="Preferences and account" />
 
       <section className="px-4 space-y-4">
         <Group title="Profile">
@@ -185,6 +185,7 @@ function Settings() {
         </button>
       </section>
 
+      <Footer className="mt-8" />
       <BottomNav />
     </div>
   );
