@@ -97,8 +97,8 @@ export function LogSheet({
         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
       />
       <div
-        className="relative w-full max-w-md glass-strong rounded-t-[28px] p-5 pb-[max(env(safe-area-inset-bottom),16px)]"
-        style={{ animation: "sheetIn 320ms cubic-bezier(0.2,0.8,0.2,1)" }}
+        className="relative w-full max-w-md glass-strong liquid rounded-t-[28px] p-5 pb-[max(env(safe-area-inset-bottom),16px)]"
+        style={{ animation: "sheetIn 420ms cubic-bezier(0.2,0.9,0.2,1.1)" }}
       >
         <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-muted-foreground/30" />
         <div className="flex items-center justify-between mb-1">
