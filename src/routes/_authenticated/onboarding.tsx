@@ -140,12 +140,12 @@ function Onboarding() {
               ))}
             </div>
 
-            <div className="mt-8 liquid liquid-sheen glass-strong rounded-3xl p-5 pop-in">
-              <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <div className="mt-8 glass rounded-3xl p-5 pop-in">
+              <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
                 {getExamLabel(stream)} {year}
               </div>
               <div className="flex items-baseline gap-2 mt-1">
-                <span className="text-5xl font-bold tabular-nums tracking-tight shimmer-text">
+                <span className="text-5xl font-bold tabular-nums tracking-tight text-foreground">
                   {daysUntil(getExamDate(stream, year))}
                 </span>
                 <span className="text-sm text-muted-foreground">days to go</span>
