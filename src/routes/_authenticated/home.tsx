@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Flame, Plus } from "lucide-react";
-import { getProfile, getStreak, getTodaySummary } from "@/lib/tracker.functions";
+import { Plus } from "lucide-react";
+import { getProfile, getTodaySummary } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
 import { SubjectRings } from "@/components/tracker/SubjectRings";
 import { DailyQuote } from "@/components/tracker/DailyQuote";
@@ -11,7 +11,7 @@ import { LogSheet, type SubjectMeta } from "@/components/tracker/LogSheet";
 import { ExamCountdown } from "@/components/tracker/ExamCountdown";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { Footer } from "@/components/tracker/Footer";
-import { Logo } from "@/components/tracker/Logo";
+import { TopHeader } from "@/components/tracker/TopHeader";
 import type { Stream } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/home")({
