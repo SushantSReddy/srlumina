@@ -5,7 +5,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { Flame, Plus } from "lucide-react";
 import { getProfile, getStreak, getTodaySummary } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
-import { GoalRing } from "@/components/tracker/GoalRing";
+import { SubjectRings } from "@/components/tracker/SubjectRings";
+import { DailyQuote } from "@/components/tracker/DailyQuote";
 import { LogSheet, type SubjectMeta } from "@/components/tracker/LogSheet";
 import { ExamCountdown } from "@/components/tracker/ExamCountdown";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
@@ -79,46 +80,48 @@ function Home() {
         </section>
       )}
 
-      {/* Goal ring */}
-      <section className="px-5 flex flex-col items-center py-6 spring-in">
-        <GoalRing value={total} goal={goal} />
-        <p className="mt-4 text-sm text-muted-foreground">
+      {/* Per-subject rings */}
+      <section className="pt-6">
+        <SubjectRings
+          subjects={subjects}
+          totals={(todayQ.data?.totals as Record<string, number>) ?? {}}
+          perSubjectGoal={Math.max(1, Math.ceil(goal / subjects.length))}
+          onPick={setActive}
+        />
+        <p className="mt-4 text-center text-sm text-muted-foreground">
           {total >= goal
-            ? "Goal hit. Keep going."
-            : `${goal - total} to reach today's goal`}
+            ? "Daily goal hit — keep going."
+            : `${total} of ${goal} today · ${goal - total} to go`}
         </p>
       </section>
 
-      {/* Subjects */}
-      <section className="px-4 space-y-3">
-        {subjects.map((s, i) => {
-          const count = (todayQ.data?.totals[s.id] as number | undefined) ?? 0;
-          return (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setActive(s)}
-              className="w-full glass liquid rounded-3xl p-5 flex items-center gap-4 tap active:tap-active text-left spring-in"
-              style={{ animationDelay: `${i * 70}ms` }}
-            >
-              <div className="h-12 w-12 rounded-2xl flex items-center justify-center"
-                style={{ background: `color-mix(in oklab, ${s.color} 20%, transparent)` }}>
-                <span className="text-lg font-bold" style={{ color: s.color }}>{s.label[0]}</span>
-              </div>
-              <div className="flex-1">
-                <div className="text-base font-semibold">{s.label}</div>
-                <div className="text-xs text-muted-foreground">
-                  {count === 0 ? "No questions yet" : `${count} question${count === 1 ? "" : "s"} today`}
-                </div>
-              </div>
-              <div className="h-10 w-10 rounded-full flex items-center justify-center text-white shadow-lg"
-                style={{ background: s.color, boxShadow: `0 6px 16px -4px color-mix(in oklab, ${s.color} 60%, transparent)` }}>
-                <Plus className="h-5 w-5" strokeWidth={2.5} />
-              </div>
-            </button>
-          );
-        })}
+      {/* Daily quote */}
+      <section className="px-4 mt-6">
+        <DailyQuote />
       </section>
+
+      {/* Log CTAs */}
+      <section className="px-4 mt-4 space-y-2.5">
+        {subjects.map((s, i) => (
+          <button
+            key={s.id}
+            type="button"
+            onClick={() => setActive(s)}
+            className="w-full glass rounded-2xl px-4 py-3 flex items-center gap-3 tap active:tap-active text-left spring-in"
+            style={{ animationDelay: `${i * 60}ms` }}
+          >
+            <span className="h-2.5 w-2.5 rounded-full" style={{ background: s.color }} />
+            <span className="flex-1 text-sm font-medium">Log {s.label}</span>
+            <span
+              className="h-8 w-8 rounded-full flex items-center justify-center text-white"
+              style={{ background: s.color }}
+            >
+              <Plus className="h-4 w-4" strokeWidth={2.6} />
+            </span>
+          </button>
+        ))}
+      </section>
+
 
       <LogSheet
         open={!!active}
