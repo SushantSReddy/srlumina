@@ -152,6 +152,7 @@ function Analytics() {
         </section>
       )}
 
+      <Footer className="mt-8" />
       <BottomNav />
     </div>
   );
