@@ -17,29 +17,35 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          class_level: Database["public"]["Enums"]["app_class_level"] | null
           created_at: string
           daily_goal: number
           display_name: string | null
           id: string
           stream: Database["public"]["Enums"]["app_stream"] | null
+          target_year: number | null
           updated_at: string
         }
         Insert: {
           avatar_url?: string | null
+          class_level?: Database["public"]["Enums"]["app_class_level"] | null
           created_at?: string
           daily_goal?: number
           display_name?: string | null
           id: string
           stream?: Database["public"]["Enums"]["app_stream"] | null
+          target_year?: number | null
           updated_at?: string
         }
         Update: {
           avatar_url?: string | null
+          class_level?: Database["public"]["Enums"]["app_class_level"] | null
           created_at?: string
           daily_goal?: number
           display_name?: string | null
           id?: string
           stream?: Database["public"]["Enums"]["app_stream"] | null
+          target_year?: number | null
           updated_at?: string
         }
         Relationships: []
@@ -117,6 +123,12 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      app_class_level:
+        | "class_9"
+        | "class_10"
+        | "class_11"
+        | "class_12"
+        | "dropper"
       app_exam_level: "main" | "advanced" | "section_a" | "section_b"
       app_stream: "jee" | "neet"
       app_subject: "physics" | "chemistry" | "math" | "biology"
@@ -247,6 +259,13 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_class_level: [
+        "class_9",
+        "class_10",
+        "class_11",
+        "class_12",
+        "dropper",
+      ],
       app_exam_level: ["main", "advanced", "section_a", "section_b"],
       app_stream: ["jee", "neet"],
       app_subject: ["physics", "chemistry", "math", "biology"],
