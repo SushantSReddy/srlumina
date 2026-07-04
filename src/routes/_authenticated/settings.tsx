@@ -81,9 +81,7 @@ function Settings() {
   return (
     <div className="min-h-dvh pb-28 relative">
       <MeshBackground />
-      <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4">
-        <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
-      </header>
+      <TopHeader title="Settings" subtitle="Preferences and account" />
 
       <section className="px-4 space-y-4">
         <Group title="Profile">
