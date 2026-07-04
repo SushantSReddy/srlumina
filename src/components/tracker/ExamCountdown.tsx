@@ -31,33 +31,26 @@ export function ExamCountdown({
   const isDone = days === 0;
 
   return (
-    <div className="relative liquid liquid-sheen glass-strong rounded-3xl px-5 py-4 overflow-hidden spring-in">
-      {/* Refractive accent */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -inset-1 opacity-60"
-        style={{
-          background:
-            "radial-gradient(120% 60% at 0% 0%, color-mix(in oklab, var(--ios-blue) 35%, transparent), transparent 60%), radial-gradient(120% 60% at 100% 100%, color-mix(in oklab, var(--ios-indigo) 30%, transparent), transparent 60%)",
-        }}
-      />
-      <div className="relative flex items-center gap-4">
+    <div className="relative glass rounded-3xl px-5 py-4 spring-in">
+      <div className="flex items-center gap-4">
         <div
-          className="h-12 w-12 rounded-2xl flex items-center justify-center pop-in"
-          style={{ background: "color-mix(in oklab, var(--ios-blue) 22%, transparent)" }}
+          className="h-11 w-11 rounded-2xl flex items-center justify-center"
+          style={{ background: "color-mix(in oklab, var(--ios-blue) 14%, transparent)" }}
         >
-          <CalendarDays className="h-6 w-6 text-[var(--ios-blue)]" strokeWidth={2.2} />
+          <CalendarDays className="h-5 w-5 text-[var(--ios-blue)]" strokeWidth={2.2} />
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+          <div className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
             {cls ? `${cls} · ` : ""}{label} {year}
           </div>
-          <div className="flex items-baseline gap-2 mt-0.5">
+          <div className="flex items-baseline gap-2 mt-1">
             {isDone ? (
-              <span className="text-2xl font-bold shimmer-text">Exam day — best of luck!</span>
+              <span className="text-xl font-semibold text-[var(--ios-blue)]">
+                Exam day — best of luck
+              </span>
             ) : (
               <>
-                <span className="text-4xl font-bold tabular-nums tracking-tight shimmer-text">
+                <span className="text-4xl font-bold tabular-nums tracking-tight text-foreground">
                   {days ?? "—"}
                 </span>
                 <span className="text-sm font-medium text-muted-foreground">
