@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { ArrowLeft, ArrowRight, Check } from "lucide-react";
 import { getProfile, updateProfile } from "@/lib/tracker.functions";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { Footer } from "@/components/tracker/Footer";
+import { Logo } from "@/components/tracker/Logo";
 import {
   CLASS_OPTIONS,
   daysUntil,
@@ -72,16 +74,19 @@ function Onboarding() {
     <div className="min-h-dvh relative px-6 py-10 flex flex-col">
       <MeshBackground />
 
-      {/* Progress dots */}
-      <div className="flex items-center justify-center gap-2 mb-8">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className={`h-1.5 rounded-full transition-all duration-500 ${
-              i === step ? "w-8 bg-[var(--ios-blue)]" : i < step ? "w-4 bg-[var(--ios-blue)]/60" : "w-4 bg-border"
-            }`}
-          />
-        ))}
+      {/* Header with logo + progress */}
+      <div className="flex flex-col items-center mb-6">
+        <Logo size={44} />
+        <div className="mt-6 flex items-center justify-center gap-2">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className={`h-1.5 rounded-full transition-all duration-500 ease-out ${
+                i === step ? "w-8 bg-[var(--ios-blue)]" : i < step ? "w-4 bg-[var(--ios-blue)]/60" : "w-4 bg-border"
+              }`}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="flex-1 max-w-sm w-full mx-auto" key={step}>
@@ -177,6 +182,7 @@ function Onboarding() {
           {mut.isPending ? "Saving…" : step === 2 ? (<><Check className="h-5 w-5" /> Start</>) : (<>Continue <ArrowRight className="h-5 w-5" /></>)}
         </button>
       </div>
+      <Footer />
     </div>
   );
 }

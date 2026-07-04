@@ -10,6 +10,8 @@ import { DailyQuote } from "@/components/tracker/DailyQuote";
 import { LogSheet, type SubjectMeta } from "@/components/tracker/LogSheet";
 import { ExamCountdown } from "@/components/tracker/ExamCountdown";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { Footer } from "@/components/tracker/Footer";
+import { Logo } from "@/components/tracker/Logo";
 import type { Stream } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -62,12 +64,15 @@ function Home() {
       <MeshBackground />
 
       {/* Header */}
-      <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4 flex items-center justify-between">
-        <div>
-          <p className="text-xs text-muted-foreground">{greet}{name ? "," : ""}</p>
-          <h1 className="text-2xl font-bold tracking-tight">{name ?? "Today"}</h1>
+      <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <Logo size={36} />
+          <div className="min-w-0">
+            <p className="text-xs text-muted-foreground truncate">{greet}{name ? "," : ""}</p>
+            <h1 className="text-2xl font-bold tracking-tight truncate">{name ?? "Today"}</h1>
+          </div>
         </div>
-        <div className="glass liquid rounded-full px-3 py-1.5 flex items-center gap-1.5 text-sm font-semibold">
+        <div className="glass rounded-full px-3 py-1.5 flex items-center gap-1.5 text-sm font-semibold shrink-0">
           <Flame className="h-4 w-4 text-[var(--ios-orange)] flame-flicker" fill="currentColor" />
           <span className="tabular-nums">{streak}</span>
         </div>
@@ -130,6 +135,7 @@ function Home() {
         stream={stream}
       />
 
+      <Footer className="mt-8" />
       <BottomNav />
     </div>
   );
