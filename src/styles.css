@@ -127,31 +127,31 @@
   }
 }
 
-/* Apple-style liquid glass: hairline border, soft blur, inner highlight, whisper shadow. */
+/* Apple-website liquid glass: highly transparent, wide blur, hairline border. */
 @utility glass {
-  background: color-mix(in oklab, var(--surface) 62%, transparent);
-  backdrop-filter: saturate(180%) blur(28px);
-  border: 1px solid color-mix(in oklab, var(--foreground) 6%, transparent);
+  background: color-mix(in oklab, var(--surface) 42%, transparent);
+  backdrop-filter: saturate(180%) blur(30px);
+  border: 1px solid color-mix(in oklab, var(--foreground) 5%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 25%, transparent),
-    0 1px 2px color-mix(in oklab, black 4%, transparent);
+    inset 0 1px 0 color-mix(in oklab, white 30%, transparent),
+    0 1px 2px color-mix(in oklab, black 3%, transparent);
 }
 
 @utility glass-strong {
-  background: color-mix(in oklab, var(--surface) 78%, transparent);
-  backdrop-filter: saturate(200%) blur(36px);
-  border: 1px solid color-mix(in oklab, var(--foreground) 8%, transparent);
+  background: color-mix(in oklab, var(--surface) 60%, transparent);
+  backdrop-filter: saturate(200%) blur(40px);
+  border: 1px solid color-mix(in oklab, var(--foreground) 7%, transparent);
   box-shadow:
-    inset 0 1px 0 color-mix(in oklab, white 30%, transparent),
-    0 8px 24px -12px color-mix(in oklab, black 18%, transparent);
+    inset 0 1px 0 color-mix(in oklab, white 34%, transparent),
+    0 12px 32px -14px color-mix(in oklab, black 18%, transparent);
 }
 
 @utility tap {
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 180ms;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 260ms, background-color 200ms, box-shadow 260ms;
 }
 @utility tap-active {
   transform: scale(0.97);
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 @layer base {
@@ -183,11 +183,11 @@
   66% { transform: translate3d(-3vw, 4vw, 0) scale(0.96); }
 }
 @keyframes springIn {
-  0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+  0% { opacity: 0; transform: translateY(12px) scale(0.985); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes popIn {
-  0% { transform: scale(0.85); opacity: 0; }
+  0% { transform: scale(0.9); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
 @keyframes flameFlicker {
@@ -195,6 +195,6 @@
   50% { transform: scale(1.08) rotate(2deg); }
 }
 
-.spring-in { animation: springIn 480ms cubic-bezier(0.2, 0.9, 0.2, 1.05) both; }
-.pop-in { animation: popIn 380ms cubic-bezier(0.2, 0.9, 0.2, 1.05) both; }
+.spring-in { animation: springIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.pop-in { animation: popIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 .flame-flicker { animation: flameFlicker 1.8s ease-in-out infinite; transform-origin: center; }
