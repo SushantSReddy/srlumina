@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { Footer } from "@/components/tracker/Footer";
+import { Logo } from "@/components/tracker/Logo";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -64,61 +67,71 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-dvh bg-background px-6 py-10 flex flex-col justify-center">
-      <div className="mx-auto w-full max-w-sm">
-        <div className="mb-10 text-center">
-          <div className="mx-auto mb-4 h-14 w-14 rounded-3xl bg-[var(--ios-blue)] shadow-lg shadow-[color-mix(in_oklab,var(--ios-blue)_40%,transparent)] flex items-center justify-center">
-            <span className="text-2xl font-bold text-white">R</span>
+    <div className="min-h-dvh relative flex flex-col px-6 py-10">
+      <MeshBackground />
+
+      <div className="flex-1 flex flex-col justify-center">
+        <div className="mx-auto w-full max-w-sm">
+          <div className="mb-10 flex flex-col items-center text-center">
+            <Logo size={64} />
+            <h1 className="mt-5 text-[32px] font-bold tracking-tight leading-none">
+              Welcome to Reps
+            </h1>
+            <p className="mt-2 text-[15px] text-muted-foreground">
+              Track every question. Every day.
+            </p>
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">Reps</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Track every question. Every day.
-          </p>
-        </div>
 
-        <button
-          type="button"
-          onClick={google}
-          disabled={busy}
-          className="glass w-full rounded-2xl py-3.5 text-sm font-semibold tap active:tap-active flex items-center justify-center gap-3 disabled:opacity-60"
-        >
-          <GoogleIcon /> Continue with Google
-        </button>
+          <div className="glass rounded-[28px] p-5 spring-in">
+            <button
+              type="button"
+              onClick={google}
+              disabled={busy}
+              className="w-full rounded-2xl bg-foreground/[0.04] hover:bg-foreground/[0.07] border border-foreground/5 py-3.5 text-[15px] font-semibold tap active:tap-active flex items-center justify-center gap-3 disabled:opacity-60 transition-colors"
+            >
+              <GoogleIcon /> Continue with Google
+            </button>
 
-        <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-          <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
-        </div>
+            <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground/70">
+              <div className="h-px flex-1 bg-border/70" />
+              or
+              <div className="h-px flex-1 bg-border/70" />
+            </div>
 
-        <form onSubmit={submit} className="space-y-3">
-          <input
-            type="email" required autoComplete="email"
-            placeholder="Email"
-            value={email} onChange={(e) => setEmail(e.target.value)}
-            className="w-full rounded-2xl bg-surface border border-border px-4 py-3.5 text-base focus:outline-none focus:ring-2 focus:ring-ring"
-          />
-          <input
-            type="password" required minLength={6}
-            autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            placeholder="Password"
-            value={password} onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-2xl bg-surface border border-border px-4 py-3.5 text-base focus:outline-none focus:ring-2 focus:ring-ring"
-          />
+            <form onSubmit={submit} className="space-y-2.5">
+              <input
+                type="email" required autoComplete="email"
+                placeholder="Email"
+                value={email} onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-2xl bg-foreground/[0.04] border border-foreground/5 px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-[var(--ios-blue)]/60 transition-shadow placeholder:text-muted-foreground/70"
+              />
+              <input
+                type="password" required minLength={6}
+                autoComplete={mode === "signup" ? "new-password" : "current-password"}
+                placeholder="Password"
+                value={password} onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-2xl bg-foreground/[0.04] border border-foreground/5 px-4 py-3.5 text-[15px] focus:outline-none focus:ring-2 focus:ring-[var(--ios-blue)]/60 transition-shadow placeholder:text-muted-foreground/70"
+              />
+              <button
+                type="submit" disabled={busy}
+                className="w-full rounded-2xl bg-[var(--ios-blue)] text-white py-3.5 text-[15px] font-semibold tap active:tap-active disabled:opacity-60 shadow-lg shadow-[color-mix(in_oklab,var(--ios-blue)_35%,transparent)] mt-1"
+              >
+                {busy ? "…" : mode === "signup" ? "Create account" : "Sign in"}
+              </button>
+            </form>
+          </div>
+
           <button
-            type="submit" disabled={busy}
-            className="w-full rounded-2xl bg-[var(--ios-blue)] text-white py-3.5 text-sm font-semibold tap active:tap-active disabled:opacity-60"
+            type="button"
+            onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
+            className="mt-5 w-full text-center text-[13px] text-muted-foreground hover:text-foreground transition-colors"
           >
-            {busy ? "…" : mode === "signup" ? "Create account" : "Sign in"}
+            {mode === "signup" ? "Have an account? Sign in" : "New here? Create an account"}
           </button>
-        </form>
-
-        <button
-          type="button"
-          onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
-          className="mt-6 w-full text-center text-sm text-muted-foreground"
-        >
-          {mode === "signup" ? "Have an account? Sign in" : "New here? Create an account"}
-        </button>
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

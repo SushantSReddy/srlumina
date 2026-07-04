@@ -10,6 +10,8 @@ import { DailyQuote } from "@/components/tracker/DailyQuote";
 import { LogSheet, type SubjectMeta } from "@/components/tracker/LogSheet";
 import { ExamCountdown } from "@/components/tracker/ExamCountdown";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { Footer } from "@/components/tracker/Footer";
+import { Logo } from "@/components/tracker/Logo";
 import type { Stream } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/home")({
