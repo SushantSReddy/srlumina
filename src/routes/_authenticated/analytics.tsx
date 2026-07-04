@@ -56,11 +56,9 @@ function Analytics() {
     : [{ id: "section_a", label: "Section A" }, { id: "section_b", label: "Section B" }];
 
   return (
-    <div className="min-h-dvh pb-28">
-      <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-2">
-        <h1 className="text-2xl font-bold tracking-tight">Analytics</h1>
-        <p className="text-xs text-muted-foreground">Trends across subjects and sources</p>
-      </header>
+    <div className="min-h-dvh pb-28 relative">
+      <MeshBackground />
+      <TopHeader title="Analytics" subtitle="Trends across subjects and sources" />
 
       <div className="px-5 py-4">
         <div className="grid grid-cols-3 gap-1 rounded-xl bg-muted p-1">
