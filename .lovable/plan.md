@@ -1,104 +1,60 @@
+## Add class + target-year onboarding, exam countdown, and liquid-glass polish
 
-## Overview
+### 1. Schema
+Add two columns to `profiles`:
+- `class_level` (enum: `class_9`, `class_10`, `class_11`, `class_12`, `dropper`)
+- `target_year` (int, e.g. 2026–2030)
 
-Build a premium, Apple-inspired **Exam Question Tracker** as a responsive web app (works great on mobile browsers). Users sign up, pick their stream (JEE or NEET), log questions solved per subject with source tagging and exam-level toggles, and track goals, streaks, and trends.
+Update `handle_new_user` trigger untouched. Regenerate types after migration.
 
-## Flow
+### 2. Onboarding flow (`_authenticated/onboarding.tsx`)
+Extend the existing stream step into a 3-step glassy wizard:
+1. Stream — JEE / NEET (existing)
+2. Class — 5 chips: Class 9, 10, 11, 12, Dropper
+3. Target year — segmented picker (current year → +5), with the auto-picked exam date shown live ("JEE Main ~ 24 Jan 2027 · 573 days to go")
 
-```text
-[Sign in / Sign up]  →  [Onboarding: choose JEE or NEET]  →  [Dashboard]
-                                                              ├─ Subject cards (log entry)
-                                                              ├─ Goal progress gauge
-                                                              ├─ Streak badge
-                                                              └─ Bottom tabs: Home · Analytics · Settings
-```
+Persist all three via `updateProfile`. Redirect to `/home` at the end.
+`home.tsx` already redirects users without `stream` back to onboarding — extend the guard to also require `class_level` and `target_year`.
 
-## Design (after you pick a direction)
+### 3. Exam date helper (`src/lib/exam-dates.ts`)
+Pure function `getExamDate(stream, year)` returning canonical dates:
+- JEE Main Session 1: **Jan 24** of target year
+- NEET UG: **May 3** of target year
 
-Three iOS-inspired directions will be rendered — you choose one. All three lock:
-- SF Pro–style system font stack, bold headers
-- System color per subject: Physics `systemBlue`, Chemistry `systemMint`, Math `systemIndigo`, Biology `systemGreen`
-- Glassmorphic cards (thin blur, subtle borders), full light + dark support
-- Haptic-style feedback on save (Vibration API where supported), smooth spring animations
+And `daysUntil(date)` returning an integer (floor of diff in days, clamped ≥ 0).
 
-Directions vary composition/density: e.g. (1) calm single-column with big keypad, (2) compact dashboard with all subjects visible + inline source chips, (3) Apple Watch–style ring gauge as centerpiece with subject cards below.
+### 4. Home screen countdown
+New `ExamCountdown` card rendered above the goal ring:
+- Big tabular number (days), label "days to <JEE Main | NEET UG> <year>"
+- Small secondary line with the exact date and class (e.g. "Class 12 · 24 Jan 2027")
+- Liquid-glass surface with animated conic-gradient sheen and a subtle shimmer sweep on mount
+- If exam is today/past: shows "Exam day 🎯" / "Best of luck!"
 
-## Features
+### 5. Liquid glass + animation upgrade (full showcase)
+Design tokens & utilities in `src/styles.css`:
+- New `.liquid-glass` utility: layered `backdrop-filter: blur(28px) saturate(180%)`, inner highlight ring via `box-shadow: inset 0 1px 0 rgba(255,255,255,.4)`, soft outer glow, `border: 1px solid color-mix(...)`.
+- `.liquid-glass-strong` variant for the countdown/ring hero.
+- New keyframes: `sheen` (moving gradient), `float-blob`, `shimmer`, `spring-in`, `pop`.
+- Animated gradient-mesh background layer (fixed, `-z-10`) with 3 slowly drifting radial-gradient blobs behind everything.
 
-**Onboarding**
-- First launch (post-signup): pick JEE or NEET. Saved to profile. Changeable in Settings.
+Component-level motion (CSS-only, no new deps):
+- `GoalRing`: animated blob behind ring + pulsing outer halo when goal is met; number counts up on mount.
+- Subject cards: `spring-in` stagger on mount, `tap-active` scale + inner highlight.
+- `LogSheet`: liquid-glass surface, spring slide-up, keypad buttons get a soft press glow.
+- `BottomNav`: stronger blur, active tab pill morphs with a shared layout feel (CSS transition on `left`/`width`).
+- Streak flame gets a gentle flicker animation.
 
-**Log entry (per subject)**
-- Numeric input (custom iOS-style keypad on mobile, plain input on desktop)
-- Source chips: Coaching Modules · PYQs · Reference Books · NCERT · Mock Tests · + Custom (user-added, persisted)
-- Exam-level segmented control: JEE → Main / Advanced · NEET → Section A / Section B
-- Save button with haptic feedback → optimistic update, toast confirmation
+### 6. Settings
+Add "Class" and "Target exam year" rows so users can change them later. Reuses the same pickers as onboarding.
 
-**Dashboard**
-- Today's subject cards with count + quick-log
-- Daily goal gauge (Apple Watch–style ring OR linear bar per chosen direction)
-- Streak badge (consecutive days with ≥1 entry)
+### Technical notes
+- Migration: `ALTER TYPE`-style enum add for `class_level` + column adds; `target_year` int with CHECK `>= 2025 AND <= 2035`.
+- `updateProfile` server fn: extend inputValidator to accept the new fields (all optional).
+- No new npm packages — animations are pure CSS/SVG.
+- Countdown recomputes on mount only (avoids hydration mismatch); safe because "days" only changes at date boundaries.
+- Keep light + dark parity for every new glass surface.
 
-**Analytics tab**
-- Weekly + monthly line/bar charts (Recharts)
-- Filters: subject, source material, exam level, date range
-- Totals summary cards
-
-**Settings**
-- Change stream, daily goal, manage custom sources, sign out, theme (system/light/dark)
-
-## Technical
-
-**Stack:** TanStack Start + React + Tailwind v4, Lovable Cloud (Supabase) for auth + DB, Recharts for analytics.
-
-**Auth:** Email/password + Google (via Lovable broker). Routes gated under `_authenticated/`.
-
-**Database (public schema, with GRANTs + RLS, all rows scoped to `auth.uid()`):**
-
-- `profiles` — `id (=auth.users.id)`, `display_name`, `avatar_url`, `stream ('jee'|'neet')`, `daily_goal int default 50`, `created_at`. Auto-created via trigger on signup.
-- `sources` — `id`, `user_id`, `name`, `is_default bool`. Seeded per user with defaults on first load (or via trigger).
-- `question_logs` — `id`, `user_id`, `logged_on date`, `subject ('physics'|'chemistry'|'math'|'biology')`, `count int`, `source_id fk`, `exam_level text` (main/advanced/section_a/section_b), `created_at`.
-- Indexes on `(user_id, logged_on)` and `(user_id, subject)`.
-
-**Server functions** (`src/lib/*.functions.ts`, all with `requireSupabaseAuth`):
-- `getProfile`, `updateProfile` (stream, goal, display name)
-- `listSources`, `addCustomSource`, `deleteCustomSource`
-- `logQuestions({subject, count, source_id, exam_level, logged_on?})`
-- `getTodaySummary`, `getStreak`
-- `getAnalytics({range, subject?, source_id?, exam_level?})`
-
-**Routes:**
-```text
-src/routes/
-  __root.tsx (meta, dark-mode class, auth listener)
-  index.tsx → redirects to /auth or /home based on session
-  auth.tsx (sign-in + sign-up + Google)
-  _authenticated/
-    route.tsx (managed gate)
-    onboarding.tsx (stream picker; redirects to /home if already set)
-    home.tsx (dashboard)
-    analytics.tsx
-    settings.tsx
-```
-
-**Design tokens:** iOS system colors added as CSS vars in `src/styles.css` (`--ios-blue`, `--ios-mint`, `--ios-indigo`, `--ios-green`, etc.), glass utility classes, per-subject semantic tokens.
-
-**Profiles table** (per your choice): includes `display_name` + `avatar_url` alongside `stream` and `daily_goal`. Avatar upload can be added later via storage — not in this initial build unless you want it now.
-
-## Build order
-
-1. Enable Lovable Cloud + configure Google auth.
-2. Migration: `profiles`, `sources`, `question_logs` + RLS + GRANTs + signup trigger + default sources seed.
-3. Render 3 iOS-inspired design directions → you pick one.
-4. Apply chosen tokens to `src/styles.css` + `__root.tsx` meta.
-5. Auth route + managed `_authenticated` gate.
-6. Onboarding route.
-7. Dashboard: subject cards, keypad, source chips, exam-level toggle, save flow, goal ring, streak.
-8. Analytics route with Recharts + filters.
-9. Settings route.
-10. Polish: haptics, animations, dark mode QA, empty states, error boundaries, SEO meta per route.
-
-## Out of scope for v1
-Avatar upload UI, push notifications, social/leaderboards, CSV export, offline PWA install prompt (can add later).
-
-Approve to proceed and I'll start with Cloud + migration, then generate the design directions.
+### Out of scope
+- Multiple exam sessions (JEE Advanced, Session 2) — v2.
+- Push/email reminders as the countdown crosses milestones.
+- Editing the exact exam date (only year is user-picked).
