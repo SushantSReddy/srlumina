@@ -8,6 +8,8 @@ import { addCustomSource, deleteSource, getProfile, listSources, updateProfile }
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNav } from "@/components/tracker/BottomNav";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { TopHeader } from "@/components/tracker/TopHeader";
+import { Footer } from "@/components/tracker/Footer";
 import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/settings")({
