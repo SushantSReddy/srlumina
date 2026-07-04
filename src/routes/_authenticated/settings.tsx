@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -7,6 +7,8 @@ import { Trash2, LogOut, Plus } from "lucide-react";
 import { addCustomSource, deleteSource, getProfile, listSources, updateProfile } from "@/lib/tracker.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNav } from "@/components/tracker/BottomNav";
+import { MeshBackground } from "@/components/tracker/MeshBackground";
+import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: Settings,
@@ -37,8 +39,13 @@ function Settings() {
   }, [profileQ.data]);
 
   const saveMut = useMutation({
-    mutationFn: (patch: { display_name?: string; stream?: "jee" | "neet"; daily_goal?: number }) =>
-      updateFn({ data: patch }),
+    mutationFn: (patch: {
+      display_name?: string;
+      stream?: "jee" | "neet";
+      daily_goal?: number;
+      class_level?: ClassLevel;
+      target_year?: number;
+    }) => updateFn({ data: patch }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["profile"] });
       qc.invalidateQueries({ queryKey: ["today"] });
