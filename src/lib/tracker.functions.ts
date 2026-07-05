@@ -103,6 +103,19 @@ export const logQuestions = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const resetToday = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const today = new Date().toISOString().slice(0, 10);
+    const { error } = await context.supabase
+      .from("question_logs")
+      .delete()
+      .eq("user_id", context.userId)
+      .eq("logged_on", today);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
