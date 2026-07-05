@@ -97,6 +97,17 @@ function Home() {
             ? "Daily goal hit — keep going."
             : `${total} of ${goal} today · ${goal - total} to go`}
         </p>
+        <div className="mt-3 flex justify-center">
+          <button
+            type="button"
+            onClick={handleReset}
+            disabled={resetMut.isPending || total === 0}
+            className="glass rounded-full px-4 py-1.5 text-xs font-medium text-muted-foreground flex items-center gap-1.5 tap active:tap-active disabled:opacity-40"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            {resetMut.isPending ? "Resetting…" : "Reset today"}
+          </button>
+        </div>
       </section>
 
       {/* Daily quote */}
