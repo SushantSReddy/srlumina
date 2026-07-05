@@ -28,7 +28,7 @@ export function TopHeader({
   const resolvedSub = subtitle ?? `${greet}${name ? "," : ""}`;
 
   return (
-    <header className="px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4 flex items-center justify-between gap-3">
+    <header className="sticky top-0 z-40 px-5 pt-[max(env(safe-area-inset-top),20px)] pb-4 flex items-center justify-between gap-3 glass-strong">
       <div className="flex items-center gap-3 min-w-0">
         <Logo size={36} />
         <div className="min-w-0">
