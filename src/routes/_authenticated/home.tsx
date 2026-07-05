@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Plus } from "lucide-react";
-import { getProfile, getTodaySummary } from "@/lib/tracker.functions";
+import { Plus, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
+import { getProfile, getTodaySummary, resetToday } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
 import { SubjectRings } from "@/components/tracker/SubjectRings";
 import { DailyQuote } from "@/components/tracker/DailyQuote";
+
 import { LogSheet, type SubjectMeta } from "@/components/tracker/LogSheet";
 import { ExamCountdown } from "@/components/tracker/ExamCountdown";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
@@ -37,6 +39,23 @@ function Home() {
 
   const profileQ = useQuery({ queryKey: ["profile"], queryFn: () => getProfileFn() });
   const todayQ = useQuery({ queryKey: ["today"], queryFn: () => getTodayFn() });
+  const qc = useQueryClient();
+  const resetFn = useServerFn(resetToday);
+  const resetMut = useMutation({
+    mutationFn: () => resetFn(),
+    onSuccess: () => {
+      toast.success("Today's log cleared");
+      qc.invalidateQueries({ queryKey: ["today"] });
+      qc.invalidateQueries({ queryKey: ["streak"] });
+      qc.invalidateQueries({ queryKey: ["analytics"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Couldn't reset"),
+  });
+  function handleReset() {
+    if (window.confirm("Reset all questions logged today? This cannot be undone.")) {
+      resetMut.mutate();
+    }
+  }
 
   useEffect(() => {
     if (profileQ.data && (!profileQ.data.stream || !profileQ.data.class_level || !profileQ.data.target_year)) {
@@ -78,6 +97,17 @@ function Home() {
             ? "Daily goal hit — keep going."
             : `${total} of ${goal} today · ${goal - total} to go`}
         </p>
+        <div className="mt-3 flex justify-center">
+          <button
+            type="button"
+            onClick={handleReset}
+            disabled={resetMut.isPending || total === 0}
+            className="glass rounded-full px-4 py-1.5 text-xs font-medium text-muted-foreground flex items-center gap-1.5 tap active:tap-active disabled:opacity-40"
+          >
+            <RotateCcw className="h-3.5 w-3.5" />
+            {resetMut.isPending ? "Resetting…" : "Reset today"}
+          </button>
+        </div>
       </section>
 
       {/* Daily quote */}
