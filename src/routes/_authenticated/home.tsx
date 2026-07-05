@@ -39,6 +39,23 @@ function Home() {
 
   const profileQ = useQuery({ queryKey: ["profile"], queryFn: () => getProfileFn() });
   const todayQ = useQuery({ queryKey: ["today"], queryFn: () => getTodayFn() });
+  const qc = useQueryClient();
+  const resetFn = useServerFn(resetToday);
+  const resetMut = useMutation({
+    mutationFn: () => resetFn(),
+    onSuccess: () => {
+      toast.success("Today's log cleared");
+      qc.invalidateQueries({ queryKey: ["today"] });
+      qc.invalidateQueries({ queryKey: ["streak"] });
+      qc.invalidateQueries({ queryKey: ["analytics"] });
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Couldn't reset"),
+  });
+  function handleReset() {
+    if (window.confirm("Reset all questions logged today? This cannot be undone.")) {
+      resetMut.mutate();
+    }
+  }
 
   useEffect(() => {
     if (profileQ.data && (!profileQ.data.stream || !profileQ.data.class_level || !profileQ.data.target_year)) {
