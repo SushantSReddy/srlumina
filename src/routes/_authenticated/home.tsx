@@ -1,12 +1,14 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Plus } from "lucide-react";
-import { getProfile, getTodaySummary } from "@/lib/tracker.functions";
+import { Plus, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
+import { getProfile, getTodaySummary, resetToday } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
 import { SubjectRings } from "@/components/tracker/SubjectRings";
 import { DailyQuote } from "@/components/tracker/DailyQuote";
+
 import { LogSheet, type SubjectMeta } from "@/components/tracker/LogSheet";
 import { ExamCountdown } from "@/components/tracker/ExamCountdown";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
