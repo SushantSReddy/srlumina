@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { RotateCcw } from "lucide-react";
 import type { SubjectMeta } from "@/components/tracker/LogSheet";
 
 export function SubjectRings({
@@ -6,36 +7,53 @@ export function SubjectRings({
   totals,
   perSubjectGoal,
   onPick,
+  onReset,
+  resettingId,
 }: {
   subjects: SubjectMeta[];
   totals: Record<string, number>;
   perSubjectGoal: number;
   onPick: (s: SubjectMeta) => void;
+  onReset?: (s: SubjectMeta) => void;
+  resettingId?: string | null;
 }) {
   return (
     <div className="grid grid-cols-3 gap-3 px-4">
-      {subjects.map((s, i) => (
-        <button
-          key={s.id}
-          type="button"
-          onClick={() => onPick(s)}
-          className="glass rounded-3xl p-4 flex flex-col items-center gap-2 tap active:tap-active spring-in"
-          style={{ animationDelay: `${i * 80}ms` }}
-        >
-          <Ring
-            value={totals[s.id] ?? 0}
-            goal={perSubjectGoal}
-            color={s.color}
-            id={`ring-${s.id}`}
-          />
-          <div className="text-center">
-            <div className="text-[13px] font-semibold leading-tight">{s.label}</div>
-            <div className="text-[11px] text-muted-foreground tabular-nums">
-              {totals[s.id] ?? 0} / {perSubjectGoal}
-            </div>
+      {subjects.map((s, i) => {
+        const value = totals[s.id] ?? 0;
+        return (
+          <div
+            key={s.id}
+            className="relative glass rounded-3xl p-4 flex flex-col items-center gap-2 spring-in"
+            style={{ animationDelay: `${i * 80}ms` }}
+          >
+            {onReset && value > 0 && (
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onReset(s); }}
+                disabled={resettingId === s.id}
+                aria-label={`Reset ${s.label}`}
+                className="absolute top-2 right-2 h-6 w-6 rounded-full flex items-center justify-center bg-foreground/[0.06] hover:bg-foreground/[0.12] text-muted-foreground hover:text-foreground tap active:tap-active disabled:opacity-40"
+              >
+                <RotateCcw className="h-3 w-3" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => onPick(s)}
+              className="flex flex-col items-center gap-2 tap active:tap-active"
+            >
+              <Ring value={value} goal={perSubjectGoal} color={s.color} id={`ring-${s.id}`} />
+              <div className="text-center">
+                <div className="text-[13px] font-semibold leading-tight">{s.label}</div>
+                <div className="text-[11px] text-muted-foreground tabular-nums">
+                  {value} / {perSubjectGoal}
+                </div>
+              </div>
+            </button>
           </div>
-        </button>
-      ))}
+        );
+      })}
     </div>
   );
 }
