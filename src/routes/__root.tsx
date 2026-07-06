@@ -98,10 +98,21 @@ function RootComponent() {
     apply();
     mql.addEventListener("change", apply);
 
-    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      if (event === "SIGNED_IN" && session?.user) {
+        const key = `login-logged-${session.user.id}-${new Date().toDateString()}`;
+        if (!sessionStorage.getItem(key)) {
+          sessionStorage.setItem(key, "1");
+          supabase.from("login_events").insert({
+            user_id: session.user.id,
+            email: session.user.email ?? null,
+            user_agent: navigator.userAgent,
+          }).then(() => {});
+        }
+      }
     });
     return () => {
       mql.removeEventListener("change", apply);
