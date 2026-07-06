@@ -42,9 +42,10 @@ function Home() {
   const qc = useQueryClient();
   const resetFn = useServerFn(resetToday);
   const resetMut = useMutation({
-    mutationFn: () => resetFn(),
-    onSuccess: () => {
-      toast.success("Today's log cleared");
+    mutationFn: (subject: SubjectMeta["id"] | null) =>
+      resetFn({ data: { subject: subject ?? null } }),
+    onSuccess: (_d, subject) => {
+      toast.success(subject ? `${subject} cleared for today` : "Today's log cleared");
       qc.invalidateQueries({ queryKey: ["today"] });
       qc.invalidateQueries({ queryKey: ["streak"] });
       qc.invalidateQueries({ queryKey: ["analytics"] });
@@ -53,7 +54,12 @@ function Home() {
   });
   function handleReset() {
     if (window.confirm("Reset all questions logged today? This cannot be undone.")) {
-      resetMut.mutate();
+      resetMut.mutate(null);
+    }
+  }
+  function handleResetSubject(s: SubjectMeta) {
+    if (window.confirm(`Reset today's ${s.label} count?`)) {
+      resetMut.mutate(s.id);
     }
   }
 
