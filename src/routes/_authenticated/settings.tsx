@@ -214,11 +214,7 @@ function Settings() {
   );
 }
 
-      <Footer className="mt-8" />
-      <BottomNav />
-    </div>
-  );
-}
+
 
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
