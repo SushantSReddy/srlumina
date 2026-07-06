@@ -191,6 +191,15 @@ function Settings() {
           </div>
         </Group>
 
+        {isAdminQ.data && (
+          <Link
+            to="/admin/logins"
+            className="w-full glass rounded-2xl py-3.5 text-sm font-semibold flex items-center justify-center gap-2 tap active:tap-active"
+          >
+            <ShieldCheck className="h-4 w-4" /> Login history
+          </Link>
+        )}
+
         <button
           onClick={signOut}
           className="w-full glass rounded-2xl py-3.5 text-sm font-semibold text-[var(--ios-red)] flex items-center justify-center gap-2 tap active:tap-active"
@@ -198,6 +207,12 @@ function Settings() {
           <LogOut className="h-4 w-4" /> Sign out
         </button>
       </section>
+
+      <Footer className="mt-8" />
+      <BottomNav />
+    </div>
+  );
+}
 
       <Footer className="mt-8" />
       <BottomNav />
