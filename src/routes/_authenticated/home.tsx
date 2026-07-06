@@ -97,6 +97,8 @@ function Home() {
           totals={(todayQ.data?.totals as Record<string, number>) ?? {}}
           perSubjectGoal={Math.max(1, Math.ceil(goal / subjects.length))}
           onPick={setActive}
+          onReset={handleResetSubject}
+          resettingId={resetMut.isPending ? (resetMut.variables ?? null) : null}
         />
         <p className="mt-4 text-center text-sm text-muted-foreground">
           {total >= goal
