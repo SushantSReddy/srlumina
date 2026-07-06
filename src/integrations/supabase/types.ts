@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      login_events: {
+        Row: {
+          email: string | null
+          id: string
+          logged_in_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          email?: string | null
+          id?: string
+          logged_in_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          email?: string | null
+          id?: string
+          logged_in_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -115,12 +139,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
       app_class_level:
@@ -130,6 +181,7 @@ export type Database = {
         | "class_12"
         | "dropper"
       app_exam_level: "main" | "advanced" | "section_a" | "section_b"
+      app_role: "admin" | "user"
       app_stream: "jee" | "neet"
       app_subject: "physics" | "chemistry" | "math" | "biology"
     }
@@ -267,6 +319,7 @@ export const Constants = {
         "dropper",
       ],
       app_exam_level: ["main", "advanced", "section_a", "section_b"],
+      app_role: ["admin", "user"],
       app_stream: ["jee", "neet"],
       app_subject: ["physics", "chemistry", "math", "biology"],
     },

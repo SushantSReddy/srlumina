@@ -1,9 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Trash2, LogOut, Plus } from "lucide-react";
+import { Trash2, LogOut, Plus, ShieldCheck } from "lucide-react";
 import { addCustomSource, deleteSource, getProfile, listSources, updateProfile } from "@/lib/tracker.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { BottomNav } from "@/components/tracker/BottomNav";
@@ -28,6 +28,20 @@ function Settings() {
 
   const profileQ = useQuery({ queryKey: ["profile"], queryFn: () => getProfileFn() });
   const sourcesQ = useQuery({ queryKey: ["sources"], queryFn: () => listSourcesFn() });
+  const isAdminQ = useQuery({
+    queryKey: ["is-admin"],
+    queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return false;
+      const { data } = await supabase
+        .from("user_roles" as never)
+        .select("role")
+        .eq("user_id", u.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      return !!data;
+    },
+  });
 
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(50);
@@ -177,6 +191,15 @@ function Settings() {
           </div>
         </Group>
 
+        {isAdminQ.data && (
+          <Link
+            to="/admin/logins"
+            className="w-full glass rounded-2xl py-3.5 text-sm font-semibold flex items-center justify-center gap-2 tap active:tap-active"
+          >
+            <ShieldCheck className="h-4 w-4" /> Login history
+          </Link>
+        )}
+
         <button
           onClick={signOut}
           className="w-full glass rounded-2xl py-3.5 text-sm font-semibold text-[var(--ios-red)] flex items-center justify-center gap-2 tap active:tap-active"
@@ -190,6 +213,8 @@ function Settings() {
     </div>
   );
 }
+
+
 
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
   return (
