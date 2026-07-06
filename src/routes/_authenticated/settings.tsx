@@ -28,6 +28,20 @@ function Settings() {
 
   const profileQ = useQuery({ queryKey: ["profile"], queryFn: () => getProfileFn() });
   const sourcesQ = useQuery({ queryKey: ["sources"], queryFn: () => listSourcesFn() });
+  const isAdminQ = useQuery({
+    queryKey: ["is-admin"],
+    queryFn: async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return false;
+      const { data } = await supabase
+        .from("user_roles" as never)
+        .select("role")
+        .eq("user_id", u.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      return !!data;
+    },
+  });
 
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(50);
