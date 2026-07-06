@@ -105,13 +105,20 @@ export const logQuestions = createServerFn({ method: "POST" })
 
 export const resetToday = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((input) =>
+    z.object({
+      subject: z.enum(["physics", "chemistry", "math", "biology"]).nullable().optional(),
+    }).parse(input ?? {}),
+  )
+  .handler(async ({ data, context }) => {
     const today = new Date().toISOString().slice(0, 10);
-    const { error } = await context.supabase
+    let q = context.supabase
       .from("question_logs")
       .delete()
       .eq("user_id", context.userId)
       .eq("logged_on", today);
+    if (data.subject) q = q.eq("subject", data.subject as Subject);
+    const { error } = await q;
     if (error) throw new Error(error.message);
     return { ok: true };
   });
