@@ -25,7 +25,7 @@ export function SubjectRings({
           <div
             key={s.id}
             className="relative glass rounded-3xl p-4 flex flex-col items-center gap-2 spring-in"
-            style={{ animationDelay: `${i * 80}ms` }}
+            style={{ animationDelay: `${i * 40}ms` }}
           >
             {onReset && value > 0 && (
               <button
@@ -76,20 +76,23 @@ function Ring({
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
 
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
   useEffect(() => {
     let raf = 0;
+    const from = display;
     const start = performance.now();
-    const dur = 700;
+    const dur = 420;
     const tick = (t: number) => {
       const p = Math.min(1, (t - start) / dur);
       const eased = 1 - Math.pow(1 - p, 3);
-      setDisplay(Math.round(value * eased));
+      setDisplay(Math.round(from + (value - from) * eased));
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
+
 
   return (
     <div className="relative" style={{ width: size, height: size }}>
@@ -113,7 +116,7 @@ function Ring({
           stroke={color}
           strokeDasharray={c}
           strokeDashoffset={c * (1 - pct)}
-          style={{ transition: "stroke-dashoffset 900ms cubic-bezier(0.2,0.8,0.2,1)" }}
+          style={{ transition: "stroke-dashoffset 500ms cubic-bezier(0.2,0.8,0.2,1)" }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
