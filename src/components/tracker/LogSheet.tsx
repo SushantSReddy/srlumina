@@ -22,13 +22,18 @@ export function LogSheet({
   const qc = useQueryClient();
   const listSourcesFn = useServerFn(listSources);
   const addSourceFn = useServerFn(addCustomSource);
+  const listChaptersFn = useServerFn(listChapters);
+  const addChapterFn = useServerFn(addChapter);
   const logFn = useServerFn(logQuestions);
 
   const [value, setValue] = useState("");
   const [sourceId, setSourceId] = useState<string | null>(null);
+  const [chapterId, setChapterId] = useState<string | null>(null);
   const [level, setLevel] = useState<ExamLevel | null>(null);
   const [newSource, setNewSource] = useState("");
   const [addingSource, setAddingSource] = useState(false);
+  const [newChapter, setNewChapter] = useState("");
+  const [addingChapter, setAddingChapter] = useState(false);
 
   const sourcesQ = useQuery({
     queryKey: ["sources"],
