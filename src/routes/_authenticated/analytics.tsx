@@ -152,6 +152,37 @@ function Analytics() {
         </section>
       )}
 
+      {/* Chapter breakdown */}
+      {dataQ.data && dataQ.data.byChapter.length > 0 && (
+        <section className="px-4 mt-5">
+          <div className="glass rounded-3xl p-4 space-y-3">
+            <div className="flex items-baseline justify-between">
+              <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wide">By chapter</span>
+              <span className="text-[10px] text-muted-foreground">{dataQ.data.byChapter.length} total</span>
+            </div>
+            {dataQ.data.byChapter.slice(0, 12).map((c) => {
+              const max = dataQ.data.byChapter[0]?.count || 1;
+              const color = c.subject ? SUBJECT_COLORS[c.subject] : "var(--muted-foreground)";
+              return (
+                <div key={c.chapter_id}>
+                  <div className="flex justify-between text-sm mb-1 gap-2">
+                    <span className="truncate">
+                      {c.subject && <span className="inline-block h-2 w-2 rounded-full mr-2 align-middle" style={{ background: color }} />}
+                      {c.name}
+                    </span>
+                    <span className="tabular-nums font-medium shrink-0">{c.count}</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-muted overflow-hidden">
+                    <div className="h-full rounded-full transition-all"
+                      style={{ width: `${(c.count / max) * 100}%`, background: color }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       <Footer className="mt-8" />
       <BottomNav />
     </div>

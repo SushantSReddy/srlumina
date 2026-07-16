@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      chapters: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          subject: Database["public"]["Enums"]["app_subject"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          subject: Database["public"]["Enums"]["app_subject"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          subject?: Database["public"]["Enums"]["app_subject"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       login_events: {
         Row: {
           email: string | null
@@ -76,6 +100,7 @@ export type Database = {
       }
       question_logs: {
         Row: {
+          chapter_id: string | null
           count: number
           created_at: string
           exam_level: Database["public"]["Enums"]["app_exam_level"] | null
@@ -86,6 +111,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          chapter_id?: string | null
           count: number
           created_at?: string
           exam_level?: Database["public"]["Enums"]["app_exam_level"] | null
@@ -96,6 +122,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          chapter_id?: string | null
           count?: number
           created_at?: string
           exam_level?: Database["public"]["Enums"]["app_exam_level"] | null
@@ -106,6 +133,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "question_logs_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "question_logs_source_id_fkey"
             columns: ["source_id"]
