@@ -3,7 +3,7 @@ import { Delete, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { addCustomSource, listSources, logQuestions, type ExamLevel } from "@/lib/tracker.functions";
+import { addCustomSource, addChapter, listChapters, listSources, logQuestions, type ExamLevel } from "@/lib/tracker.functions";
 
 export type SubjectMeta = {
   id: "physics" | "chemistry" | "math" | "biology";
