@@ -161,6 +161,59 @@ export function LogSheet({
           </button>
         </div>
 
+        {/* Chapter (required) */}
+        <div className="mb-3">
+          <div className="flex items-baseline justify-between">
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              Chapter <span className="text-[var(--ios-red,#ff3b30)]">*</span>
+            </label>
+            {!chapterId && <span className="text-[10px] text-muted-foreground">Pick or add one</span>}
+          </div>
+          <div className="mt-2 -mx-5 overflow-x-auto scrollbar-none">
+            <div className="flex gap-2 px-5 pb-1">
+              {chaptersQ.data?.length === 0 && !addingChapter && (
+                <span className="text-xs text-muted-foreground self-center">No chapters yet —</span>
+              )}
+              {chaptersQ.data?.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => setChapterId(c.id)}
+                  className={`whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm border tap active:tap-active ${
+                    chapterId === c.id
+                      ? "text-white border-transparent"
+                      : "bg-surface border-border text-foreground"
+                  }`}
+                  style={chapterId === c.id ? { background: subject.color } : undefined}
+                >{c.name}</button>
+              ))}
+              {addingChapter ? (
+                <div className="flex items-center gap-1">
+                  <input
+                    autoFocus value={newChapter} onChange={(e) => setNewChapter(e.target.value)}
+                    placeholder="Chapter name" maxLength={80}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && newChapter.trim()) addChapterMut.mutate(newChapter.trim());
+                      if (e.key === "Escape") { setAddingChapter(false); setNewChapter(""); }
+                    }}
+                    className="rounded-full bg-surface border border-border px-3 py-1.5 text-sm w-40"
+                  />
+                  <button
+                    type="button" disabled={!newChapter.trim() || addChapterMut.isPending}
+                    onClick={() => addChapterMut.mutate(newChapter.trim())}
+                    className="text-[var(--ios-blue)] text-sm font-semibold px-1"
+                  >Add</button>
+                </div>
+              ) : (
+                <button
+                  type="button" onClick={() => setAddingChapter(true)}
+                  className="whitespace-nowrap rounded-full px-3 py-1.5 text-sm border border-dashed border-border text-muted-foreground flex items-center gap-1"
+                ><Plus className="h-3.5 w-3.5" />New chapter</button>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* Source */}
         <div className="mb-3">
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Source</label>
