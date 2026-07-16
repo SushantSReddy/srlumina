@@ -113,7 +113,7 @@ export function LogSheet({
     else setValue((v) => (v.length >= 4 ? v : v + k));
   }
 
-  const canSave = parseInt(value || "0", 10) > 0 && !saveMut.isPending;
+  const canSave = parseInt(value || "0", 10) > 0 && !!chapterId && !saveMut.isPending;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center">
