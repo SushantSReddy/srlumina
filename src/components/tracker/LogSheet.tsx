@@ -41,8 +41,18 @@ export function LogSheet({
     enabled: open,
   });
 
+  const chaptersQ = useQuery({
+    queryKey: ["chapters", subject?.id],
+    queryFn: () => listChaptersFn({ data: { subject: subject!.id } }),
+    enabled: open && !!subject,
+  });
+
   useEffect(() => {
-    if (open) { setValue(""); setLevel(null); setSourceId(null); setAddingSource(false); setNewSource(""); }
+    if (open) {
+      setValue(""); setLevel(null); setSourceId(null); setChapterId(null);
+      setAddingSource(false); setNewSource("");
+      setAddingChapter(false); setNewChapter("");
+    }
   }, [open, subject?.id]);
 
   useEffect(() => {
@@ -59,12 +69,23 @@ export function LogSheet({
     onError: (e) => toast.error(e instanceof Error ? e.message : "Couldn't add source"),
   });
 
+  const addChapterMut = useMutation({
+    mutationFn: (name: string) => addChapterFn({ data: { subject: subject!.id, name } }),
+    onSuccess: (row) => {
+      qc.invalidateQueries({ queryKey: ["chapters", subject?.id] });
+      if (row) setChapterId(row.id);
+      setNewChapter(""); setAddingChapter(false);
+    },
+    onError: (e) => toast.error(e instanceof Error ? e.message : "Couldn't add chapter"),
+  });
+
   const saveMut = useMutation({
     mutationFn: () => logFn({
       data: {
         subject: subject!.id,
         count: parseInt(value, 10),
         source_id: sourceId,
+        chapter_id: chapterId!,
         exam_level: level,
       },
     }),
