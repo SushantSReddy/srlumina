@@ -79,6 +79,56 @@ export const deleteSource = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const listChapters = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z.object({
+      subject: z.enum(["physics", "chemistry", "math", "biology"]).nullable().optional(),
+    }).parse(input ?? {}),
+  )
+  .handler(async ({ data, context }) => {
+    let q = context.supabase
+      .from("chapters")
+      .select("id, name, subject")
+      .eq("user_id", context.userId)
+      .order("name", { ascending: true });
+    if (data.subject) q = q.eq("subject", data.subject as Subject);
+    const { data: rows, error } = await q;
+    if (error) throw new Error(error.message);
+    return rows ?? [];
+  });
+
+export const addChapter = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z.object({
+      subject: z.enum(["physics", "chemistry", "math", "biology"]),
+      name: z.string().trim().min(1).max(80),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: row, error } = await context.supabase
+      .from("chapters")
+      .insert({ user_id: context.userId, subject: data.subject as Subject, name: data.name.trim() })
+      .select("id, name, subject")
+      .single();
+    if (error) throw new Error(error.message);
+    return row;
+  });
+
+export const deleteChapter = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("chapters")
+      .delete()
+      .eq("id", data.id)
+      .eq("user_id", context.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 export const logQuestions = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
@@ -86,10 +136,21 @@ export const logQuestions = createServerFn({ method: "POST" })
       subject: z.enum(["physics", "chemistry", "math", "biology"]),
       count: z.number().int().min(1).max(10000),
       source_id: z.string().uuid().nullable(),
+      chapter_id: z.string().uuid(),
       exam_level: z.enum(["main", "advanced", "section_a", "section_b"]).nullable(),
     }).parse(input),
   )
   .handler(async ({ data, context }) => {
+    // Verify chapter belongs to user + subject
+    const { data: chap, error: cErr } = await context.supabase
+      .from("chapters")
+      .select("id, subject")
+      .eq("id", data.chapter_id)
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    if (cErr) throw new Error(cErr.message);
+    if (!chap || chap.subject !== data.subject) throw new Error("Invalid chapter for subject");
+
     const { error } = await context.supabase
       .from("question_logs")
       .insert({
@@ -97,6 +158,7 @@ export const logQuestions = createServerFn({ method: "POST" })
         subject: data.subject as Subject,
         count: data.count,
         source_id: data.source_id,
+        chapter_id: data.chapter_id,
         exam_level: data.exam_level as ExamLevel | null,
       });
     if (error) throw new Error(error.message);
