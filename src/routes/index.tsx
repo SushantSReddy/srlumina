@@ -553,16 +553,17 @@ function FeatureSection({
     <section
       id={id}
       ref={ref}
-      className="min-h-dvh flex items-center px-6 sm:px-12"
+      className="min-h-dvh flex items-end md:items-center px-6 sm:px-12 pb-16 md:pb-0"
     >
-      <div className={`w-full max-w-6xl mx-auto flex ${alignSide}`}>
+      <div className={`w-full max-w-6xl mx-auto flex justify-center ${alignSide}`}>
         <div
-          className="max-w-md transition-all duration-700 ease-out"
+          className="max-w-md rounded-3xl p-5 md:p-0 md:bg-transparent md:backdrop-blur-0 md:border-0 bg-black/50 backdrop-blur-xl border border-white/10 transition-all duration-700 ease-out"
           style={{
             opacity: inView ? 1 : 0,
             transform: inView ? "translateY(0)" : "translateY(30px)",
           }}
         >
+
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-[0.2em] text-white/70 uppercase backdrop-blur-sm">
             <Icon className="h-3 w-3 text-indigo-300" strokeWidth={2.4} />
             {eyebrow}
