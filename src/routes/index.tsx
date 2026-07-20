@@ -43,8 +43,12 @@ function LandingPage() {
   }, [navigate]);
 
   useEffect(() => {
-    const onResize = () => setVh(window.innerHeight);
+    const onResize = () => {
+      setVh(window.innerHeight);
+      setVw(window.innerWidth);
+    };
     onResize();
+
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
