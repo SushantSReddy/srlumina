@@ -89,8 +89,11 @@ function LandingPage() {
 
   const bookRotY = -25 + openAmt * 25 + explode * -15 + portal * 15; // final ~0
   const bookRotX = -8 + openAmt * 3 + explode * 40 - portal * 35;
-  const bookScale = 1 + portal * 0.15;
+  const isMobile = vw < 768;
+  const mobileScale = isMobile ? 0.55 : 1;
+  const bookScale = (1 + portal * 0.15) * mobileScale;
   const bookGlow = 0.35 + Math.max(openAmt, explode, flame, portal) * 0.6;
+
 
   return (
     <div className="relative bg-[#0A0A0E] text-white min-h-dvh overflow-x-clip">
