@@ -450,8 +450,10 @@ function Book({
         </div>
       )}
     </div>
+    </div>
   );
 }
+
 
 function Panel({
   w, h, style, children,
