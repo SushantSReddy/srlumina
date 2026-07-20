@@ -32,6 +32,8 @@ function LandingPage() {
   const [checking, setChecking] = useState(true);
   const [scrollY, setScrollY] = useState(0);
   const [vh, setVh] = useState(800);
+  const [vw, setVw] = useState(1024);
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
