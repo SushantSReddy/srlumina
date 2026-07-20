@@ -149,7 +149,8 @@ function LandingPage() {
       {/* ─── Content Sections (overlay on sticky stage) ─── */}
       <main className="relative z-20 -mt-[100dvh]">
         {/* HERO */}
-        <section className="min-h-dvh flex flex-col items-center justify-center px-6 text-center relative">
+        <section className="min-h-dvh flex flex-col items-center justify-end md:justify-center pb-24 md:pb-0 px-6 text-center relative">
+
           <h1
             className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent"
             style={{
