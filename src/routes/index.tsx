@@ -32,6 +32,8 @@ function LandingPage() {
   const [checking, setChecking] = useState(true);
   const [scrollY, setScrollY] = useState(0);
   const [vh, setVh] = useState(800);
+  const [vw, setVw] = useState(1024);
+
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -41,8 +43,12 @@ function LandingPage() {
   }, [navigate]);
 
   useEffect(() => {
-    const onResize = () => setVh(window.innerHeight);
+    const onResize = () => {
+      setVh(window.innerHeight);
+      setVw(window.innerWidth);
+    };
     onResize();
+
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
@@ -83,8 +89,11 @@ function LandingPage() {
 
   const bookRotY = -25 + openAmt * 25 + explode * -15 + portal * 15; // final ~0
   const bookRotX = -8 + openAmt * 3 + explode * 40 - portal * 35;
-  const bookScale = 1 + portal * 0.15;
+  const isMobile = vw < 768;
+  const mobileScale = isMobile ? 0.55 : 1;
+  const bookScale = (1 + portal * 0.15) * mobileScale;
   const bookGlow = 0.35 + Math.max(openAmt, explode, flame, portal) * 0.6;
+
 
   return (
     <div className="relative bg-[#0A0A0E] text-white min-h-dvh overflow-x-clip">
@@ -120,7 +129,7 @@ function LandingPage() {
       {/* ─── Sticky 3D Stage (persists across sections) ─── */}
       <div className="sticky top-0 h-dvh w-full pointer-events-none z-10">
         <div
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0 flex justify-center items-start md:items-center pt-24 md:pt-0"
           style={{ perspective: "1600px" }}
         >
           <Book
@@ -136,10 +145,12 @@ function LandingPage() {
         </div>
       </div>
 
+
       {/* ─── Content Sections (overlay on sticky stage) ─── */}
       <main className="relative z-20 -mt-[100dvh]">
         {/* HERO */}
-        <section className="min-h-dvh flex flex-col items-center justify-center px-6 text-center relative">
+        <section className="min-h-dvh flex flex-col items-center justify-end md:justify-center pb-24 md:pb-0 px-6 text-center relative">
+
           <h1
             className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent"
             style={{
@@ -276,6 +287,12 @@ function Book({
 
   return (
     <div
+      style={{
+        animation: "floatY 6s ease-in-out infinite",
+        transformStyle: "preserve-3d",
+      }}
+    >
+    <div
       className="relative"
       style={{
         width: size.w,
@@ -283,9 +300,9 @@ function Book({
         transformStyle: "preserve-3d",
         transform: `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${scale})`,
         transition: "transform 120ms linear",
-        animation: "floatY 6s ease-in-out infinite",
       }}
     >
+
       {/* halo glow */}
       <div
         aria-hidden
@@ -433,8 +450,10 @@ function Book({
         </div>
       )}
     </div>
+    </div>
   );
 }
+
 
 function Panel({
   w, h, style, children,
@@ -542,16 +561,17 @@ function FeatureSection({
     <section
       id={id}
       ref={ref}
-      className="min-h-dvh flex items-center px-6 sm:px-12"
+      className="min-h-dvh flex items-end md:items-center px-6 sm:px-12 pb-16 md:pb-0"
     >
-      <div className={`w-full max-w-6xl mx-auto flex ${alignSide}`}>
+      <div className={`w-full max-w-6xl mx-auto flex justify-center ${alignSide}`}>
         <div
-          className="max-w-md transition-all duration-700 ease-out"
+          className="max-w-md rounded-3xl p-5 md:p-0 md:bg-transparent md:backdrop-blur-0 md:border-0 bg-black/50 backdrop-blur-xl border border-white/10 transition-all duration-700 ease-out"
           style={{
             opacity: inView ? 1 : 0,
             transform: inView ? "translateY(0)" : "translateY(30px)",
           }}
         >
+
           <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-[0.2em] text-white/70 uppercase backdrop-blur-sm">
             <Icon className="h-3 w-3 text-indigo-300" strokeWidth={2.4} />
             {eyebrow}
