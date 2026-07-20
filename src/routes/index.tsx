@@ -129,7 +129,7 @@ function LandingPage() {
       {/* ─── Sticky 3D Stage (persists across sections) ─── */}
       <div className="sticky top-0 h-dvh w-full pointer-events-none z-10">
         <div
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0 flex justify-center items-start md:items-center pt-24 md:pt-0"
           style={{ perspective: "1600px" }}
         >
           <Book
@@ -144,6 +144,7 @@ function LandingPage() {
           />
         </div>
       </div>
+
 
       {/* ─── Content Sections (overlay on sticky stage) ─── */}
       <main className="relative z-20 -mt-[100dvh]">
