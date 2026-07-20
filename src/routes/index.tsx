@@ -287,6 +287,12 @@ function Book({
 
   return (
     <div
+      style={{
+        animation: "floatY 6s ease-in-out infinite",
+        transformStyle: "preserve-3d",
+      }}
+    >
+    <div
       className="relative"
       style={{
         width: size.w,
@@ -294,9 +300,9 @@ function Book({
         transformStyle: "preserve-3d",
         transform: `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${scale})`,
         transition: "transform 120ms linear",
-        animation: "floatY 6s ease-in-out infinite",
       }}
     >
+
       {/* halo glow */}
       <div
         aria-hidden
