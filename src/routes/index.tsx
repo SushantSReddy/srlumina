@@ -350,9 +350,9 @@ function LandingPage() {
 /*  3D Book (pure CSS transforms)                              */
 /* ─────────────────────────────────────────────────────────── */
 function Book({
-  rotX, rotY, scale, open, explode, flame, portal, glow,
+  rotX, rotY, rotZ = 0, scale, open, explode, flame, portal, glow,
 }: {
-  rotX: number; rotY: number; scale: number;
+  rotX: number; rotY: number; rotZ?: number; scale: number;
   open: number; explode: number; flame: number; portal: number; glow: number;
 }) {
   const size = { w: 320, h: 420 };
@@ -371,10 +371,11 @@ function Book({
         width: size.w,
         height: size.h,
         transformStyle: "preserve-3d",
-        transform: `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${scale})`,
-        transition: "transform 120ms linear",
+        transform: `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`,
+        willChange: "transform",
       }}
     >
+
 
       {/* halo glow */}
       <div
