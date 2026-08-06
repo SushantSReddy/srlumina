@@ -179,7 +179,9 @@ function LandingPage() {
           <Book
             rotX={bookRotX}
             rotY={bookRotY}
+            rotZ={bookRotZ}
             scale={bookScale}
+
             open={openAmt}
             explode={explode}
             flame={flame}
