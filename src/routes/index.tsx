@@ -595,24 +595,36 @@ function FeatureSection({
           style={{
             opacity: inView ? 1 : 0,
             transform: inView ? "translateY(0)" : "translateY(30px)",
+            filter: inView ? "blur(0px)" : "blur(8px)",
           }}
         >
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-[0.2em] text-white/70 uppercase backdrop-blur-sm">
-            <Icon className="h-3 w-3 text-indigo-300" strokeWidth={2.4} />
+          <div
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] tracking-[0.2em] text-white/85 uppercase backdrop-blur-sm transition-all duration-700 ease-out"
+            style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)", transitionDelay: "80ms" }}
+          >
+            <Icon className="h-3 w-3 text-indigo-200" strokeWidth={2.4} />
             {eyebrow}
           </div>
           <h2
-            className="mt-5 text-[36px] sm:text-[52px] font-semibold tracking-[-0.035em] leading-[1] bg-clip-text text-transparent"
+            className="mt-5 text-[36px] sm:text-[52px] font-semibold tracking-[-0.035em] leading-[1] bg-clip-text text-transparent transition-all duration-700 ease-out"
             style={{
-              backgroundImage: "linear-gradient(180deg, #ffffff 0%, #a5b4fc 100%)",
+              backgroundImage: "linear-gradient(180deg, #ffffff 0%, #cdd6ff 100%)",
+              filter: inView ? "drop-shadow(0 6px 30px rgba(129,140,248,0.35))" : "blur(6px)",
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateY(0)" : "translateY(18px)",
+              transitionDelay: "180ms",
             }}
           >
             {title}
           </h2>
-          <p className="mt-4 text-[15px] sm:text-[17px] text-white/60 leading-relaxed">
+          <p
+            className="mt-4 text-[15px] sm:text-[17px] text-white/75 leading-relaxed transition-all duration-700 ease-out"
+            style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(18px)", transitionDelay: "300ms" }}
+          >
             {desc}
           </p>
+
         </div>
       </div>
     </section>
