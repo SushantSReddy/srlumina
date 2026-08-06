@@ -55,9 +55,13 @@ function LandingPage() {
     onResize();
 
     const computeTarget = () => {
-      const total = window.innerHeight * 4;
-      target.current = Math.min(1, Math.max(0, window.scrollY / total));
+      const max = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      target.current = Math.min(1, Math.max(0, window.scrollY / max));
     };
+
     computeTarget();
     current.current = target.current;
 
