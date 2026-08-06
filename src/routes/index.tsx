@@ -152,20 +152,26 @@ function LandingPage() {
         <section className="min-h-dvh flex flex-col items-center justify-end md:justify-center pb-24 md:pb-0 px-6 text-center relative">
 
           <h1
-            className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent"
+            className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent reveal"
             style={{
               backgroundImage:
-                "linear-gradient(180deg, #ffffff 0%, #ffffff 45%, #a5b4fc 100%)",
+                "linear-gradient(180deg, #ffffff 0%, #f4f6ff 40%, #c3cdff 100%)",
+              filter: "drop-shadow(0 6px 40px rgba(129,140,248,0.35))",
+              animationDelay: "80ms",
             }}
           >
             Master Your
             <br />
             Daily Study Grind.
           </h1>
-          <p className="mt-6 text-[16px] sm:text-[19px] text-white/60 max-w-xl leading-relaxed">
+          <p
+            className="mt-6 text-[16px] sm:text-[19px] text-white/75 max-w-xl leading-relaxed reveal"
+            style={{ animationDelay: "260ms" }}
+          >
             The intelligent question tracker that turns your daily study goals
             into an unbreakable streak.
           </p>
+
           <div className="mt-9 flex items-center gap-3">
             <Link
               to="/auth"
@@ -218,22 +224,24 @@ function LandingPage() {
         {/* CTA */}
         <section className="min-h-dvh flex flex-col items-center justify-center px-6 text-center relative">
           <div className="mt-[42vh] flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-wider text-white/70 uppercase mb-6">
-              <Sparkles className="h-3 w-3 text-indigo-300" /> Ready when you are
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] tracking-wider text-white/85 uppercase mb-6 shimmer">
+              <Sparkles className="h-3 w-3 text-indigo-200" /> Ready when you are
             </div>
             <h2
               className="text-[40px] sm:text-[64px] font-semibold leading-[0.98] tracking-[-0.04em] max-w-3xl bg-clip-text text-transparent"
               style={{
-                backgroundImage: "linear-gradient(180deg, #fff 0%, #c7d2fe 100%)",
+                backgroundImage: "linear-gradient(180deg, #fff 0%, #dbe2ff 100%)",
+                filter: "drop-shadow(0 6px 36px rgba(139,92,246,0.35))",
               }}
             >
               Ready to start your
               <br />
               streak today?
             </h2>
-            <p className="mt-5 text-[16px] text-white/60 max-w-md">
+            <p className="mt-5 text-[16px] text-white/75 max-w-md">
               Your study vault is waiting. Join thousands building unbreakable habits.
             </p>
+
             <Link
               to="/auth"
               className="group mt-9 relative inline-flex items-center gap-2 rounded-full px-8 py-4 text-[15px] font-semibold text-white bg-gradient-to-b from-indigo-500 to-violet-600 shadow-[0_20px_60px_-10px_rgba(139,92,246,0.7)] hover:brightness-110 hover:scale-[1.02] transition-all"
@@ -268,6 +276,24 @@ function LandingPage() {
           0%,100% { opacity: .9; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.06); }
         }
+        @keyframes revealUp {
+          0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
+          100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        .reveal { animation: revealUp 900ms cubic-bezier(0.22,1,0.36,1) both; }
+        @keyframes shimmerSweep {
+          0% { background-position: -140% 0; }
+          100% { background-position: 240% 0; }
+        }
+        .shimmer {
+          background-image: linear-gradient(100deg, transparent 35%, rgba(255,255,255,0.16) 50%, transparent 65%);
+          background-size: 220% 100%;
+          animation: shimmerSweep 4.5s linear infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .reveal, .shimmer, .animate-bounce-slow { animation: none !important; }
+        }
+
       `}</style>
     </div>
   );
@@ -569,24 +595,36 @@ function FeatureSection({
           style={{
             opacity: inView ? 1 : 0,
             transform: inView ? "translateY(0)" : "translateY(30px)",
+            filter: inView ? "blur(0px)" : "blur(8px)",
           }}
         >
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-[0.2em] text-white/70 uppercase backdrop-blur-sm">
-            <Icon className="h-3 w-3 text-indigo-300" strokeWidth={2.4} />
+          <div
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] tracking-[0.2em] text-white/85 uppercase backdrop-blur-sm transition-all duration-700 ease-out"
+            style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(14px)", transitionDelay: "80ms" }}
+          >
+            <Icon className="h-3 w-3 text-indigo-200" strokeWidth={2.4} />
             {eyebrow}
           </div>
           <h2
-            className="mt-5 text-[36px] sm:text-[52px] font-semibold tracking-[-0.035em] leading-[1] bg-clip-text text-transparent"
+            className="mt-5 text-[36px] sm:text-[52px] font-semibold tracking-[-0.035em] leading-[1] bg-clip-text text-transparent transition-all duration-700 ease-out"
             style={{
-              backgroundImage: "linear-gradient(180deg, #ffffff 0%, #a5b4fc 100%)",
+              backgroundImage: "linear-gradient(180deg, #ffffff 0%, #cdd6ff 100%)",
+              filter: inView ? "drop-shadow(0 6px 30px rgba(129,140,248,0.35))" : "blur(6px)",
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateY(0)" : "translateY(18px)",
+              transitionDelay: "180ms",
             }}
           >
             {title}
           </h2>
-          <p className="mt-4 text-[15px] sm:text-[17px] text-white/60 leading-relaxed">
+          <p
+            className="mt-4 text-[15px] sm:text-[17px] text-white/75 leading-relaxed transition-all duration-700 ease-out"
+            style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(18px)", transitionDelay: "300ms" }}
+          >
             {desc}
           </p>
+
         </div>
       </div>
     </section>
