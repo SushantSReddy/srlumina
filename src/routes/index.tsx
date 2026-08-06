@@ -30,10 +30,10 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
-  const [scrollY, setScrollY] = useState(0);
+  const [prog, setProg] = useState(0);
   const [vh, setVh] = useState(800);
   const [vw, setVw] = useState(1024);
-
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -42,6 +42,11 @@ function LandingPage() {
     });
   }, [navigate]);
 
+  // Smoothed (spring-like) scroll progress driven by a continuous rAF loop
+  const target = useRef(0);
+  const current = useRef(0);
+  const velocity = useRef(0);
+
   useEffect(() => {
     const onResize = () => {
       setVh(window.innerHeight);
@@ -49,19 +54,51 @@ function LandingPage() {
     };
     onResize();
 
+    const computeTarget = () => {
+      const total = window.innerHeight * 4;
+      target.current = Math.min(1, Math.max(0, window.scrollY / total));
+    };
+    computeTarget();
+    current.current = target.current;
+
     let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        setScrollY(window.scrollY);
-        raf = 0;
+    let last = performance.now();
+    const loop = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      // critically-damped spring toward target
+      const stiffness = 90;
+      const damping = 18;
+      const dx = target.current - current.current;
+      velocity.current += (dx * stiffness - velocity.current * damping) * dt;
+      current.current += velocity.current * dt;
+      if (Math.abs(dx) < 0.0002 && Math.abs(velocity.current) < 0.0005) {
+        current.current = target.current;
+        velocity.current = 0;
+      }
+      setProg((prev) =>
+        Math.abs(prev - current.current) > 0.0004 ? current.current : prev,
+      );
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    const onPointer = (e: PointerEvent) => {
+      if (window.innerWidth < 768) return;
+      setTilt({
+        x: (e.clientY / window.innerHeight - 0.5) * -6,
+        y: (e.clientX / window.innerWidth - 0.5) * 10,
       });
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    window.addEventListener("scroll", computeTarget, { passive: true });
     window.addEventListener("resize", onResize);
+    window.addEventListener("pointermove", onPointer, { passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", computeTarget);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointer);
     };
   }, []);
 
@@ -69,9 +106,7 @@ function LandingPage() {
     return <div className="min-h-dvh bg-[#0A0A0E]" />;
   }
 
-  // Scroll progress across the 4 pinned sections (hero + 3 features + CTA = 5 * vh)
-  const totalScroll = vh * 4;
-  const p = Math.min(1, Math.max(0, scrollY / totalScroll));
+  const p = prog;
 
   // Book animation stages
   // 0.00 – 0.20 hero (closed, tilted)
@@ -79,20 +114,29 @@ function LandingPage() {
   // 0.40 – 0.60 explode layers (Section 2)
   // 0.60 – 0.80 flame emerges (Section 3)
   // 0.80 – 1.00 upright portal (CTA)
-  const seg = (from: number, to: number) =>
-    Math.min(1, Math.max(0, (p - from) / (to - from)));
+  const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+  const easeInOut = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+  const seg = (from: number, to: number) => clamp01((p - from) / (to - from));
 
-  const openAmt = seg(0.18, 0.38);
-  const explode = seg(0.4, 0.6);
-  const flame = seg(0.6, 0.8);
-  const portal = seg(0.8, 1.0);
+  const openAmt = easeInOut(seg(0.16, 0.4));
+  const explode = easeInOut(seg(0.4, 0.62));
+  const flame = easeOut(seg(0.6, 0.82));
+  const portal = easeInOut(seg(0.8, 1.0));
 
-  const bookRotY = -25 + openAmt * 25 + explode * -15 + portal * 15; // final ~0
-  const bookRotX = -8 + openAmt * 3 + explode * 40 - portal * 35;
   const isMobile = vw < 768;
+  const bookRotY =
+    -28 + openAmt * 28 + explode * -18 + portal * 18 + (isMobile ? 0 : tilt.y);
+  const bookRotX =
+    -8 + openAmt * 4 + explode * 42 - portal * 38 + (isMobile ? 0 : tilt.x);
+  const bookRotZ = openAmt * 2 - explode * 3 + portal * 1;
   const mobileScale = isMobile ? 0.55 : 1;
-  const bookScale = (1 + portal * 0.15) * mobileScale;
+  const bookScale =
+    (0.92 + easeOut(clamp01(p / 0.16)) * 0.08 + portal * 0.18 - explode * 0.06) *
+    mobileScale;
   const bookGlow = 0.35 + Math.max(openAmt, explode, flame, portal) * 0.6;
+
 
 
   return (
