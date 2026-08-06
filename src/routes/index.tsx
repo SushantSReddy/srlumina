@@ -30,10 +30,10 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
-  const [scrollY, setScrollY] = useState(0);
+  const [prog, setProg] = useState(0);
   const [vh, setVh] = useState(800);
   const [vw, setVw] = useState(1024);
-
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -42,6 +42,11 @@ function LandingPage() {
     });
   }, [navigate]);
 
+  // Smoothed (spring-like) scroll progress driven by a continuous rAF loop
+  const target = useRef(0);
+  const current = useRef(0);
+  const velocity = useRef(0);
+
   useEffect(() => {
     const onResize = () => {
       setVh(window.innerHeight);
@@ -49,19 +54,55 @@ function LandingPage() {
     };
     onResize();
 
+    const computeTarget = () => {
+      const max = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+      target.current = Math.min(1, Math.max(0, window.scrollY / max));
+    };
+
+    computeTarget();
+    current.current = target.current;
+
     let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        setScrollY(window.scrollY);
-        raf = 0;
+    let last = performance.now();
+    const loop = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      // critically-damped spring toward target
+      const stiffness = 90;
+      const damping = 18;
+      const dx = target.current - current.current;
+      velocity.current += (dx * stiffness - velocity.current * damping) * dt;
+      current.current += velocity.current * dt;
+      if (Math.abs(dx) < 0.0002 && Math.abs(velocity.current) < 0.0005) {
+        current.current = target.current;
+        velocity.current = 0;
+      }
+      setProg((prev) =>
+        Math.abs(prev - current.current) > 0.0004 ? current.current : prev,
+      );
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    const onPointer = (e: PointerEvent) => {
+      if (window.innerWidth < 768) return;
+      setTilt({
+        x: (e.clientY / window.innerHeight - 0.5) * -6,
+        y: (e.clientX / window.innerWidth - 0.5) * 10,
       });
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    window.addEventListener("scroll", computeTarget, { passive: true });
     window.addEventListener("resize", onResize);
+    window.addEventListener("pointermove", onPointer, { passive: true });
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", computeTarget);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("pointermove", onPointer);
     };
   }, []);
 
@@ -69,9 +110,7 @@ function LandingPage() {
     return <div className="min-h-dvh bg-[#0A0A0E]" />;
   }
 
-  // Scroll progress across the 4 pinned sections (hero + 3 features + CTA = 5 * vh)
-  const totalScroll = vh * 4;
-  const p = Math.min(1, Math.max(0, scrollY / totalScroll));
+  const p = prog;
 
   // Book animation stages
   // 0.00 – 0.20 hero (closed, tilted)
@@ -79,20 +118,31 @@ function LandingPage() {
   // 0.40 – 0.60 explode layers (Section 2)
   // 0.60 – 0.80 flame emerges (Section 3)
   // 0.80 – 1.00 upright portal (CTA)
-  const seg = (from: number, to: number) =>
-    Math.min(1, Math.max(0, (p - from) / (to - from)));
+  const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+  const easeInOut = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+  const seg = (from: number, to: number) => clamp01((p - from) / (to - from));
 
-  const openAmt = seg(0.18, 0.38);
-  const explode = seg(0.4, 0.6);
-  const flame = seg(0.6, 0.8);
-  const portal = seg(0.8, 1.0);
+  const openAmt = easeInOut(seg(0.16, 0.4));
+  const explode = easeInOut(seg(0.4, 0.62));
+  const portal = easeInOut(seg(0.8, 1.0));
+  // flame rises, then dissolves as the portal takes over
+  const flame = easeOut(seg(0.6, 0.82)) * (1 - clamp01(portal * 1.4));
 
-  const bookRotY = -25 + openAmt * 25 + explode * -15 + portal * 15; // final ~0
-  const bookRotX = -8 + openAmt * 3 + explode * 40 - portal * 35;
+
   const isMobile = vw < 768;
+  const bookRotY =
+    -28 + openAmt * 28 + explode * -18 + portal * 18 + (isMobile ? 0 : tilt.y);
+  const bookRotX =
+    -8 + openAmt * 4 + explode * 42 - portal * 38 + (isMobile ? 0 : tilt.x);
+  const bookRotZ = openAmt * 2 - explode * 3 + portal * 1;
   const mobileScale = isMobile ? 0.55 : 1;
-  const bookScale = (1 + portal * 0.15) * mobileScale;
+  const bookScale =
+    (0.92 + easeOut(clamp01(p / 0.16)) * 0.08 + portal * 0.18 - explode * 0.06) *
+    mobileScale;
   const bookGlow = 0.35 + Math.max(openAmt, explode, flame, portal) * 0.6;
+
 
 
   return (
@@ -135,7 +185,9 @@ function LandingPage() {
           <Book
             rotX={bookRotX}
             rotY={bookRotY}
+            rotZ={bookRotZ}
             scale={bookScale}
+
             open={openAmt}
             explode={explode}
             flame={flame}
@@ -277,6 +329,12 @@ function LandingPage() {
           0%,100% { opacity: .9; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.06); }
         }
+        @keyframes ember {
+          0% { transform: translateY(0) scale(.6); opacity: 0; }
+          25% { opacity: 1; }
+          100% { transform: translateY(-120px) scale(0); opacity: 0; }
+        }
+
         @keyframes revealUp {
           0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
           100% { opacity: 1; transform: translateY(0); filter: blur(0); }
@@ -304,13 +362,15 @@ function LandingPage() {
 /*  3D Book (pure CSS transforms)                              */
 /* ─────────────────────────────────────────────────────────── */
 function Book({
-  rotX, rotY, scale, open, explode, flame, portal, glow,
+  rotX, rotY, rotZ = 0, scale, open, explode, flame, portal, glow,
 }: {
-  rotX: number; rotY: number; scale: number;
+  rotX: number; rotY: number; rotZ?: number; scale: number;
   open: number; explode: number; flame: number; portal: number; glow: number;
 }) {
   const size = { w: 320, h: 420 };
   const portalMode = portal > 0.5;
+  const chipAmt = explode * (1 - Math.min(1, flame * 1.5));
+
 
   return (
     <div
@@ -325,10 +385,11 @@ function Book({
         width: size.w,
         height: size.h,
         transformStyle: "preserve-3d",
-        transform: `rotateX(${rotX}deg) rotateY(${rotY}deg) scale(${scale})`,
-        transition: "transform 120ms linear",
+        transform: `rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(${scale})`,
+        willChange: "transform",
       }}
     >
+
 
       {/* halo glow */}
       <div
@@ -354,42 +415,50 @@ function Book({
         }}
       />
 
-      {/* Inner pages (exploded layers) */}
+      {/* Inner pages (exploded layers, staggered) */}
       {[0, 1, 2, 3].map((i) => {
-        const z = -18 + i * 6 + explode * (i - 1.5) * 40;
-        const tY = explode * (i - 1.5) * 22;
+        // stagger each layer so they separate one after another
+        const stagger = Math.min(1, Math.max(0, (explode - i * 0.06) / 0.75));
+        const ez = 1 - Math.pow(1 - stagger, 3);
+        const z = -18 + i * 6 + ez * (i - 1.5) * 46;
+        const tY = ez * (i - 1.5) * 26;
+        const rX = ez * (i - 1.5) * -4;
         return (
           <Panel
             key={i}
             w={size.w - 14} h={size.h - 18}
             style={{
               left: 7, top: 9,
-              transform: `translate3d(0, ${tY}px, ${z}px)`,
+              transform: `translate3d(0, ${tY}px, ${z}px) rotateX(${rX}deg)`,
               background: "linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)",
               borderRadius: 10,
-              boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
+              boxShadow: `0 ${6 + ez * 14}px ${20 + ez * 26}px rgba(0,0,0,${0.35 + ez * 0.2})`,
+              willChange: "transform",
             }}
           >
-            {i === 2 && open > 0.5 && (
+            {i === 3 && open > 0.35 && (
               <PageContent explode={explode} />
             )}
           </Panel>
         );
       })}
 
-      {/* Floating analytics chips during explode */}
-      {explode > 0.05 && (
+
+      {/* Floating analytics chips during explode (fade out as the flame rises) */}
+      {chipAmt > 0.02 && (
         <>
-          <Chip label="Calculus +15" color="#818cf8"
-            x={-140} y={-60} z={90} explode={explode} />
-          <Chip label="Physics +20" color="#a78bfa"
-            x={140} y={-40} z={110} explode={explode} />
-          <Chip label="Coding +10" color="#22d3ee"
-            x={-120} y={90} z={70} explode={explode} />
-          <Chip label="Biology +8" color="#f472b6"
-            x={130} y={100} z={80} explode={explode} />
+          <Chip label="Calculus +15" color="#818cf8" delay={0}
+            x={-140} y={-60} z={90} explode={chipAmt} rotX={rotX} rotY={rotY} rotZ={rotZ} />
+          <Chip label="Physics +20" color="#a78bfa" delay={0.08}
+            x={140} y={-40} z={110} explode={chipAmt} rotX={rotX} rotY={rotY} rotZ={rotZ} />
+          <Chip label="Coding +10" color="#22d3ee" delay={0.16}
+            x={-120} y={90} z={70} explode={chipAmt} rotX={rotX} rotY={rotY} rotZ={rotZ} />
+          <Chip label="Biology +8" color="#f472b6" delay={0.24}
+            x={130} y={100} z={80} explode={chipAmt} rotX={rotX} rotY={rotY} rotZ={rotZ} />
         </>
       )}
+
+
 
       {/* Front cover (opens like a door on the left spine) */}
       <div
@@ -397,9 +466,9 @@ function Book({
           position: "absolute",
           inset: 0,
           transformOrigin: "left center",
-          transform: `rotateY(${-open * 155}deg) translateZ(24px)`,
-          transition: "transform 120ms linear",
+          transform: `rotateY(${-open * 158}deg) translateZ(24px)`,
           transformStyle: "preserve-3d",
+          willChange: "transform",
         }}
       >
         <Panel
@@ -410,10 +479,14 @@ function Book({
             border: "1px solid rgba(255,255,255,0.08)",
             boxShadow:
               "inset 0 1px 0 rgba(255,255,255,0.12), 0 30px 60px -20px rgba(0,0,0,0.7)",
+            backfaceVisibility: "hidden",
           }}
         >
           {/* Emblem */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+            style={{ opacity: 1 - open * 0.9 }}
+          >
             <div
               className="h-20 w-20 rounded-2xl flex items-center justify-center"
               style={{
@@ -431,30 +504,75 @@ function Book({
               Solve
             </span>
           </div>
+
+          {/* dynamic lighting sweep as the cover swings */}
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(105deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.04) 35%, transparent 60%)",
+              opacity: 0.25 + Math.sin(open * Math.PI) * 0.55,
+            }}
+          />
         </Panel>
       </div>
 
-      {/* Holographic flame (Section 3) */}
-      {flame > 0.05 && (
+      {/* Spine */}
+      <div
+        aria-hidden
+        className="absolute left-0 top-0"
+        style={{
+          width: 48,
+          height: size.h,
+          transformOrigin: "left center",
+          transform: "rotateY(90deg) translateZ(0px)",
+          background: "linear-gradient(90deg, #241f5c, #120f33)",
+          borderRadius: 4,
+          boxShadow: "inset -6px 0 12px rgba(0,0,0,0.5)",
+        }}
+      />
+
+
+      {/* Holographic flame (Section 3) — rises out of the book toward the camera */}
+      {flame > 0.02 && (
         <div
           className="absolute left-1/2 top-1/2 pointer-events-none"
           style={{
-            transform: `translate(-50%, -50%) translateZ(${140 * flame}px) scale(${0.4 + flame})`,
-            opacity: flame,
-            animation: "flicker 1.6s ease-in-out infinite",
+            transform: `translate(-50%, -50%) translate3d(0, ${-120 * flame}px, ${220 * flame + 60}px) scale(${0.35 + flame * 0.95})`,
+            opacity: Math.min(1, flame * 1.6),
+            willChange: "transform",
           }}
         >
-          <div
-            className="relative h-40 w-28 rounded-[50%_50%_45%_45%/60%_60%_40%_40%]"
-            style={{
-              background:
-                "radial-gradient(ellipse at 50% 70%, #fef08a 0%, #fb923c 30%, #a855f7 65%, transparent 80%)",
-              filter: "blur(0.5px) drop-shadow(0 0 30px rgba(168,85,247,0.8))",
-            }}
-          />
-          <Flame className="absolute inset-0 m-auto h-16 w-16 text-white/90" strokeWidth={1.5} />
+          <div style={{ animation: "flicker 1.6s ease-in-out infinite" }}>
+            <div
+              className="relative h-40 w-28 rounded-[50%_50%_45%_45%/60%_60%_40%_40%]"
+              style={{
+                background:
+                  "radial-gradient(ellipse at 50% 70%, #fef08a 0%, #fb923c 30%, #a855f7 65%, transparent 80%)",
+                filter: `blur(0.5px) drop-shadow(0 0 ${20 + flame * 40}px rgba(168,85,247,0.85))`,
+              }}
+            />
+            <Flame className="absolute inset-0 m-auto h-16 w-16 text-white/90" strokeWidth={1.5} />
+          </div>
+          {/* rising embers */}
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              aria-hidden
+              className="absolute left-1/2 bottom-2 h-1.5 w-1.5 rounded-full"
+              style={{
+                background: i % 2 ? "#fbbf24" : "#c084fc",
+                boxShadow: "0 0 10px currentColor",
+                marginLeft: (i - 2) * 14,
+                opacity: flame,
+                animation: `ember 2.6s ease-in-out ${i * 0.35}s infinite`,
+              }}
+            />
+          ))}
         </div>
       )}
+
 
       {/* Portal card overlay (final CTA state) */}
       {portalMode && (
@@ -538,25 +656,33 @@ function PageContent({ explode }: { explode: number }) {
 }
 
 function Chip({
-  label, color, x, y, z, explode,
-}: { label: string; color: string; x: number; y: number; z: number; explode: number }) {
+  label, color, x, y, z, explode, delay = 0, rotX = 0, rotY = 0, rotZ = 0,
+}: {
+  label: string; color: string; x: number; y: number; z: number; explode: number;
+  delay?: number; rotX?: number; rotY?: number; rotZ?: number;
+}) {
+  const t = Math.min(1, Math.max(0, (explode - delay) / 0.55));
+  const e = 1 - Math.pow(1 - t, 3);
   return (
     <div
       className="absolute left-1/2 top-1/2 px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap"
       style={{
-        transform: `translate(-50%, -50%) translate3d(${x * explode}px, ${y * explode}px, ${z * explode}px)`,
-        opacity: Math.min(1, explode * 1.5),
+        // counter-rotate so labels always face the camera
+        transform: `translate(-50%, -50%) translate3d(${x * e}px, ${y * e}px, ${z * e}px) rotateZ(${-rotZ}deg) rotateY(${-rotY}deg) rotateX(${-rotX}deg) scale(${0.8 + e * 0.2})`,
+        opacity: e,
         background: `${color}22`,
         border: `1px solid ${color}66`,
         color: "#fff",
         boxShadow: `0 0 20px ${color}55`,
         backdropFilter: "blur(6px)",
+        willChange: "transform",
       }}
     >
       {label}
     </div>
   );
 }
+
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Feature text section (overlays sticky book stage)          */
