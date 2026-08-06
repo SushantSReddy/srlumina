@@ -519,27 +519,45 @@ function Book({
       />
 
 
-      {/* Holographic flame (Section 3) */}
-      {flame > 0.05 && (
+      {/* Holographic flame (Section 3) — rises out of the book toward the camera */}
+      {flame > 0.02 && (
         <div
           className="absolute left-1/2 top-1/2 pointer-events-none"
           style={{
-            transform: `translate(-50%, -50%) translateZ(${140 * flame}px) scale(${0.4 + flame})`,
-            opacity: flame,
-            animation: "flicker 1.6s ease-in-out infinite",
+            transform: `translate(-50%, -50%) translate3d(0, ${-120 * flame}px, ${220 * flame + 60}px) scale(${0.35 + flame * 0.95})`,
+            opacity: Math.min(1, flame * 1.6),
+            willChange: "transform",
           }}
         >
-          <div
-            className="relative h-40 w-28 rounded-[50%_50%_45%_45%/60%_60%_40%_40%]"
-            style={{
-              background:
-                "radial-gradient(ellipse at 50% 70%, #fef08a 0%, #fb923c 30%, #a855f7 65%, transparent 80%)",
-              filter: "blur(0.5px) drop-shadow(0 0 30px rgba(168,85,247,0.8))",
-            }}
-          />
-          <Flame className="absolute inset-0 m-auto h-16 w-16 text-white/90" strokeWidth={1.5} />
+          <div style={{ animation: "flicker 1.6s ease-in-out infinite" }}>
+            <div
+              className="relative h-40 w-28 rounded-[50%_50%_45%_45%/60%_60%_40%_40%]"
+              style={{
+                background:
+                  "radial-gradient(ellipse at 50% 70%, #fef08a 0%, #fb923c 30%, #a855f7 65%, transparent 80%)",
+                filter: `blur(0.5px) drop-shadow(0 0 ${20 + flame * 40}px rgba(168,85,247,0.85))`,
+              }}
+            />
+            <Flame className="absolute inset-0 m-auto h-16 w-16 text-white/90" strokeWidth={1.5} />
+          </div>
+          {/* rising embers */}
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              aria-hidden
+              className="absolute left-1/2 bottom-2 h-1.5 w-1.5 rounded-full"
+              style={{
+                background: i % 2 ? "#fbbf24" : "#c084fc",
+                boxShadow: "0 0 10px currentColor",
+                marginLeft: (i - 2) * 14,
+                opacity: flame,
+                animation: `ember 2.6s ease-in-out ${i * 0.35}s infinite`,
+              }}
+            />
+          ))}
         </div>
       )}
+
 
       {/* Portal card overlay (final CTA state) */}
       {portalMode && (
