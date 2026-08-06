@@ -152,20 +152,26 @@ function LandingPage() {
         <section className="min-h-dvh flex flex-col items-center justify-end md:justify-center pb-24 md:pb-0 px-6 text-center relative">
 
           <h1
-            className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent"
+            className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent reveal"
             style={{
               backgroundImage:
-                "linear-gradient(180deg, #ffffff 0%, #ffffff 45%, #a5b4fc 100%)",
+                "linear-gradient(180deg, #ffffff 0%, #f4f6ff 40%, #c3cdff 100%)",
+              filter: "drop-shadow(0 6px 40px rgba(129,140,248,0.35))",
+              animationDelay: "80ms",
             }}
           >
             Master Your
             <br />
             Daily Study Grind.
           </h1>
-          <p className="mt-6 text-[16px] sm:text-[19px] text-white/60 max-w-xl leading-relaxed">
+          <p
+            className="mt-6 text-[16px] sm:text-[19px] text-white/75 max-w-xl leading-relaxed reveal"
+            style={{ animationDelay: "260ms" }}
+          >
             The intelligent question tracker that turns your daily study goals
             into an unbreakable streak.
           </p>
+
           <div className="mt-9 flex items-center gap-3">
             <Link
               to="/auth"
