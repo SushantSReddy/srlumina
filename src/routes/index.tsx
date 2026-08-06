@@ -276,6 +276,24 @@ function LandingPage() {
           0%,100% { opacity: .9; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.06); }
         }
+        @keyframes revealUp {
+          0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
+          100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+        .reveal { animation: revealUp 900ms cubic-bezier(0.22,1,0.36,1) both; }
+        @keyframes shimmerSweep {
+          0% { background-position: -140% 0; }
+          100% { background-position: 240% 0; }
+        }
+        .shimmer {
+          background-image: linear-gradient(100deg, transparent 35%, rgba(255,255,255,0.16) 50%, transparent 65%);
+          background-size: 220% 100%;
+          animation: shimmerSweep 4.5s linear infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .reveal, .shimmer, .animate-bounce-slow { animation: none !important; }
+        }
+
       `}</style>
     </div>
   );
