@@ -422,7 +422,7 @@ function Book({
               willChange: "transform",
             }}
           >
-            {i === 2 && open > 0.5 && (
+            {i === 3 && open > 0.35 && (
               <PageContent explode={explode} />
             )}
           </Panel>
