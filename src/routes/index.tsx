@@ -401,20 +401,25 @@ function Book({
         }}
       />
 
-      {/* Inner pages (exploded layers) */}
+      {/* Inner pages (exploded layers, staggered) */}
       {[0, 1, 2, 3].map((i) => {
-        const z = -18 + i * 6 + explode * (i - 1.5) * 40;
-        const tY = explode * (i - 1.5) * 22;
+        // stagger each layer so they separate one after another
+        const stagger = Math.min(1, Math.max(0, (explode - i * 0.06) / 0.75));
+        const ez = 1 - Math.pow(1 - stagger, 3);
+        const z = -18 + i * 6 + ez * (i - 1.5) * 46;
+        const tY = ez * (i - 1.5) * 26;
+        const rX = ez * (i - 1.5) * -4;
         return (
           <Panel
             key={i}
             w={size.w - 14} h={size.h - 18}
             style={{
               left: 7, top: 9,
-              transform: `translate3d(0, ${tY}px, ${z}px)`,
+              transform: `translate3d(0, ${tY}px, ${z}px) rotateX(${rX}deg)`,
               background: "linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)",
               borderRadius: 10,
-              boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
+              boxShadow: `0 ${6 + ez * 14}px ${20 + ez * 26}px rgba(0,0,0,${0.35 + ez * 0.2})`,
+              willChange: "transform",
             }}
           >
             {i === 2 && open > 0.5 && (
@@ -423,6 +428,7 @@ function Book({
           </Panel>
         );
       })}
+
 
       {/* Floating analytics chips during explode */}
       {explode > 0.05 && (
