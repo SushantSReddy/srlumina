@@ -450,9 +450,9 @@ function Book({
           position: "absolute",
           inset: 0,
           transformOrigin: "left center",
-          transform: `rotateY(${-open * 155}deg) translateZ(24px)`,
-          transition: "transform 120ms linear",
+          transform: `rotateY(${-open * 158}deg) translateZ(24px)`,
           transformStyle: "preserve-3d",
+          willChange: "transform",
         }}
       >
         <Panel
@@ -463,10 +463,14 @@ function Book({
             border: "1px solid rgba(255,255,255,0.08)",
             boxShadow:
               "inset 0 1px 0 rgba(255,255,255,0.12), 0 30px 60px -20px rgba(0,0,0,0.7)",
+            backfaceVisibility: "hidden",
           }}
         >
           {/* Emblem */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+            style={{ opacity: 1 - open * 0.9 }}
+          >
             <div
               className="h-20 w-20 rounded-2xl flex items-center justify-center"
               style={{
@@ -484,8 +488,35 @@ function Book({
               Solve
             </span>
           </div>
+
+          {/* dynamic lighting sweep as the cover swings */}
+          <div
+            aria-hidden
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(105deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.04) 35%, transparent 60%)",
+              opacity: 0.25 + Math.sin(open * Math.PI) * 0.55,
+            }}
+          />
         </Panel>
       </div>
+
+      {/* Spine */}
+      <div
+        aria-hidden
+        className="absolute left-0 top-0"
+        style={{
+          width: 48,
+          height: size.h,
+          transformOrigin: "left center",
+          transform: "rotateY(90deg) translateZ(0px)",
+          background: "linear-gradient(90deg, #241f5c, #120f33)",
+          borderRadius: 4,
+          boxShadow: "inset -6px 0 12px rgba(0,0,0,0.5)",
+        }}
+      />
+
 
       {/* Holographic flame (Section 3) */}
       {flame > 0.05 && (
