@@ -623,25 +623,33 @@ function PageContent({ explode }: { explode: number }) {
 }
 
 function Chip({
-  label, color, x, y, z, explode,
-}: { label: string; color: string; x: number; y: number; z: number; explode: number }) {
+  label, color, x, y, z, explode, delay = 0, rotX = 0, rotY = 0, rotZ = 0,
+}: {
+  label: string; color: string; x: number; y: number; z: number; explode: number;
+  delay?: number; rotX?: number; rotY?: number; rotZ?: number;
+}) {
+  const t = Math.min(1, Math.max(0, (explode - delay) / 0.55));
+  const e = 1 - Math.pow(1 - t, 3);
   return (
     <div
       className="absolute left-1/2 top-1/2 px-3 py-1.5 rounded-full text-[11px] font-semibold whitespace-nowrap"
       style={{
-        transform: `translate(-50%, -50%) translate3d(${x * explode}px, ${y * explode}px, ${z * explode}px)`,
-        opacity: Math.min(1, explode * 1.5),
+        // counter-rotate so labels always face the camera
+        transform: `translate(-50%, -50%) translate3d(${x * e}px, ${y * e}px, ${z * e}px) rotateZ(${-rotZ}deg) rotateY(${-rotY}deg) rotateX(${-rotX}deg) scale(${0.8 + e * 0.2})`,
+        opacity: e,
         background: `${color}22`,
         border: `1px solid ${color}66`,
         color: "#fff",
         boxShadow: `0 0 20px ${color}55`,
         backdropFilter: "blur(6px)",
+        willChange: "transform",
       }}
     >
       {label}
     </div>
   );
 }
+
 
 /* ─────────────────────────────────────────────────────────── */
 /*  Feature text section (overlays sticky book stage)          */
