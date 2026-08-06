@@ -323,6 +323,12 @@ function LandingPage() {
           0%,100% { opacity: .9; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.06); }
         }
+        @keyframes ember {
+          0% { transform: translateY(0) scale(.6); opacity: 0; }
+          25% { opacity: 1; }
+          100% { transform: translateY(-120px) scale(0); opacity: 0; }
+        }
+
         @keyframes revealUp {
           0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
           100% { opacity: 1; transform: translateY(0); filter: blur(0); }
