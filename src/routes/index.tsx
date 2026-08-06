@@ -363,6 +363,8 @@ function Book({
 }) {
   const size = { w: 320, h: 420 };
   const portalMode = portal > 0.5;
+  const chipAmt = explode * (1 - Math.min(1, flame * 1.5));
+
 
   return (
     <div
