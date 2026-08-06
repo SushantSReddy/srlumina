@@ -122,8 +122,10 @@ function LandingPage() {
 
   const openAmt = easeInOut(seg(0.16, 0.4));
   const explode = easeInOut(seg(0.4, 0.62));
-  const flame = easeOut(seg(0.6, 0.82));
   const portal = easeInOut(seg(0.8, 1.0));
+  // flame rises, then dissolves as the portal takes over
+  const flame = easeOut(seg(0.6, 0.82)) * (1 - clamp01(portal * 1.4));
+
 
   const isMobile = vw < 768;
   const bookRotY =
