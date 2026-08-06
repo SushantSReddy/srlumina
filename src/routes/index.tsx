@@ -223,10 +223,11 @@ function LandingPage() {
 
         {/* CTA */}
         <section className="min-h-dvh flex flex-col items-center justify-center px-6 text-center relative">
-          <div className="mt-[42vh] flex flex-col items-center">
+          <div className="mt-[42vh] flex flex-col items-center rounded-[28px] px-5 py-8 sm:px-10 sm:py-10 bg-black/65 backdrop-blur-2xl border border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] tracking-wider text-white/85 uppercase mb-6 shimmer">
               <Sparkles className="h-3 w-3 text-indigo-200" /> Ready when you are
             </div>
+
             <h2
               className="text-[40px] sm:text-[64px] font-semibold leading-[0.98] tracking-[-0.04em] max-w-3xl bg-clip-text text-transparent"
               style={{
