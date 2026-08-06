@@ -431,18 +431,19 @@ function Book({
 
 
       {/* Floating analytics chips during explode */}
-      {explode > 0.05 && (
+      {explode > 0.02 && (
         <>
-          <Chip label="Calculus +15" color="#818cf8"
-            x={-140} y={-60} z={90} explode={explode} />
-          <Chip label="Physics +20" color="#a78bfa"
-            x={140} y={-40} z={110} explode={explode} />
-          <Chip label="Coding +10" color="#22d3ee"
-            x={-120} y={90} z={70} explode={explode} />
-          <Chip label="Biology +8" color="#f472b6"
-            x={130} y={100} z={80} explode={explode} />
+          <Chip label="Calculus +15" color="#818cf8" delay={0}
+            x={-140} y={-60} z={90} explode={explode} rotX={rotX} rotY={rotY} rotZ={rotZ} />
+          <Chip label="Physics +20" color="#a78bfa" delay={0.08}
+            x={140} y={-40} z={110} explode={explode} rotX={rotX} rotY={rotY} rotZ={rotZ} />
+          <Chip label="Coding +10" color="#22d3ee" delay={0.16}
+            x={-120} y={90} z={70} explode={explode} rotX={rotX} rotY={rotY} rotZ={rotZ} />
+          <Chip label="Biology +8" color="#f472b6" delay={0.24}
+            x={130} y={100} z={80} explode={explode} rotX={rotX} rotY={rotY} rotZ={rotZ} />
         </>
       )}
+
 
       {/* Front cover (opens like a door on the left spine) */}
       <div
