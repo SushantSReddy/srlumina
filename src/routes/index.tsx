@@ -224,22 +224,24 @@ function LandingPage() {
         {/* CTA */}
         <section className="min-h-dvh flex flex-col items-center justify-center px-6 text-center relative">
           <div className="mt-[42vh] flex flex-col items-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-wider text-white/70 uppercase mb-6">
-              <Sparkles className="h-3 w-3 text-indigo-300" /> Ready when you are
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] tracking-wider text-white/85 uppercase mb-6 shimmer">
+              <Sparkles className="h-3 w-3 text-indigo-200" /> Ready when you are
             </div>
             <h2
               className="text-[40px] sm:text-[64px] font-semibold leading-[0.98] tracking-[-0.04em] max-w-3xl bg-clip-text text-transparent"
               style={{
-                backgroundImage: "linear-gradient(180deg, #fff 0%, #c7d2fe 100%)",
+                backgroundImage: "linear-gradient(180deg, #fff 0%, #dbe2ff 100%)",
+                filter: "drop-shadow(0 6px 36px rgba(139,92,246,0.35))",
               }}
             >
               Ready to start your
               <br />
               streak today?
             </h2>
-            <p className="mt-5 text-[16px] text-white/60 max-w-md">
+            <p className="mt-5 text-[16px] text-white/75 max-w-md">
               Your study vault is waiting. Join thousands building unbreakable habits.
             </p>
+
             <Link
               to="/auth"
               className="group mt-9 relative inline-flex items-center gap-2 rounded-full px-8 py-4 text-[15px] font-semibold text-white bg-gradient-to-b from-indigo-500 to-violet-600 shadow-[0_20px_60px_-10px_rgba(139,92,246,0.7)] hover:brightness-110 hover:scale-[1.02] transition-all"
