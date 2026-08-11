@@ -9,7 +9,12 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
     handlers: {
       POST: async ({ request }) => {
         const key = request.headers.get("apikey");
-        if (!key || key !== process.env["SUPABASE_ANON_KEY"]) {
+        const allowed = [
+          process.env["SUPABASE_ANON_KEY"],
+          process.env["SUPABASE_PUBLISHABLE_KEY"],
+          process.env["VITE_SUPABASE_PUBLISHABLE_KEY"],
+        ].filter(Boolean);
+        if (!key || !allowed.includes(key)) {
           return new Response(JSON.stringify({ error: "Unauthorized" }), {
             status: 401,
             headers: { "content-type": "application/json" },
