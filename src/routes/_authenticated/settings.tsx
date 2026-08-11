@@ -11,6 +11,8 @@ import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { TopHeader } from "@/components/tracker/TopHeader";
 import { Footer } from "@/components/tracker/Footer";
 import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
+import { useDailyReminder } from "@/lib/reminder";
+
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: Settings,
@@ -46,6 +48,8 @@ function Settings() {
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(50);
   const [newSource, setNewSource] = useState("");
+  const reminder = useDailyReminder();
+
 
   useEffect(() => {
     if (profileQ.data) {
@@ -190,6 +194,40 @@ function Settings() {
             </div>
           </div>
         </Group>
+
+        <Group title="Daily reminder">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm">Remind me to log</span>
+              <button
+                role="switch"
+                aria-checked={reminder.enabled}
+                onClick={() => reminder.toggle(!reminder.enabled)}
+                className={`relative h-7 w-12 rounded-full transition-colors ${reminder.enabled ? "bg-[var(--ios-green)]" : "bg-muted"}`}
+              >
+                <span
+                  className="absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all"
+                  style={{ left: reminder.enabled ? 22 : 2 }}
+                />
+              </button>
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm text-muted-foreground">Time</span>
+              <input
+                type="time"
+                value={reminder.time}
+                onChange={(e) => reminder.setTime(e.target.value)}
+                className="bg-transparent text-sm font-semibold tabular-nums outline-none text-right"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {reminder.permission === "denied"
+                ? "Notifications are blocked in your browser — you'll see an in-app reminder instead."
+                : "Shows a notification at this time while the app is open."}
+            </p>
+          </div>
+        </Group>
+
 
         {isAdminQ.data && (
           <Link
