@@ -120,7 +120,12 @@ export function useDailyReminder(onFallback?: (msg: string) => void) {
 
   useEffect(() => {
     if (!enabled || !onFallback) return; // only the mounted app shell schedules
-    const check = () => {
+    let stop = false;
+    const check = async () => {
+      if (stop) return;
+      // Push handles delivery (including when the app is closed) — don't double-notify.
+      const { getExistingSubscription } = await import("./push-client");
+      if (await getExistingSubscription()) return;
       const [h, m] = time.split(":").map(Number);
       if (Number.isNaN(h) || Number.isNaN(m)) return;
       const now = new Date();
@@ -130,10 +135,14 @@ export function useDailyReminder(onFallback?: (msg: string) => void) {
       localStorage.setItem(KEY_LAST, today());
       fire(MESSAGE, onFallback);
     };
-    check();
-    const id = window.setInterval(check, 20_000);
-    return () => window.clearInterval(id);
+    void check();
+    const id = window.setInterval(() => void check(), 20_000);
+    return () => {
+      stop = true;
+      window.clearInterval(id);
+    };
   }, [enabled, time, onFallback]);
 
-  return { enabled, time, permission, setTime, toggle, test };
+  return { enabled, time, permission, setTime, toggle, test, setLocal: setState };
 }
+
