@@ -34,12 +34,13 @@ export const updateReminderSettings = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = {};
-    if (data.enabled !== undefined) patch["reminder_enabled"] = data.enabled;
-    if (data.time !== undefined) patch["reminder_time"] = `${data.time}:00`;
-    if (data.tzOffset !== undefined) patch["reminder_tz_offset"] = data.tzOffset;
-    // changing settings clears the "already sent today" marker
-    patch["reminder_last_sent_on"] = null;
+    const patch = {
+      ...(data.enabled !== undefined ? { reminder_enabled: data.enabled } : {}),
+      ...(data.time !== undefined ? { reminder_time: `${data.time}:00` } : {}),
+      ...(data.tzOffset !== undefined ? { reminder_tz_offset: data.tzOffset } : {}),
+      // changing settings clears the "already sent today" marker
+      reminder_last_sent_on: null,
+    };
     const { error } = await context.supabase.from("profiles").update(patch).eq("id", context.userId);
     if (error) throw new Error(error.message);
     return { ok: true };

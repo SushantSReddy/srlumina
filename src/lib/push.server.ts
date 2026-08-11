@@ -25,7 +25,7 @@ export async function sendPush(sub: StoredSubscription, message: PushBody): Prom
       subscription,
       vapid,
     );
-    const res = await fetch(sub.endpoint, payload);
+    const res = await fetch(sub.endpoint, payload as unknown as RequestInit);
     if (res.status === 404 || res.status === 410) return false;
     if (!res.ok) {
       console.error("push failed", res.status, await res.text());
