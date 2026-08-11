@@ -46,6 +46,8 @@ function Settings() {
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(50);
   const [newSource, setNewSource] = useState("");
+  const reminder = useDailyReminder();
+
 
   useEffect(() => {
     if (profileQ.data) {
