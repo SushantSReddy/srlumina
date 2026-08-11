@@ -191,6 +191,40 @@ function Settings() {
           </div>
         </Group>
 
+        <Group title="Daily reminder">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm">Remind me to log</span>
+              <button
+                role="switch"
+                aria-checked={reminder.enabled}
+                onClick={() => reminder.toggle(!reminder.enabled)}
+                className={`relative h-7 w-12 rounded-full transition-colors ${reminder.enabled ? "bg-[var(--ios-green)]" : "bg-muted"}`}
+              >
+                <span
+                  className="absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all"
+                  style={{ left: reminder.enabled ? 22 : 2 }}
+                />
+              </button>
+            </div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-sm text-muted-foreground">Time</span>
+              <input
+                type="time"
+                value={reminder.time}
+                onChange={(e) => reminder.setTime(e.target.value)}
+                className="bg-transparent text-sm font-semibold tabular-nums outline-none text-right"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {reminder.permission === "denied"
+                ? "Notifications are blocked in your browser — you'll see an in-app reminder instead."
+                : "Shows a notification at this time while the app is open."}
+            </p>
+          </div>
+        </Group>
+
+
         {isAdminQ.data && (
           <Link
             to="/admin/logins"
