@@ -11,7 +11,7 @@ import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { TopHeader } from "@/components/tracker/TopHeader";
 import { Footer } from "@/components/tracker/Footer";
 import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
-import { useDailyReminder } from "@/lib/reminder";
+import { ReminderCard } from "@/components/tracker/ReminderCard";
 
 
 export const Route = createFileRoute("/_authenticated/settings")({
@@ -48,7 +48,6 @@ function Settings() {
   const [name, setName] = useState("");
   const [goal, setGoal] = useState(50);
   const [newSource, setNewSource] = useState("");
-  const reminder = useDailyReminder();
 
 
   useEffect(() => {
