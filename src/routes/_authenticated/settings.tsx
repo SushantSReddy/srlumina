@@ -11,6 +11,8 @@ import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { TopHeader } from "@/components/tracker/TopHeader";
 import { Footer } from "@/components/tracker/Footer";
 import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
+import { useDailyReminder } from "@/lib/reminder";
+
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: Settings,
