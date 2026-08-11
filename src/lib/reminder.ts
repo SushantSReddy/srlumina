@@ -106,8 +106,12 @@ export function useDailyReminder(onFallback?: (msg: string) => void) {
       setPermission(Notification.permission);
     }
     if (next) {
-      // don't instantly fire for a time that already passed today
-      localStorage.setItem(KEY_LAST, today());
+      // don't instantly fire if today's time already passed when turning it on
+      const [h, m] = state.time.split(":").map(Number);
+      const now = new Date();
+      const passed = now.getHours() > h! || (now.getHours() === h! && now.getMinutes() >= m!);
+      if (passed) localStorage.setItem(KEY_LAST, today());
+      else localStorage.removeItem(KEY_LAST);
     }
     setState({ enabled: next });
   }, []);
