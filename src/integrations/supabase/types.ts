@@ -70,6 +70,10 @@ export type Database = {
           daily_goal: number
           display_name: string | null
           id: string
+          reminder_enabled: boolean
+          reminder_last_sent_on: string | null
+          reminder_time: string
+          reminder_tz_offset: number
           stream: Database["public"]["Enums"]["app_stream"] | null
           target_year: number | null
           updated_at: string
@@ -81,6 +85,10 @@ export type Database = {
           daily_goal?: number
           display_name?: string | null
           id: string
+          reminder_enabled?: boolean
+          reminder_last_sent_on?: string | null
+          reminder_time?: string
+          reminder_tz_offset?: number
           stream?: Database["public"]["Enums"]["app_stream"] | null
           target_year?: number | null
           updated_at?: string
@@ -92,9 +100,43 @@ export type Database = {
           daily_goal?: number
           display_name?: string | null
           id?: string
+          reminder_enabled?: boolean
+          reminder_last_sent_on?: string | null
+          reminder_time?: string
+          reminder_tz_offset?: number
           stream?: Database["public"]["Enums"]["app_stream"] | null
           target_year?: number | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
         }
         Relationships: []
       }
