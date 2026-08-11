@@ -13,6 +13,8 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           process.env["SUPABASE_ANON_KEY"],
           process.env["SUPABASE_PUBLISHABLE_KEY"],
           process.env["VITE_SUPABASE_PUBLISHABLE_KEY"],
+          ...(process.env["SUPABASE_PUBLISHABLE_KEYS"] ?? "").split(","),
+          ...(process.env["SUPABASE_ANON_KEYS"] ?? "").split(","),
         ].filter(Boolean);
         if (!key || !allowed.includes(key)) {
           return new Response(JSON.stringify({ error: "Unauthorized" }), {
