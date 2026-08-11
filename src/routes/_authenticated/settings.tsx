@@ -220,11 +220,20 @@ function Settings() {
                 className="bg-transparent text-sm font-semibold tabular-nums outline-none text-right"
               />
             </div>
-            <p className="text-xs text-muted-foreground">
-              {reminder.permission === "denied"
-                ? "Notifications are blocked in your browser — you'll see an in-app reminder instead."
-                : "Shows a notification at this time while the app is open."}
-            </p>
+            <div className="flex items-center justify-between gap-3 pt-1">
+              <span className="text-xs text-muted-foreground">
+                {reminder.permission === "denied"
+                  ? "Notifications blocked — you'll get an in-app alert instead."
+                  : reminder.permission === "granted"
+                    ? "Notification will show at this time while the app is open."
+                    : "Turn on to allow notifications; otherwise an in-app alert shows."}
+              </span>
+              <button
+                onClick={() => { reminder.test(); toast("Daily study log", { description: "Time to log the questions you solved today.", duration: 6000 }); }}
+                className="shrink-0 rounded-full border border-border px-3 py-1.5 text-xs font-semibold tap active:tap-active"
+              >Test</button>
+            </div>
+
           </div>
         </Group>
 
