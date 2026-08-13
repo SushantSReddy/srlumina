@@ -32,7 +32,7 @@ export async function sendPush(sub: StoredSubscription, message: PushBody): Prom
   };
   try {
     const payload = await buildPushPayload(
-      { data: JSON.stringify(message), options: { ttl: 3600 } },
+      { data: JSON.stringify(message), options: { ttl: 21600, urgency: "high" as const } },
       subscription,
       vapid,
     );
