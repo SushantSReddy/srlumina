@@ -60,22 +60,30 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           if (!subs?.length) continue;
 
           const dead: string[] = [];
+          let delivered = 0;
           for (const s of subs) {
             const res = await sendPush(s, {
               title: "Daily study log",
               body: "Time to log the questions you solved today.",
               url: "/home",
             });
-            if (res.delivered) sent += 1;
+            if (res.delivered) {
+              sent += 1;
+              delivered += 1;
+            }
             if (!res.keep) dead.push(s.endpoint);
           }
           if (dead.length) {
             await supabaseAdmin.from("push_subscriptions").delete().in("endpoint", dead);
           }
-          await supabaseAdmin
-            .from("profiles")
-            .update({ reminder_last_sent_on: localDate })
-            .eq("id", p.id);
+          // only mark the day as done when a device actually accepted it,
+          // so a transient failure retries on the next 5-minute tick
+          if (delivered > 0) {
+            await supabaseAdmin
+              .from("profiles")
+              .update({ reminder_last_sent_on: localDate })
+              .eq("id", p.id);
+          }
         }
 
         return new Response(JSON.stringify({ ok: true, considered, sent }), {

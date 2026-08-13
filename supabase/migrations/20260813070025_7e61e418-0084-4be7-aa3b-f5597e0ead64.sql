@@ -1,0 +1,1 @@
+UPDATE public.profiles SET reminder_last_sent_on = NULL WHERE reminder_enabled;
