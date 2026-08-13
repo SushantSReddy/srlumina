@@ -25,6 +25,8 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { sendPush } = await import("@/lib/push.server");
+        const { getQuoteForDateKey } = await import("@/lib/quotes");
+
 
         const { data: profiles, error } = await supabaseAdmin
           .from("profiles")
