@@ -1,4 +1,4 @@
-import { VAPID_PUBLIC_KEY } from "./push.functions";
+import { VAPID_PUBLIC_KEY } from "./push-config";
 
 function urlBase64ToUint8Array(base64: string) {
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);
