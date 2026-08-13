@@ -38,3 +38,12 @@ export function getDailyQuote(date: Date = new Date()) {
   const idx = Math.floor(key / 86_400_000) % QUOTES.length;
   return QUOTES[idx];
 }
+
+/** Same rotation, but keyed off a "YYYY-MM-DD" string (used server-side per user's local date). */
+export function getQuoteForDateKey(dateKey: string) {
+  const [y, m, d] = dateKey.split("-").map(Number);
+  const key = Date.UTC(y ?? 1970, (m ?? 1) - 1, d ?? 1);
+  const idx = Math.floor(key / 86_400_000) % QUOTES.length;
+  return QUOTES[idx];
+}
+
