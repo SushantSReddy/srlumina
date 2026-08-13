@@ -93,16 +93,19 @@ export const sendTestPush = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     if (!subs?.length) return { sent: 0, failed: 0, error: null as string | null };
     const { sendPush } = await import("./push.server");
+    const { getDailyQuote } = await import("./quotes");
+    const quote = getDailyQuote();
     let sent = 0;
     let failed = 0;
     let firstError: string | null = null;
     const dead: string[] = [];
     for (const s of subs) {
       const res = await sendPush(s, {
-        title: "Daily study log",
-        body: "Test reminder — this is what you'll get each day.",
+        title: `"${quote.text}"`,
+        body: `— ${quote.author}\nLog the questions you solved today.`,
         url: "/home",
       });
+
       if (res.delivered) sent += 1;
       else {
         failed += 1;
