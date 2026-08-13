@@ -25,6 +25,8 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
 
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { sendPush } = await import("@/lib/push.server");
+        const { getQuoteForDateKey } = await import("@/lib/quotes");
+
 
         const { data: profiles, error } = await supabaseAdmin
           .from("profiles")
@@ -61,12 +63,14 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
 
           const dead: string[] = [];
           let delivered = 0;
+          const quote = getQuoteForDateKey(localDate);
           for (const s of subs) {
             const res = await sendPush(s, {
-              title: "Daily study log",
-              body: "Time to log the questions you solved today.",
+              title: `"${quote.text}"`,
+              body: `— ${quote.author}\nLog the questions you solved today.`,
               url: "/home",
             });
+
             if (res.delivered) {
               sent += 1;
               delivered += 1;
