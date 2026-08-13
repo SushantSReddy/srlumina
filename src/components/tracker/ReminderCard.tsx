@@ -143,9 +143,17 @@ export function ReminderCard() {
         </p>
         <button
           onClick={async () => {
-            const res = await testPush();
-            if (res.sent > 0) toast.success(`Test sent to ${res.sent} device${res.sent > 1 ? "s" : ""}`);
-            else toast("No registered devices", { description: "Turn on notifications for this device first." });
+            try {
+              const res = await testPush();
+              if (res.sent > 0) toast.success(`Test sent to ${res.sent} device${res.sent > 1 ? "s" : ""}`);
+              else if (res.failed > 0)
+                toast.error("Push was rejected", {
+                  description: res.error ?? "Turn notifications off and on again to re-register this device.",
+                });
+              else toast("No registered devices", { description: "Turn on notifications for this device first." });
+            } catch (e) {
+              toast.error(e instanceof Error ? e.message : "Couldn't send test");
+            }
           }}
           className="shrink-0 rounded-full border border-border px-3 py-1.5 text-xs font-semibold tap active:tap-active inline-flex items-center gap-1.5"
         >

@@ -2,10 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-/** Public VAPID key — safe to ship to the browser. */
-export const VAPID_PUBLIC_KEY =
-  "BBXmeq1EST_2eB78TdZ67iXHjCQIzv8UQIaQA5G3lqRCWIXBM5SDFtJd51DoQOisNntn7lQTrbEGJNTN-D-uO3Q";
-
 export const getReminderSettings = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
@@ -95,16 +91,27 @@ export const sendTestPush = createServerFn({ method: "POST" })
       .select("endpoint, p256dh, auth")
       .eq("user_id", context.userId);
     if (error) throw new Error(error.message);
-    if (!subs?.length) return { sent: 0 };
+    if (!subs?.length) return { sent: 0, failed: 0, error: null as string | null };
     const { sendPush } = await import("./push.server");
     let sent = 0;
+    let failed = 0;
+    let firstError: string | null = null;
+    const dead: string[] = [];
     for (const s of subs) {
-      const ok = await sendPush(s, {
+      const res = await sendPush(s, {
         title: "Daily study log",
         body: "Test reminder — this is what you'll get each day.",
         url: "/home",
       });
-      if (ok) sent += 1;
+      if (res.delivered) sent += 1;
+      else {
+        failed += 1;
+        firstError ??= res.error ?? (res.status ? `Push service returned ${res.status}` : "Unknown error");
+      }
+      if (!res.keep) dead.push(s.endpoint);
     }
-    return { sent };
+    if (dead.length) {
+      await context.supabase.from("push_subscriptions").delete().in("endpoint", dead);
+    }
+    return { sent, failed, error: firstError };
   });

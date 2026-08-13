@@ -61,13 +61,13 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
 
           const dead: string[] = [];
           for (const s of subs) {
-            const alive = await sendPush(s, {
+            const res = await sendPush(s, {
               title: "Daily study log",
               body: "Time to log the questions you solved today.",
               url: "/home",
             });
-            if (alive) sent += 1;
-            else dead.push(s.endpoint);
+            if (res.delivered) sent += 1;
+            if (!res.keep) dead.push(s.endpoint);
           }
           if (dead.length) {
             await supabaseAdmin.from("push_subscriptions").delete().in("endpoint", dead);
