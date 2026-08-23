@@ -12,6 +12,7 @@ import { TopHeader } from "@/components/tracker/TopHeader";
 import { Footer } from "@/components/tracker/Footer";
 import { CLASS_OPTIONS, type ClassLevel } from "@/lib/exam-dates";
 import { ReminderCard } from "@/components/tracker/ReminderCard";
+import { ThemePicker } from "@/components/tracker/ThemePicker";
 
 
 export const Route = createFileRoute("/_authenticated/settings")({
@@ -192,6 +193,10 @@ function Settings() {
               ><Plus className="h-4 w-4" /></button>
             </div>
           </div>
+        </Group>
+
+        <Group title="Theme">
+          <ThemePicker />
         </Group>
 
         <Group title="Daily reminder">
