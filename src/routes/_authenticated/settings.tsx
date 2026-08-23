@@ -194,6 +194,10 @@ function Settings() {
           </div>
         </Group>
 
+        <Group title="Theme">
+          <ThemePicker />
+        </Group>
+
         <Group title="Daily reminder">
           <ReminderCard />
         </Group>
