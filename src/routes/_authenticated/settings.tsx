@@ -132,7 +132,7 @@ function Settings() {
               <button key={c.id}
                 onClick={() => clsLevel !== c.id && saveMut.mutate({ class_level: c.id })}
                 className={`rounded-full px-3.5 py-1.5 text-sm font-medium border tap active:tap-active transition-colors ${
-                  clsLevel === c.id ? "bg-[var(--ios-blue)] text-white border-transparent" : "bg-surface border-border text-foreground"
+                  clsLevel === c.id ? "bg-primary text-primary-foreground border-transparent" : "bg-surface border-border text-foreground"
                 }`}>
                 {c.label}
               </button>
