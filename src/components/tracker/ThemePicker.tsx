@@ -13,8 +13,8 @@ const THEMES: { id: AppTheme; label: string; hint: string; swatch: string[] }[] 
   {
     id: "claude",
     label: "Claude",
-    hint: "Warm paper & clay",
-    swatch: ["oklch(0.968 0.011 84)", "oklch(0.63 0.13 44)", "oklch(0.24 0.012 60)"],
+    hint: "Warm paper & terracotta",
+    swatch: ["oklch(0.97 0.009 80)", "oklch(0.56 0.11 45)", "oklch(0.22 0.012 55)"],
   },
 ];
 

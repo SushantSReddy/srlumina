@@ -132,7 +132,7 @@ function Settings() {
               <button key={c.id}
                 onClick={() => clsLevel !== c.id && saveMut.mutate({ class_level: c.id })}
                 className={`rounded-full px-3.5 py-1.5 text-sm font-medium border tap active:tap-active transition-colors ${
-                  clsLevel === c.id ? "bg-[var(--ios-blue)] text-white border-transparent" : "bg-surface border-border text-foreground"
+                  clsLevel === c.id ? "bg-primary text-primary-foreground border-transparent" : "bg-surface border-border text-foreground"
                 }`}>
                 {c.label}
               </button>
@@ -146,7 +146,7 @@ function Settings() {
               <button key={y}
                 onClick={() => targetYear !== y && saveMut.mutate({ target_year: y })}
                 className={`rounded-full px-4 py-1.5 text-sm font-semibold border tap active:tap-active transition-colors ${
-                  targetYear === y ? "bg-[var(--ios-blue)] text-white border-transparent" : "bg-surface border-border text-foreground"
+                  targetYear === y ? "bg-primary text-primary-foreground border-transparent" : "bg-surface border-border text-foreground"
                 }`}>
                 {y}
               </button>
@@ -161,7 +161,7 @@ function Settings() {
               value={goal}
               onChange={(e) => setGoal(Number(e.target.value))}
               onPointerUp={() => goal !== profileQ.data?.daily_goal && saveMut.mutate({ daily_goal: goal })}
-              className="flex-1 accent-[var(--ios-blue)]"
+              className="flex-1 accent-primary"
             />
             <span className="tabular-nums font-semibold w-14 text-right">{goal}</span>
           </div>
@@ -188,7 +188,7 @@ function Settings() {
               <button
                 disabled={!newSource.trim() || addMut.isPending}
                 onClick={() => addMut.mutate(newSource.trim())}
-                className="h-8 w-8 rounded-full bg-[var(--ios-blue)] text-white flex items-center justify-center disabled:opacity-40"
+                className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center disabled:opacity-40"
                 aria-label="Add"
               ><Plus className="h-4 w-4" /></button>
             </div>
