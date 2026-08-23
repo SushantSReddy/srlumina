@@ -103,6 +103,10 @@ function RootComponent() {
       const stored = localStorage.getItem("theme");
       const dark = stored ? stored === "dark" : mql.matches;
       document.documentElement.classList.toggle("dark", dark);
+      document.documentElement.classList.toggle(
+        "theme-claude",
+        localStorage.getItem("app-theme") === "claude",
+      );
     };
     apply();
     mql.addEventListener("change", apply);
