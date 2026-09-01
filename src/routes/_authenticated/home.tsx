@@ -72,6 +72,17 @@ function Home() {
   const [active, setActive] = useState<SubjectMeta | null>(null);
 
   const subjects = profileQ.data?.stream === "neet" ? NEET_SUBJECTS : JEE_SUBJECTS;
+
+  // Home-screen shortcut deep link: /home?log=physics
+  useEffect(() => {
+    if (typeof window === "undefined" || !profileQ.data) return;
+    const want = new URLSearchParams(window.location.search).get("log");
+    if (!want) return;
+    const match = subjects.find((s) => s.id === want);
+    if (match) setActive(match);
+    window.history.replaceState({}, "", window.location.pathname);
+  }, [profileQ.data, subjects]);
+
   const goal = profileQ.data?.daily_goal ?? 50;
   const total = todayQ.data?.total ?? 0;
   const stream = (profileQ.data?.stream as Stream | null) ?? null;
