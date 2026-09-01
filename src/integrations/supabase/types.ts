@@ -215,6 +215,112 @@ export type Database = {
         }
         Relationships: []
       }
+      subtasks: {
+        Row: {
+          created_at: string
+          done: boolean
+          id: string
+          position: number
+          task_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          done?: boolean
+          id?: string
+          position?: number
+          task_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          done?: boolean
+          id?: string
+          position?: number
+          task_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subtasks_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          chapter_id: string | null
+          completed_at: string | null
+          created_at: string
+          due_on: string | null
+          due_time: string | null
+          id: string
+          notes: string | null
+          priority: Database["public"]["Enums"]["app_task_priority"]
+          question_target: number | null
+          reminder_last_sent_on: string | null
+          reminder_time: string | null
+          repeat_rule: Json | null
+          sort_order: number
+          subject: Database["public"]["Enums"]["app_subject"] | null
+          tags: string[]
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chapter_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          due_on?: string | null
+          due_time?: string | null
+          id?: string
+          notes?: string | null
+          priority?: Database["public"]["Enums"]["app_task_priority"]
+          question_target?: number | null
+          reminder_last_sent_on?: string | null
+          reminder_time?: string | null
+          repeat_rule?: Json | null
+          sort_order?: number
+          subject?: Database["public"]["Enums"]["app_subject"] | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          due_on?: string | null
+          due_time?: string | null
+          id?: string
+          notes?: string | null
+          priority?: Database["public"]["Enums"]["app_task_priority"]
+          question_target?: number | null
+          reminder_last_sent_on?: string | null
+          reminder_time?: string | null
+          repeat_rule?: Json | null
+          sort_order?: number
+          subject?: Database["public"]["Enums"]["app_subject"] | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -260,6 +366,7 @@ export type Database = {
       app_role: "admin" | "user"
       app_stream: "jee" | "neet"
       app_subject: "physics" | "chemistry" | "math" | "biology"
+      app_task_priority: "low" | "medium" | "high"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -398,6 +505,7 @@ export const Constants = {
       app_role: ["admin", "user"],
       app_stream: ["jee", "neet"],
       app_subject: ["physics", "chemistry", "math", "biology"],
+      app_task_priority: ["low", "medium", "high"],
     },
   },
 } as const
