@@ -140,9 +140,10 @@ export const updateTask = createServerFn({ method: "POST" })
     const { id, ...patch } = data as Record<string, unknown> & { id: string };
     const { error } = await context.supabase
       .from("tasks")
-      .update(patch)
+      .update(patch as Database["public"]["Tables"]["tasks"]["Update"])
       .eq("id", id)
       .eq("user_id", context.userId);
+
     if (error) throw new Error(error.message);
     return { ok: true };
   });
