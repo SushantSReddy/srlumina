@@ -51,8 +51,9 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           const [h, m] = String(p.reminder_time ?? "20:00:00").split(":").map(Number);
           const dueMinutes = (h ?? 20) * 60 + (m ?? 0);
           const nowMinutes = local.getUTCHours() * 60 + local.getUTCMinutes();
-          // fire within a 2-hour window after the chosen time (avoids day-old bursts)
-          if (nowMinutes < dueMinutes || nowMinutes - dueMinutes > 120) continue;
+          // the job ticks every 5 min: allow firing up to 4 min early so a
+          // reminder lands on (or just before) its time instead of minutes late
+          if (nowMinutes < dueMinutes - 4 || nowMinutes - dueMinutes > 120) continue;
 
           considered += 1;
           const { data: subs } = await supabaseAdmin
@@ -96,7 +97,8 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           .from("tasks")
           .select("id, user_id, title, due_on, due_time, reminder_time, reminder_last_sent_on, completed_at")
           .is("completed_at", null)
-          .not("reminder_time", "is", null);
+          // remind at the explicit reminder time, or fall back to the due time
+          .or("reminder_time.not.is.null,due_time.not.is.null");
 
         const offsets = new Map<string, number>();
         for (const p of profiles ?? []) offsets.set(p.id, p.reminder_tz_offset ?? 0);
@@ -117,10 +119,12 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           if (t.reminder_last_sent_on === localDate) continue;
           if (t.due_on && t.due_on !== localDate) continue;
 
-          const [th, tm] = String(t.reminder_time).split(":").map(Number);
+          const at = t.reminder_time ?? t.due_time;
+          if (!at) continue;
+          const [th, tm] = String(at).split(":").map(Number);
           const dueMinutes = (th ?? 0) * 60 + (tm ?? 0);
           const nowMinutes = local.getUTCHours() * 60 + local.getUTCMinutes();
-          if (nowMinutes < dueMinutes || nowMinutes - dueMinutes > 60) continue;
+          if (nowMinutes < dueMinutes - 4 || nowMinutes - dueMinutes > 60) continue;
 
           const { data: subs } = await supabaseAdmin
             .from("push_subscriptions")
