@@ -119,10 +119,12 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           if (t.reminder_last_sent_on === localDate) continue;
           if (t.due_on && t.due_on !== localDate) continue;
 
-          const [th, tm] = String(t.reminder_time).split(":").map(Number);
+          const at = t.reminder_time ?? t.due_time;
+          if (!at) continue;
+          const [th, tm] = String(at).split(":").map(Number);
           const dueMinutes = (th ?? 0) * 60 + (tm ?? 0);
           const nowMinutes = local.getUTCHours() * 60 + local.getUTCMinutes();
-          if (nowMinutes < dueMinutes || nowMinutes - dueMinutes > 60) continue;
+          if (nowMinutes < dueMinutes - 4 || nowMinutes - dueMinutes > 60) continue;
 
           const { data: subs } = await supabaseAdmin
             .from("push_subscriptions")
