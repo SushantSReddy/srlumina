@@ -97,7 +97,8 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           .from("tasks")
           .select("id, user_id, title, due_on, due_time, reminder_time, reminder_last_sent_on, completed_at")
           .is("completed_at", null)
-          .not("reminder_time", "is", null);
+          // remind at the explicit reminder time, or fall back to the due time
+          .or("reminder_time.not.is.null,due_time.not.is.null");
 
         const offsets = new Map<string, number>();
         for (const p of profiles ?? []) offsets.set(p.id, p.reminder_tz_offset ?? 0);
