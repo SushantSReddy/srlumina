@@ -14,6 +14,7 @@ import { ExamCountdown } from "@/components/tracker/ExamCountdown";
 import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { Footer } from "@/components/tracker/Footer";
 import { TopHeader } from "@/components/tracker/TopHeader";
+import { TodayTasksCard } from "@/components/tracker/tasks/TodayTasksCard";
 import type { Stream } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -127,6 +128,11 @@ function Home() {
             {resetMut.isPending ? "Resetting…" : "Reset today"}
           </button>
         </div>
+      </section>
+
+      {/* Today's tasks */}
+      <section className="px-4 mt-6">
+        <TodayTasksCard />
       </section>
 
       {/* Daily quote */}
