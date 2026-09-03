@@ -1,15 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { Home, BarChart3, Settings } from "lucide-react";
+import { Home, BarChart3, Settings, CheckCircle2 } from "lucide-react";
 
 export function BottomNav() {
   const items = [
     { to: "/home" as const, label: "Home", Icon: Home },
+    { to: "/tasks" as const, label: "Tasks", Icon: CheckCircle2 },
     { to: "/analytics" as const, label: "Analytics", Icon: BarChart3 },
     { to: "/settings" as const, label: "Settings", Icon: Settings },
   ];
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 pointer-events-none pb-[max(env(safe-area-inset-bottom),10px)] px-4">
-      <div className="mx-auto max-w-md glass-strong liquid rounded-full grid grid-cols-3 p-1.5 pointer-events-auto">
+      <div className="mx-auto max-w-md glass-strong liquid rounded-full grid grid-cols-4 p-1.5 pointer-events-auto">
         {items.map(({ to, label, Icon }) => (
           <Link
             key={to} to={to}
