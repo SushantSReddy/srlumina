@@ -51,8 +51,9 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           const [h, m] = String(p.reminder_time ?? "20:00:00").split(":").map(Number);
           const dueMinutes = (h ?? 20) * 60 + (m ?? 0);
           const nowMinutes = local.getUTCHours() * 60 + local.getUTCMinutes();
-          // fire within a 2-hour window after the chosen time (avoids day-old bursts)
-          if (nowMinutes < dueMinutes || nowMinutes - dueMinutes > 120) continue;
+          // the job ticks every 5 min: allow firing up to 4 min early so a
+          // reminder lands on (or just before) its time instead of minutes late
+          if (nowMinutes < dueMinutes - 4 || nowMinutes - dueMinutes > 120) continue;
 
           considered += 1;
           const { data: subs } = await supabaseAdmin
