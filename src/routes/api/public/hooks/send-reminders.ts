@@ -90,7 +90,70 @@ export const Route = createFileRoute("/api/public/hooks/send-reminders")({
           }
         }
 
-        return new Response(JSON.stringify({ ok: true, considered, sent }), {
+        // ---- per-task reminders (same tick, same 5-minute cron) ----
+        let taskSent = 0;
+        const { data: tasks } = await supabaseAdmin
+          .from("tasks")
+          .select("id, user_id, title, due_on, due_time, reminder_time, reminder_last_sent_on, completed_at")
+          .is("completed_at", null)
+          .not("reminder_time", "is", null);
+
+        const offsets = new Map<string, number>();
+        for (const p of profiles ?? []) offsets.set(p.id, p.reminder_tz_offset ?? 0);
+
+        for (const t of tasks ?? []) {
+          let offset = offsets.get(t.user_id);
+          if (offset === undefined) {
+            const { data: prof } = await supabaseAdmin
+              .from("profiles")
+              .select("reminder_tz_offset")
+              .eq("id", t.user_id)
+              .maybeSingle();
+            offset = prof?.reminder_tz_offset ?? 0;
+            offsets.set(t.user_id, offset);
+          }
+          const local = new Date(nowUtcMs + offset * 60_000);
+          const localDate = local.toISOString().slice(0, 10);
+          if (t.reminder_last_sent_on === localDate) continue;
+          if (t.due_on && t.due_on !== localDate) continue;
+
+          const [th, tm] = String(t.reminder_time).split(":").map(Number);
+          const dueMinutes = (th ?? 0) * 60 + (tm ?? 0);
+          const nowMinutes = local.getUTCHours() * 60 + local.getUTCMinutes();
+          if (nowMinutes < dueMinutes || nowMinutes - dueMinutes > 60) continue;
+
+          const { data: subs } = await supabaseAdmin
+            .from("push_subscriptions")
+            .select("endpoint, p256dh, auth")
+            .eq("user_id", t.user_id);
+          if (!subs?.length) continue;
+
+          const dead: string[] = [];
+          let delivered = 0;
+          for (const s of subs) {
+            const res = await sendPush(s, {
+              title: "Task reminder",
+              body: t.title,
+              url: "/tasks",
+            });
+            if (res.delivered) {
+              taskSent += 1;
+              delivered += 1;
+            }
+            if (!res.keep) dead.push(s.endpoint);
+          }
+          if (dead.length) {
+            await supabaseAdmin.from("push_subscriptions").delete().in("endpoint", dead);
+          }
+          if (delivered > 0) {
+            await supabaseAdmin
+              .from("tasks")
+              .update({ reminder_last_sent_on: localDate })
+              .eq("id", t.id);
+          }
+        }
+
+        return new Response(JSON.stringify({ ok: true, considered, sent, taskSent }), {
           headers: { "content-type": "application/json" },
         });
       },
