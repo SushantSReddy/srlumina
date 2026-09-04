@@ -38,6 +38,30 @@ export type Database = {
         }
         Relationships: []
       }
+      dream_images: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          image_path: string
+          user_id: string
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_path: string
+          user_id: string
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          image_path?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       login_events: {
         Row: {
           email: string | null
