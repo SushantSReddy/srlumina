@@ -93,6 +93,8 @@ export type Database = {
           created_at: string
           daily_goal: number
           display_name: string | null
+          dream_college: string | null
+          dream_image_url: string | null
           id: string
           reminder_enabled: boolean
           reminder_last_sent_on: string | null
@@ -108,6 +110,8 @@ export type Database = {
           created_at?: string
           daily_goal?: number
           display_name?: string | null
+          dream_college?: string | null
+          dream_image_url?: string | null
           id: string
           reminder_enabled?: boolean
           reminder_last_sent_on?: string | null
@@ -123,6 +127,8 @@ export type Database = {
           created_at?: string
           daily_goal?: number
           display_name?: string | null
+          dream_college?: string | null
+          dream_image_url?: string | null
           id?: string
           reminder_enabled?: boolean
           reminder_last_sent_on?: string | null
