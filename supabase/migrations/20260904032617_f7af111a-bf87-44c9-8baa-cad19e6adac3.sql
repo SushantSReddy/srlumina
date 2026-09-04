@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS dream_college text, ADD COLUMN IF NOT EXISTS dream_image_url text;
