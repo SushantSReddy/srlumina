@@ -298,3 +298,41 @@ export const getAnalytics = createServerFn({ method: "POST" })
 
 
 export type { Subject, ExamLevel, Stream };
+
+async function findCollegeImage(name: string): Promise<string | null> {
+  try {
+    const url =
+      "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*" +
+      "&generator=search&gsrlimit=3&prop=pageimages&piprop=thumbnail&pithumbsize=1000" +
+      "&gsrsearch=" +
+      encodeURIComponent(name);
+    const res = await fetch(url, { headers: { "User-Agent": "SolveApp/1.0" } });
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      query?: { pages?: Record<string, { thumbnail?: { source?: string } }> };
+    };
+    const pages = Object.values(json.query?.pages ?? {});
+    for (const p of pages) {
+      if (p.thumbnail?.source) return p.thumbnail.source;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+export const setDreamCollege = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z.object({ name: z.string().min(1).max(80) }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const name = data.name.trim();
+    const image = await findCollegeImage(name);
+    const { error } = await context.supabase
+      .from("profiles")
+      .update({ dream_college: name, dream_image_url: image } as never)
+      .eq("id", context.userId);
+    if (error) throw new Error(error.message);
+    return { name, image };
+  });
