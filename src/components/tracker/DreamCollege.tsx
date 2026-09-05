@@ -39,6 +39,34 @@ function DreamSheet({
   const [name, setName] = useState(initialName);
   const [options, setOptions] = useState<{ url: string; title: string }[]>([]);
   const [picked, setPicked] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const upload = useMutation({
+    mutationFn: async (file: File) => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not signed in");
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${user.id}/dream-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("dream-images")
+        .upload(path, file, { cacheControl: "31536000", upsert: false });
+      if (error) throw error;
+      const { data: signed, error: signErr } = await supabase.storage
+        .from("dream-images")
+        .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+      if (signErr || !signed?.signedUrl) throw signErr ?? new Error("URL failed");
+      return signed.signedUrl;
+    },
+    onSuccess: (url) => {
+      setPicked(url);
+      setOptions((prev) => [{ url, title: "Your photo" }, ...prev]);
+      toast.success("Photo added");
+    },
+    onError: (e) =>
+      toast.error(e instanceof Error ? e.message : "Upload failed"),
+  });
 
   const search = useMutation({
     mutationFn: (n: string) => searchFn({ data: { name: n } }),
