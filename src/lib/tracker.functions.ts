@@ -324,11 +324,19 @@ async function findCollegeImage(name: string): Promise<string | null> {
 export const setDreamCollege = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
-    z.object({ name: z.string().min(1).max(80) }).parse(input),
+    z
+      .object({
+        name: z.string().min(1).max(80),
+        image_url: z.string().url().max(500).nullable().optional(),
+      })
+      .parse(input),
   )
   .handler(async ({ data, context }) => {
     const name = data.name.trim();
-    const image = await findCollegeImage(name);
+    const image =
+      data.image_url !== undefined
+        ? data.image_url
+        : await findCollegeImage(name);
     const { error } = await context.supabase
       .from("profiles")
       .update({ dream_college: name, dream_image_url: image } as never)
@@ -336,3 +344,73 @@ export const setDreamCollege = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { name, image };
   });
+
+async function wikiImages(name: string): Promise<{ url: string; title: string }[]> {
+  const url =
+    "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*" +
+    "&generator=search&gsrlimit=12&prop=pageimages|info&piprop=thumbnail&pithumbsize=1200" +
+    "&gsrsearch=" +
+    encodeURIComponent(name);
+  const res = await fetch(url, { headers: { "User-Agent": "SolveApp/1.0" } });
+  if (!res.ok) return [];
+  const json = (await res.json()) as {
+    query?: {
+      pages?: Record<
+        string,
+        { title?: string; index?: number; thumbnail?: { source?: string } }
+      >;
+    };
+  };
+  return Object.values(json.query?.pages ?? {})
+    .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+    .filter((p) => p.thumbnail?.source)
+    .map((p) => ({ url: p.thumbnail!.source!, title: p.title ?? name }));
+}
+
+async function commonsImages(name: string): Promise<{ url: string; title: string }[]> {
+  const url =
+    "https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*" +
+    "&generator=search&gsrnamespace=6&gsrlimit=14&prop=imageinfo&iiprop=url&iiurlwidth=1200" +
+    "&gsrsearch=" +
+    encodeURIComponent(name);
+  const res = await fetch(url, { headers: { "User-Agent": "SolveApp/1.0" } });
+  if (!res.ok) return [];
+  const json = (await res.json()) as {
+    query?: {
+      pages?: Record<
+        string,
+        { title?: string; index?: number; imageinfo?: { thumburl?: string }[] }
+      >;
+    };
+  };
+  return Object.values(json.query?.pages ?? {})
+    .sort((a, b) => (a.index ?? 0) - (b.index ?? 0))
+    .map((p) => ({
+      url: p.imageinfo?.[0]?.thumburl ?? "",
+      title: (p.title ?? name).replace(/^File:/, "").replace(/\.[a-z]+$/i, ""),
+    }))
+    .filter((p) => p.url && !/\.svg$/i.test(p.url));
+}
+
+export const searchCollegeImages = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) =>
+    z.object({ name: z.string().min(1).max(80) }).parse(input),
+  )
+  .handler(async ({ data }) => {
+    const name = data.name.trim();
+    const [a, b] = await Promise.all([
+      wikiImages(name).catch(() => []),
+      commonsImages(name).catch(() => []),
+    ]);
+    const seen = new Set<string>();
+    const out: { url: string; title: string }[] = [];
+    for (const item of [...a, ...b]) {
+      if (seen.has(item.url)) continue;
+      seen.add(item.url);
+      out.push(item);
+      if (out.length >= 12) break;
+    }
+    return out;
+  });
+
