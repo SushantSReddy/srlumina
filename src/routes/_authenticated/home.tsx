@@ -1,8 +1,8 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Plus, RotateCcw, Sparkles } from "lucide-react";
+import { Plus, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { getProfile, getTodaySummary, resetToday } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
@@ -15,6 +15,10 @@ import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { Footer } from "@/components/tracker/Footer";
 import { TopHeader } from "@/components/tracker/TopHeader";
 import { TodayTasksCard } from "@/components/tracker/tasks/TodayTasksCard";
+import {
+  DreamCollegeBanner,
+  DreamCollegeShowcase,
+} from "@/components/tracker/DreamCollege";
 import type { Stream } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/home")({
@@ -95,6 +99,11 @@ function Home() {
 
       <TopHeader />
 
+      {/* Dream college name */}
+      <section className="px-4 mt-4">
+        <DreamCollegeBanner />
+      </section>
+
       {/* Exam countdown */}
       {stream && year && (
         <section className="px-4">
@@ -162,24 +171,9 @@ function Home() {
         ))}
       </section>
 
-      {/* Dream board */}
+      {/* Dream college image */}
       <section className="px-4 mt-4">
-        <Link
-          to="/dreams"
-          className="w-full glass rounded-2xl px-4 py-3.5 flex items-center gap-3 tap active:tap-active spring-in"
-          style={{ animationDelay: "200ms" }}
-        >
-          <span className="h-9 w-9 rounded-full bg-primary/15 flex items-center justify-center">
-            <Sparkles className="h-4.5 w-4.5 text-primary" />
-          </span>
-          <span className="flex-1 text-left">
-            <span className="block text-sm font-semibold">Dream Board</span>
-            <span className="block text-xs text-muted-foreground">
-              Pin your dream college & goals
-            </span>
-          </span>
-          <span className="text-muted-foreground text-lg leading-none">›</span>
-        </Link>
+        <DreamCollegeShowcase />
       </section>
 
       <LogSheet
