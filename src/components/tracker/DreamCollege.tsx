@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, GraduationCap, Loader2, Pencil } from "lucide-react";
+import { Check, GraduationCap, ImagePlus, Loader2, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   getProfile,
   searchCollegeImages,
@@ -38,6 +39,34 @@ function DreamSheet({
   const [name, setName] = useState(initialName);
   const [options, setOptions] = useState<{ url: string; title: string }[]>([]);
   const [picked, setPicked] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const upload = useMutation({
+    mutationFn: async (file: File) => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not signed in");
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${user.id}/dream-${Date.now()}.${ext}`;
+      const { error } = await supabase.storage
+        .from("dream-images")
+        .upload(path, file, { cacheControl: "31536000", upsert: false });
+      if (error) throw error;
+      const { data: signed, error: signErr } = await supabase.storage
+        .from("dream-images")
+        .createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+      if (signErr || !signed?.signedUrl) throw signErr ?? new Error("URL failed");
+      return signed.signedUrl;
+    },
+    onSuccess: (url) => {
+      setPicked(url);
+      setOptions((prev) => [{ url, title: "Your photo" }, ...prev]);
+      toast.success("Photo added");
+    },
+    onError: (e) =>
+      toast.error(e instanceof Error ? e.message : "Upload failed"),
+  });
 
   const search = useMutation({
     mutationFn: (n: string) => searchFn({ data: { name: n } }),
@@ -118,6 +147,31 @@ function DreamSheet({
             </div>
           </>
         )}
+
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) upload.mutate(f);
+            e.target.value = "";
+          }}
+        />
+        <button
+          type="button"
+          disabled={upload.isPending}
+          onClick={() => fileRef.current?.click()}
+          className="mt-4 w-full glass rounded-2xl px-4 py-3 flex items-center justify-center gap-2 text-sm font-semibold tap active:tap-active disabled:opacity-50"
+        >
+          {upload.isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ImagePlus className="h-4 w-4 text-primary" />
+          )}
+          {upload.isPending ? "Uploading…" : "Add your own photo"}
+        </button>
 
         <div className="pt-5 pb-2 flex gap-2">
           <Button
