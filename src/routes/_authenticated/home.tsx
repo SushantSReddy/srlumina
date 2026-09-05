@@ -15,6 +15,10 @@ import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { Footer } from "@/components/tracker/Footer";
 import { TopHeader } from "@/components/tracker/TopHeader";
 import { TodayTasksCard } from "@/components/tracker/tasks/TodayTasksCard";
+import {
+  DreamCollegeBanner,
+  DreamCollegeShowcase,
+} from "@/components/tracker/DreamCollege";
 import type { Stream } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/home")({
