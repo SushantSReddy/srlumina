@@ -148,6 +148,31 @@ function DreamSheet({
           </>
         )}
 
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) upload.mutate(f);
+            e.target.value = "";
+          }}
+        />
+        <button
+          type="button"
+          disabled={upload.isPending}
+          onClick={() => fileRef.current?.click()}
+          className="mt-4 w-full glass rounded-2xl px-4 py-3 flex items-center justify-center gap-2 text-sm font-semibold tap active:tap-active disabled:opacity-50"
+        >
+          {upload.isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ImagePlus className="h-4 w-4 text-primary" />
+          )}
+          {upload.isPending ? "Uploading…" : "Add your own photo"}
+        </button>
+
         <div className="pt-5 pb-2 flex gap-2">
           <Button
             type="button"
