@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Check, GraduationCap, Loader2, Pencil } from "lucide-react";
+import { Check, GraduationCap, ImagePlus, Loader2, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   getProfile,
   searchCollegeImages,
