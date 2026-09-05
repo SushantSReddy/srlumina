@@ -99,6 +99,11 @@ function Home() {
 
       <TopHeader />
 
+      {/* Dream college name */}
+      <section className="px-4 mt-4">
+        <DreamCollegeBanner />
+      </section>
+
       {/* Exam countdown */}
       {stream && year && (
         <section className="px-4">
