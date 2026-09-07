@@ -12,8 +12,10 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
   head: () => ({
     meta: [
-      { title: "Sign in — Reps" },
-      { name: "description", content: "Sign in to your daily question tracker." },
+      { title: "Sign in — SOLVE" },
+      { name: "description", content: "Sign in to SOLVE, your daily question tracker for JEE and NEET preparation." },
+      { property: "og:title", content: "Sign in — SOLVE" },
+      { property: "og:description", content: "Sign in to SOLVE, your daily question tracker for JEE and NEET preparation." },
     ],
   }),
 });
@@ -75,7 +77,7 @@ function AuthPage() {
           <div className="mb-10 flex flex-col items-center text-center">
             <Logo size={68} />
             <h1 className="mt-6 text-[34px] font-semibold tracking-[-0.03em] leading-none">
-              Sign in to Reps
+              Sign in to SOLVE
             </h1>
             <p className="mt-2.5 text-[15px] text-muted-foreground tracking-[-0.01em]">
               Use your Apple ID or email to continue.
@@ -135,7 +137,7 @@ function AuthPage() {
             onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
             className="mt-6 w-full text-center text-[13px] text-[var(--ios-blue)] hover:opacity-80 transition-opacity font-medium"
           >
-            {mode === "signup" ? "Already have an account? Sign in" : "Create your Reps account"}
+            {mode === "signup" ? "Already have an account? Sign in" : "Create your SOLVE account"}
           </button>
         </div>
       </div>

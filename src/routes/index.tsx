@@ -9,17 +9,17 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "SOLVE — Master your daily study grind" },
+      { title: "SOLVE — Daily question tracker for JEE & NEET" },
       {
         name: "description",
         content:
-          "SOLVE is the intelligent question tracker that turns your daily study goals into an unbreakable streak. Log, analyze, and dominate every subject.",
+          "SOLVE is the question tracker built for JEE and NEET aspirants. Log questions by subject and source, hit daily goals, and build an unbreakable study streak.",
       },
-      { property: "og:title", content: "SOLVE — Master your daily study grind" },
+      { property: "og:title", content: "SOLVE — Daily question tracker for JEE & NEET" },
       {
         property: "og:description",
         content:
-          "The intelligent question tracker for serious students. Streaks, analytics, and momentum.",
+          "The question tracker built for JEE and NEET aspirants. Streaks, subject analytics, and daily momentum.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -220,8 +220,9 @@ function LandingPage() {
             className="mt-6 text-[16px] sm:text-[19px] text-white/75 max-w-xl leading-relaxed reveal"
             style={{ animationDelay: "260ms" }}
           >
-            The intelligent question tracker that turns your daily study goals
-            into an unbreakable streak.
+            The question tracker built for JEE &amp; NEET aspirants — log every
+            question by subject and source, and turn daily goals into an
+            unbreakable streak.
           </p>
 
           <div className="mt-9 flex items-center gap-3">

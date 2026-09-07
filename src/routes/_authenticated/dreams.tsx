@@ -17,6 +17,11 @@ export const Route = createFileRoute("/_authenticated/dreams")({
         content:
           "Your personal vision board. Pin photos of your dream college and goals to stay motivated every day.",
       },
+      { property: "og:title", content: "Dream Board — SOLVE" },
+      {
+        property: "og:description",
+        content: "Pin photos of your dream college and goals to stay motivated every day.",
+      },
     ],
   }),
 });
