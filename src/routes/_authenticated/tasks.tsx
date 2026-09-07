@@ -18,9 +18,9 @@ export const Route = createFileRoute("/_authenticated/tasks")({
   component: TasksPage,
   head: () => ({
     meta: [
-      { title: "Tasks — Reps" },
+      { title: "Tasks — SOLVE" },
       { name: "description", content: "Plan your study day: quick-add tasks, question targets and reminders." },
-      { property: "og:title", content: "Tasks — Reps" },
+      { property: "og:title", content: "Tasks — SOLVE" },
       { property: "og:description", content: "Plan your study day with question-linked tasks and reminders." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

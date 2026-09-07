@@ -20,7 +20,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   component: Onboarding,
-  head: () => ({ meta: [{ title: "Set up — Reps" }] }),
+  head: () => ({ meta: [{ title: "Set up — SOLVE" }] }),
 });
 
 function Onboarding() {

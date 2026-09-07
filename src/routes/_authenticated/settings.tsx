@@ -17,7 +17,7 @@ import { ThemePicker } from "@/components/tracker/ThemePicker";
 
 export const Route = createFileRoute("/_authenticated/settings")({
   component: Settings,
-  head: () => ({ meta: [{ title: "Settings — Reps" }] }),
+  head: () => ({ meta: [{ title: "Settings — SOLVE" }] }),
 });
 
 function Settings() {

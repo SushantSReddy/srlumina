@@ -11,7 +11,7 @@ import { MeshBackground } from "@/components/tracker/MeshBackground";
 
 export const Route = createFileRoute("/_authenticated/analytics")({
   component: Analytics,
-  head: () => ({ meta: [{ title: "Analytics — Reps" }] }),
+  head: () => ({ meta: [{ title: "Analytics — SOLVE" }] }),
 });
 
 const SUBJECT_COLORS: Record<string, string> = {

@@ -23,7 +23,7 @@ import type { Stream } from "@/lib/exam-dates";
 
 export const Route = createFileRoute("/_authenticated/home")({
   component: Home,
-  head: () => ({ meta: [{ title: "Today — Reps" }] }),
+  head: () => ({ meta: [{ title: "Today — SOLVE" }] }),
 });
 
 const JEE_SUBJECTS: SubjectMeta[] = [
