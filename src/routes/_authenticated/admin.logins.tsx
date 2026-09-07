@@ -9,7 +9,7 @@ import { ShieldAlert } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/admin/logins")({
   component: AdminLogins,
-  head: () => ({ meta: [{ title: "Login history — SOLVE" }] }),
+  head: () => ({ meta: [{ title: "Login history — SOLVE" }, { name: "description", content: "Recent sign-in activity on SOLVE." }, { property: "og:title", content: "Login history — SOLVE" }, { property: "og:description", content: "Recent sign-in activity on SOLVE." }] }),
 });
 
 type LoginRow = {
