@@ -149,32 +149,7 @@ function LandingPage() {
     <div className="relative bg-[#0A0A0E] text-white min-h-dvh overflow-x-clip">
       <AmbientBackground />
 
-      {/* ─── Header ─── */}
-      <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-[#0A0A0E]/60 border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="relative">
-              <span className="text-[17px] font-semibold tracking-tight">SOLVE</span>
-              <span
-                aria-hidden
-                className="absolute -right-2 top-1.5 h-1.5 w-1.5 rounded-full bg-indigo-400"
-                style={{ boxShadow: "0 0 12px 2px rgb(129 140 248 / 0.9)" }}
-              />
-            </span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8 text-[13px] text-white/70">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#how" className="hover:text-white transition-colors">How It Works</a>
-            <a href="#streaks" className="hover:text-white transition-colors">Streaks</a>
-          </nav>
-          <Link
-            to="/auth"
-            className="relative inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold text-white bg-gradient-to-b from-indigo-500 to-violet-600 shadow-[0_8px_30px_-6px_rgba(139,92,246,0.6)] hover:brightness-110 transition"
-          >
-            Log In / Get Started
-          </Link>
-        </div>
-      </header>
+      <LandingHeader />
 
       {/* ─── Sticky 3D Stage (persists across sections) ─── */}
       <div className="sticky top-0 h-dvh w-full pointer-events-none z-10">
