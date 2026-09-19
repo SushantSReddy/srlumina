@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowDown, Target, Flame, LineChart, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Footer } from "@/components/tracker/Footer";
@@ -149,32 +149,7 @@ function LandingPage() {
     <div className="relative bg-[#0A0A0E] text-white min-h-dvh overflow-x-clip">
       <AmbientBackground />
 
-      {/* ─── Header ─── */}
-      <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-[#0A0A0E]/60 border-b border-white/5">
-        <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <span className="relative">
-              <span className="text-[17px] font-semibold tracking-tight">SOLVE</span>
-              <span
-                aria-hidden
-                className="absolute -right-2 top-1.5 h-1.5 w-1.5 rounded-full bg-indigo-400"
-                style={{ boxShadow: "0 0 12px 2px rgb(129 140 248 / 0.9)" }}
-              />
-            </span>
-          </Link>
-          <nav className="hidden md:flex items-center gap-8 text-[13px] text-white/70">
-            <a href="#features" className="hover:text-white transition-colors">Features</a>
-            <a href="#how" className="hover:text-white transition-colors">How It Works</a>
-            <a href="#streaks" className="hover:text-white transition-colors">Streaks</a>
-          </nav>
-          <Link
-            to="/auth"
-            className="relative inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold text-white bg-gradient-to-b from-indigo-500 to-violet-600 shadow-[0_8px_30px_-6px_rgba(139,92,246,0.6)] hover:brightness-110 transition"
-          >
-            Log In / Get Started
-          </Link>
-        </div>
-      </header>
+      <LandingHeader />
 
       {/* ─── Sticky 3D Stage (persists across sections) ─── */}
       <div className="sticky top-0 h-dvh w-full pointer-events-none z-10">
@@ -198,166 +173,216 @@ function LandingPage() {
       </div>
 
 
-      {/* ─── Content Sections (overlay on sticky stage) ─── */}
-      <main className="relative z-20 -mt-[100dvh]">
-        {/* HERO */}
-        <section className="min-h-dvh flex flex-col items-center justify-end md:justify-center pb-24 md:pb-0 px-6 text-center relative">
+      <LandingMain />
 
-          <h1
-            className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent reveal"
-            style={{
-              backgroundImage:
-                "linear-gradient(180deg, #ffffff 0%, #f4f6ff 40%, #c3cdff 100%)",
-              filter: "drop-shadow(0 6px 40px rgba(129,140,248,0.35))",
-              animationDelay: "80ms",
-            }}
-          >
-            Master Your
-            <br />
-            Daily Study Grind.
-          </h1>
-          <p
-            className="mt-6 text-[16px] sm:text-[19px] text-white/75 max-w-xl leading-relaxed reveal"
-            style={{ animationDelay: "260ms" }}
-          >
-            The question tracker built for JEE &amp; NEET aspirants — log every
-            question by subject and source, and turn daily goals into an
-            unbreakable streak.
-          </p>
+      <LandingFooter />
 
-          <div className="mt-9 flex items-center gap-3">
-            <Link
-              to="/auth"
-              className="group inline-flex items-center gap-2 rounded-full bg-white text-[#0A0A0E] px-6 py-3 text-[14px] font-semibold hover:bg-white/90 transition"
-            >
-              Get Started Free
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" strokeWidth={2.4} />
-            </Link>
-            <a
-              href="#features"
-              className="text-[14px] font-medium text-white/70 hover:text-white px-3 py-3 transition-colors"
-            >
-              See how it works ›
-            </a>
-          </div>
-
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50 text-[11px] tracking-[0.25em] uppercase animate-bounce-slow">
-            Scroll to Explore
-            <ArrowDown className="h-4 w-4" strokeWidth={2} />
-          </div>
-        </section>
-
-        {/* SECTION 1 – Tracker */}
-        <FeatureSection
-          id="features"
-          align="left"
-          eyebrow="01 · Tracker"
-          title="Visual Momentum."
-          desc="Log your solved questions across any subject and watch your daily goal ring fill up in real-time."
-        />
-
-        {/* SECTION 2 – Analytics */}
-        <FeatureSection
-          id="how"
-          align="right"
-          eyebrow="02 · Analytics"
-          title="Deep Analytics."
-          desc="Automatically categorize your solved problems and track your mastery across every subject over time."
-        />
-
-        {/* SECTION 3 – Streaks */}
-        <FeatureSection
-          id="streaks"
-          align="left"
-          eyebrow="03 · Streaks"
-          title="Unbreakable Habits."
-          desc="Build daily momentum. Our smart reminder system ensures you never break your streak."
-        />
-
-        {/* CTA */}
-        <section className="min-h-dvh flex flex-col items-center justify-center px-6 text-center relative">
-          <div className="mt-[42vh] flex flex-col items-center rounded-[28px] px-5 py-8 sm:px-10 sm:py-10 bg-black/65 backdrop-blur-2xl border border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] tracking-wider text-white/85 uppercase mb-6 shimmer">
-              <Sparkles className="h-3 w-3 text-indigo-200" /> Ready when you are
-            </div>
-
-            <h2
-              className="text-[40px] sm:text-[64px] font-semibold leading-[0.98] tracking-[-0.04em] max-w-3xl bg-clip-text text-transparent"
-              style={{
-                backgroundImage: "linear-gradient(180deg, #fff 0%, #dbe2ff 100%)",
-                filter: "drop-shadow(0 6px 36px rgba(139,92,246,0.35))",
-              }}
-            >
-              Ready to start your
-              <br />
-              streak today?
-            </h2>
-            <p className="mt-5 text-[16px] text-white/75 max-w-md">
-              Your study vault is waiting. Join thousands building unbreakable habits.
-            </p>
-
-            <Link
-              to="/auth"
-              className="group mt-9 relative inline-flex items-center gap-2 rounded-full px-8 py-4 text-[15px] font-semibold text-white bg-gradient-to-b from-indigo-500 to-violet-600 shadow-[0_20px_60px_-10px_rgba(139,92,246,0.7)] hover:brightness-110 hover:scale-[1.02] transition-all"
-            >
-              <span
-                aria-hidden
-                className="absolute inset-0 rounded-full opacity-70 blur-2xl -z-10"
-                style={{ background: "linear-gradient(180deg, #6366f1, #8b5cf6)" }}
-              />
-              Enter Your Study Vault
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.4} />
-            </Link>
-          </div>
-        </section>
-      </main>
-
-      <div className="relative z-20 bg-[#0A0A0E]">
-        <Footer />
-      </div>
-
-      <style>{`
-        @keyframes bounceSlow {
-          0%,100% { transform: translateY(0); opacity: .55; }
-          50% { transform: translateY(6px); opacity: 1; }
-        }
-        .animate-bounce-slow { animation: bounceSlow 2.2s ease-in-out infinite; }
-        @keyframes floatY {
-          0%,100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-        @keyframes flicker {
-          0%,100% { opacity: .9; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.06); }
-        }
-        @keyframes ember {
-          0% { transform: translateY(0) scale(.6); opacity: 0; }
-          25% { opacity: 1; }
-          100% { transform: translateY(-120px) scale(0); opacity: 0; }
-        }
-
-        @keyframes revealUp {
-          0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
-          100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-        }
-        .reveal { animation: revealUp 900ms cubic-bezier(0.22,1,0.36,1) both; }
-        @keyframes shimmerSweep {
-          0% { background-position: -140% 0; }
-          100% { background-position: 240% 0; }
-        }
-        .shimmer {
-          background-image: linear-gradient(100deg, transparent 35%, rgba(255,255,255,0.16) 50%, transparent 65%);
-          background-size: 220% 100%;
-          animation: shimmerSweep 4.5s linear infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .reveal, .shimmer, .animate-bounce-slow { animation: none !important; }
-        }
-
-      `}</style>
+      <LandingStyles />
     </div>
   );
 }
+
+/* ─────────────────────────────────────────────────────────── */
+/*  Static landing chrome — memoized so the per-frame scroll    */
+/*  animation only re-renders the 3D book, not the whole page.  */
+/* ─────────────────────────────────────────────────────────── */
+const LandingHeader = memo(function LandingHeader() {
+  return (
+    <header className="fixed top-0 inset-x-0 z-50 backdrop-blur-xl bg-[#0A0A0E]/60 border-b border-white/5">
+      <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-2 group">
+          <span className="relative">
+            <span className="text-[17px] font-semibold tracking-tight">SOLVE</span>
+            <span
+              aria-hidden
+              className="absolute -right-2 top-1.5 h-1.5 w-1.5 rounded-full bg-indigo-400"
+              style={{ boxShadow: "0 0 12px 2px rgb(129 140 248 / 0.9)" }}
+            />
+          </span>
+        </Link>
+        <nav className="hidden md:flex items-center gap-8 text-[13px] text-white/70">
+          <a href="#features" className="hover:text-white transition-colors">Features</a>
+          <a href="#how" className="hover:text-white transition-colors">How It Works</a>
+          <a href="#streaks" className="hover:text-white transition-colors">Streaks</a>
+        </nav>
+        <Link
+          to="/auth"
+          className="relative inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold text-white bg-gradient-to-b from-indigo-500 to-violet-600 shadow-[0_8px_30px_-6px_rgba(139,92,246,0.6)] hover:brightness-110 transition"
+        >
+          Log In / Get Started
+        </Link>
+      </div>
+    </header>
+  );
+});
+
+const LandingMain = memo(function LandingMain() {
+  return (
+    <main className="relative z-20 -mt-[100dvh]">
+      {/* HERO */}
+      <section className="min-h-dvh flex flex-col items-center justify-end md:justify-center pb-24 md:pb-0 px-6 text-center relative">
+
+        <h1
+          className="text-[44px] sm:text-[72px] md:text-[92px] font-semibold leading-[0.95] tracking-[-0.045em] max-w-5xl bg-clip-text text-transparent reveal"
+          style={{
+            backgroundImage:
+              "linear-gradient(180deg, #ffffff 0%, #f4f6ff 40%, #c3cdff 100%)",
+            filter: "drop-shadow(0 6px 40px rgba(129,140,248,0.35))",
+            animationDelay: "80ms",
+          }}
+        >
+          Master Your
+          <br />
+          Daily Study Grind.
+        </h1>
+        <p
+          className="mt-6 text-[16px] sm:text-[19px] text-white/75 max-w-xl leading-relaxed reveal"
+          style={{ animationDelay: "260ms" }}
+        >
+          The question tracker built for JEE &amp; NEET aspirants — log every
+          question by subject and source, and turn daily goals into an
+          unbreakable streak.
+        </p>
+
+        <div className="mt-9 flex items-center gap-3">
+          <Link
+            to="/auth"
+            className="group inline-flex items-center gap-2 rounded-full bg-white text-[#0A0A0E] px-6 py-3 text-[14px] font-semibold hover:bg-white/90 transition"
+          >
+            Get Started Free
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" strokeWidth={2.4} />
+          </Link>
+          <a
+            href="#features"
+            className="text-[14px] font-medium text-white/70 hover:text-white px-3 py-3 transition-colors"
+          >
+            See how it works ›
+          </a>
+        </div>
+
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/50 text-[11px] tracking-[0.25em] uppercase animate-bounce-slow">
+          Scroll to Explore
+          <ArrowDown className="h-4 w-4" strokeWidth={2} />
+        </div>
+      </section>
+
+      {/* SECTION 1 – Tracker */}
+      <FeatureSection
+        id="features"
+        align="left"
+        eyebrow="01 · Tracker"
+        title="Visual Momentum."
+        desc="Log your solved questions across any subject and watch your daily goal ring fill up in real-time."
+      />
+
+      {/* SECTION 2 – Analytics */}
+      <FeatureSection
+        id="how"
+        align="right"
+        eyebrow="02 · Analytics"
+        title="Deep Analytics."
+        desc="Automatically categorize your solved problems and track your mastery across every subject over time."
+      />
+
+      {/* SECTION 3 – Streaks */}
+      <FeatureSection
+        id="streaks"
+        align="left"
+        eyebrow="03 · Streaks"
+        title="Unbreakable Habits."
+        desc="Build daily momentum. Our smart reminder system ensures you never break your streak."
+      />
+
+      {/* CTA */}
+      <section className="min-h-dvh flex flex-col items-center justify-center px-6 text-center relative">
+        <div className="mt-[42vh] flex flex-col items-center rounded-[28px] px-5 py-8 sm:px-10 sm:py-10 bg-black/65 backdrop-blur-2xl border border-white/10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.9)]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.07] px-3 py-1 text-[11px] tracking-wider text-white/85 uppercase mb-6 shimmer">
+            <Sparkles className="h-3 w-3 text-indigo-200" /> Ready when you are
+          </div>
+
+          <h2
+            className="text-[40px] sm:text-[64px] font-semibold leading-[0.98] tracking-[-0.04em] max-w-3xl bg-clip-text text-transparent"
+            style={{
+              backgroundImage: "linear-gradient(180deg, #fff 0%, #dbe2ff 100%)",
+              filter: "drop-shadow(0 6px 36px rgba(139,92,246,0.35))",
+            }}
+          >
+            Ready to start your
+            <br />
+            streak today?
+          </h2>
+          <p className="mt-5 text-[16px] text-white/75 max-w-md">
+            Your study vault is waiting. Join thousands building unbreakable habits.
+          </p>
+
+          <Link
+            to="/auth"
+            className="group mt-9 relative inline-flex items-center gap-2 rounded-full px-8 py-4 text-[15px] font-semibold text-white bg-gradient-to-b from-indigo-500 to-violet-600 shadow-[0_20px_60px_-10px_rgba(139,92,246,0.7)] hover:brightness-110 hover:scale-[1.02] transition-all"
+          >
+            <span
+              aria-hidden
+              className="absolute inset-0 rounded-full opacity-70 blur-2xl -z-10"
+              style={{ background: "linear-gradient(180deg, #6366f1, #8b5cf6)" }}
+            />
+            Enter Your Study Vault
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" strokeWidth={2.4} />
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
+});
+
+const LandingFooter = memo(function LandingFooter() {
+  return (
+    <div className="relative z-20 bg-[#0A0A0E]">
+      <Footer />
+    </div>
+  );
+});
+
+const LANDING_CSS = `
+  @keyframes bounceSlow {
+    0%,100% { transform: translateY(0); opacity: .55; }
+    50% { transform: translateY(6px); opacity: 1; }
+  }
+  .animate-bounce-slow { animation: bounceSlow 2.2s ease-in-out infinite; }
+  @keyframes floatY {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes flicker {
+    0%,100% { opacity: .9; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.06); }
+  }
+  @keyframes ember {
+    0% { transform: translateY(0) scale(.6); opacity: 0; }
+    25% { opacity: 1; }
+    100% { transform: translateY(-120px) scale(0); opacity: 0; }
+  }
+
+  @keyframes revealUp {
+    0% { opacity: 0; transform: translateY(24px); filter: blur(10px); }
+    100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  .reveal { animation: revealUp 900ms cubic-bezier(0.22,1,0.36,1) both; }
+  @keyframes shimmerSweep {
+    0% { background-position: -140% 0; }
+    100% { background-position: 240% 0; }
+  }
+  .shimmer {
+    background-image: linear-gradient(100deg, transparent 35%, rgba(255,255,255,0.16) 50%, transparent 65%);
+    background-size: 220% 100%;
+    animation: shimmerSweep 4.5s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .shimmer, .animate-bounce-slow { animation: none !important; }
+  }
+`;
+
+const LandingStyles = memo(function LandingStyles() {
+  return <style>{LANDING_CSS}</style>;
+});
 
 /* ─────────────────────────────────────────────────────────── */
 /*  3D Book (pure CSS transforms)                              */
