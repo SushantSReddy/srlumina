@@ -167,6 +167,7 @@ function AuthPage() {
           >
             {mode === "signup" ? "Already have an account? Sign in" : "Create your SOLVE account"}
           </button>
+          )}
         </div>
       </div>
 
