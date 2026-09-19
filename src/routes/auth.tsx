@@ -157,7 +157,9 @@ function AuthPage() {
               </button>
             </form>
           </div>
+          )}
 
+          {!confirmEmail && (
           <button
             type="button"
             onClick={() => setMode(mode === "signup" ? "signin" : "signup")}
