@@ -88,6 +88,28 @@ function AuthPage() {
             </p>
           </div>
 
+          {confirmEmail ? (
+            <div className="glass-strong rounded-[26px] p-6 spring-in text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--ios-blue)]/10">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ios-blue)" strokeWidth="2" aria-hidden>
+                  <rect x="2" y="4" width="20" height="16" rx="3" />
+                  <path d="m2 7 10 6L22 7" />
+                </svg>
+              </div>
+              <h2 className="mt-4 text-[20px] font-semibold tracking-[-0.02em]">Check your email</h2>
+              <p className="mt-2 text-[14px] text-muted-foreground leading-relaxed">
+                We sent a confirmation link to <span className="font-medium text-foreground">{confirmEmail}</span>.
+                Tap it to activate your account, then sign in.
+              </p>
+              <button
+                type="button"
+                onClick={() => { setConfirmEmail(null); setMode("signin"); }}
+                className="mt-5 w-full rounded-2xl bg-[var(--ios-blue)] text-white py-3.5 text-[15px] font-semibold tap active:tap-active"
+              >
+                Back to sign in
+              </button>
+            </div>
+          ) : (
           <div className="glass-strong rounded-[26px] p-5 spring-in space-y-2.5">
             <button
               type="button"
