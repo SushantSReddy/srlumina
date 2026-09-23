@@ -266,10 +266,14 @@ export const getAnalytics = createServerFn({ method: "POST" })
 
     // Aggregate per day
     const byDay = new Map<string, number>();
-    for (let i = 0; i < data.days; i++) {
-      const d = new Date(since);
-      d.setDate(since.getDate() + i);
-      byDay.set(d.toISOString().slice(0, 10), 0);
+    if (data.days > 0) {
+      const since = new Date();
+      since.setDate(since.getDate() - (data.days - 1));
+      for (let i = 0; i < data.days; i++) {
+        const d = new Date(since);
+        d.setDate(since.getDate() + i);
+        byDay.set(d.toISOString().slice(0, 10), 0);
+      }
     }
     const bySubject: Record<string, number> = { physics: 0, chemistry: 0, math: 0, biology: 0 };
     const bySource = new Map<string, number>();
@@ -283,7 +287,7 @@ export const getAnalytics = createServerFn({ method: "POST" })
       byChapter.set(ckey, (byChapter.get(ckey) ?? 0) + r.count);
     }
     return {
-      series: Array.from(byDay, ([date, count]) => ({ date, count })),
+      series: Array.from(byDay, ([date, count]) => ({ date, count })).sort((a, b) => a.date.localeCompare(b.date)),
       bySubject,
       bySource: Array.from(bySource, ([source_id, count]) => ({ source_id, count })),
       byChapter: Array.from(byChapter, ([chapter_id, count]) => ({
