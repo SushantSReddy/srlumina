@@ -26,7 +26,7 @@ function Analytics() {
   const listSourcesFn = useServerFn(listSources);
   const getAnalyticsFn = useServerFn(getAnalytics);
 
-  const [range, setRange] = useState<7 | 30 | 90>(7);
+  const [range, setRange] = useState<7 | 30 | 0>(7); // 0 = lifetime
   const [subject, setSubject] = useState<Subject | null>(null);
   const [sourceId, setSourceId] = useState<string | null>(null);
   const [level, setLevel] = useState<ExamLevel | null>(null);
@@ -62,10 +62,10 @@ function Analytics() {
 
       <div className="px-5 py-4">
         <div className="grid grid-cols-3 gap-1 rounded-xl bg-muted p-1">
-          {([7, 30, 90] as const).map((n) => (
+          {([7, 30, 0] as const).map((n) => (
             <button key={n} onClick={() => setRange(n)}
               className={`rounded-lg py-2 text-sm font-medium ${range === n ? "bg-surface shadow-sm" : "text-muted-foreground"}`}>
-              {n === 7 ? "Week" : n === 30 ? "Month" : "3 Months"}
+              {n === 7 ? "Week" : n === 30 ? "Month" : "Lifetime"}
             </button>
           ))}
         </div>
