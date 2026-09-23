@@ -233,7 +233,7 @@ export const getAnalytics = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input) =>
     z.object({
-      days: z.number().int().min(1).max(365).default(30),
+      days: z.number().int().min(0).max(365).default(30), // 0 = lifetime
       subject: z.enum(["physics", "chemistry", "math", "biology"]).nullable().optional(),
       source_id: z.string().uuid().nullable().optional(),
       chapter_id: z.string().uuid().nullable().optional(),
@@ -241,15 +241,15 @@ export const getAnalytics = createServerFn({ method: "POST" })
     }).parse(input),
   )
   .handler(async ({ data, context }) => {
-    const since = new Date();
-    since.setDate(since.getDate() - (data.days - 1));
-    const sinceISO = since.toISOString().slice(0, 10);
-
     let q = context.supabase
       .from("question_logs")
       .select("logged_on, subject, count, source_id, chapter_id, exam_level")
-      .eq("user_id", context.userId)
-      .gte("logged_on", sinceISO);
+      .eq("user_id", context.userId);
+    if (data.days > 0) {
+      const since = new Date();
+      since.setDate(since.getDate() - (data.days - 1));
+      q = q.gte("logged_on", since.toISOString().slice(0, 10));
+    }
     if (data.subject) q = q.eq("subject", data.subject as Subject);
     if (data.source_id) q = q.eq("source_id", data.source_id);
     if (data.chapter_id) q = q.eq("chapter_id", data.chapter_id);
