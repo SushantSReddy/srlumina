@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep the first-visit book intro isolated in `src/components/intro/` and mount it only over the public index page; this preserves the existing scrolling landing experience and lets session/reduced-motion behavior remain independent.
