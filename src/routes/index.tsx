@@ -3,6 +3,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { ArrowRight, ArrowDown, Target, Flame, LineChart, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Footer } from "@/components/tracker/Footer";
+import { BookIntro } from "@/components/intro/BookIntro";
 
 export const Route = createFileRoute("/")({
   ssr: false,
@@ -34,6 +35,7 @@ function LandingPage() {
   const [vh, setVh] = useState(800);
   const [vw, setVw] = useState(1024);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -41,6 +43,21 @@ function LandingPage() {
       else setChecking(false);
     });
   }, [navigate]);
+
+  useEffect(() => {
+    if (checking) return;
+    const key = "sr-lumina-book-intro-seen";
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      // Private browsing can block storage; the intro still completes normally.
+    }
+    setShowIntro(true);
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const timer = window.setTimeout(() => setShowIntro(false), reduced ? 480 : 2250);
+    return () => window.clearTimeout(timer);
+  }, [checking]);
 
   // Smoothed (spring-like) scroll progress driven by a continuous rAF loop
   const target = useRef(0);
@@ -178,6 +195,7 @@ function LandingPage() {
       <LandingFooter />
 
       <LandingStyles />
+      {showIntro && <BookIntro />}
     </div>
   );
 }
