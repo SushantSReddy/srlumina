@@ -8,6 +8,13 @@
       "when": 1791339973925,
       "tag": "0000_friends_leaderboard",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791344328466,
+      "tag": "0001_friend_group_leaderboard",
+      "breakpoints": true
     }
   ]
 }
