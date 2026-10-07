@@ -10,13 +10,13 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "SOLVE — Daily question tracker for JEE & NEET" },
+      { title: "SR Lumina — Daily question tracker for JEE & NEET" },
       {
         name: "description",
         content:
-          "SOLVE is the question tracker built for JEE and NEET aspirants. Log questions by subject and source, hit daily goals, and build an unbreakable study streak.",
+          "SR Lumina is the question tracker built for JEE and NEET aspirants. Log questions by subject and source, hit daily goals, and build an unbreakable study streak.",
       },
-      { property: "og:title", content: "SOLVE — Daily question tracker for JEE & NEET" },
+      { property: "og:title", content: "SR Lumina — Daily question tracker for JEE & NEET" },
       {
         property: "og:description",
         content:
@@ -203,7 +203,7 @@ const LandingHeader = memo(function LandingHeader() {
       <div className="max-w-6xl mx-auto px-5 sm:px-8 h-14 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
           <span className="relative">
-            <span className="text-[17px] font-semibold tracking-tight">SOLVE</span>
+            <span className="text-[17px] font-semibold tracking-tight">SR Lumina</span>
             <span
               aria-hidden
               className="absolute -right-2 top-1.5 h-1.5 w-1.5 rounded-full bg-indigo-400"
@@ -627,7 +627,7 @@ function Book({
         >
           <div className="text-center">
             <div className="text-[10px] tracking-[0.4em] text-white/70 uppercase mb-2">Vault</div>
-            <div className="text-[42px] font-semibold tracking-tight">SOLVE</div>
+            <div className="text-[42px] font-semibold tracking-tight">SR Lumina</div>
           </div>
         </div>
       )}

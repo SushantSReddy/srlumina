@@ -9,9 +9,9 @@ import { BottomNav } from "@/components/tracker/BottomNav";
 export const Route = createFileRoute("/_authenticated/friends")({
   head: () => ({
     meta: [
-      { title: "Friends ranking — SOLVE" },
+      { title: "Friends ranking — SR Lumina" },
       { name: "description", content: "Compare solved questions with your friends." },
-      { property: "og:title", content: "Friends ranking — SOLVE" },
+      { property: "og:title", content: "Friends ranking — SR Lumina" },
       { property: "og:description", content: "Compare solved questions with your friends." },
     ],
   }),
@@ -39,9 +39,9 @@ function FriendsPage() {
     const { data: code, error } = await supabase.rpc("my_invite_code");
     if (error || !code) return toast.error("Couldn't create your link");
     const url = `${window.location.origin}/invite/${code}`;
-    const text = "Join me on SOLVE and let's compete on solved questions!";
+    const text = "Join me on SR Lumina and let's compete on solved questions!";
     try {
-      if (navigator.share) await navigator.share({ title: "SOLVE", text, url });
+      if (navigator.share) await navigator.share({ title: "SR Lumina", text, url });
       else {
         await navigator.clipboard.writeText(url);
         toast.success("Invite link copied");
