@@ -46,13 +46,6 @@ function LandingPage() {
 
   useEffect(() => {
     if (checking) return;
-    const key = "sr-lumina-book-intro-seen";
-    try {
-      if (sessionStorage.getItem(key)) return;
-      sessionStorage.setItem(key, "1");
-    } catch {
-      // Private browsing can block storage; the intro still completes normally.
-    }
     setShowIntro(true);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const timer = window.setTimeout(() => setShowIntro(false), reduced ? 480 : 2250);
