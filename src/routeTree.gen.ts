@@ -9,50 +9,42 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
-import { Route as AuthenticatedDreamsRouteImport } from './routes/_authenticated/dreams'
-import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
-import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
-import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as InviteCodeRouteImport } from './routes/invite.$code'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedFriendsRouteImport } from './routes/_authenticated/friends'
+import { Route as AuthenticatedDreamsRouteImport } from './routes/_authenticated/dreams'
+import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedAdminLoginsRouteImport } from './routes/_authenticated/admin.logins'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const InviteCodeRoute = InviteCodeRouteImport.update({
+  id: '/invite/$code',
+  path: '/invite/$code',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDreamsRoute = AuthenticatedDreamsRouteImport.update({
-  id: '/dreams',
-  path: '/dreams',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
+const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
@@ -60,9 +52,29 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
-  id: '/tasks',
-  path: '/tasks',
+const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedFriendsRoute = AuthenticatedFriendsRouteImport.update({
+  id: '/friends',
+  path: '/friends',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDreamsRoute = AuthenticatedDreamsRouteImport.update({
+  id: '/dreams',
+  path: '/dreams',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAdminLoginsRoute =
@@ -83,10 +95,12 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dreams': typeof AuthenticatedDreamsRoute
+  '/friends': typeof AuthenticatedFriendsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
@@ -95,10 +109,12 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/dreams': typeof AuthenticatedDreamsRoute
+  '/friends': typeof AuthenticatedFriendsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
@@ -109,10 +125,12 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/dreams': typeof AuthenticatedDreamsRoute
+  '/_authenticated/friends': typeof AuthenticatedFriendsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
+  '/invite/$code': typeof InviteCodeRoute
   '/_authenticated/admin/logins': typeof AuthenticatedAdminLoginsRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
@@ -123,10 +141,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/analytics'
     | '/dreams'
+    | '/friends'
     | '/home'
     | '/onboarding'
     | '/settings'
     | '/tasks'
+    | '/invite/$code'
     | '/admin/logins'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
@@ -135,10 +155,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/analytics'
     | '/dreams'
+    | '/friends'
     | '/home'
     | '/onboarding'
     | '/settings'
     | '/tasks'
+    | '/invite/$code'
     | '/admin/logins'
     | '/api/public/hooks/send-reminders'
   id:
@@ -148,10 +170,12 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/analytics'
     | '/_authenticated/dreams'
+    | '/_authenticated/friends'
     | '/_authenticated/home'
     | '/_authenticated/onboarding'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
+    | '/invite/$code'
     | '/_authenticated/admin/logins'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
@@ -160,16 +184,17 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  InviteCodeRoute: typeof InviteCodeRoute
   ApiPublicHooksSendRemindersRoute: typeof ApiPublicHooksSendRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -179,39 +204,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/analytics': {
-      id: '/_authenticated/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/invite/$code': {
+      id: '/invite/$code'
+      path: '/invite/$code'
+      fullPath: '/invite/$code'
+      preLoaderRoute: typeof InviteCodeRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dreams': {
-      id: '/_authenticated/dreams'
-      path: '/dreams'
-      fullPath: '/dreams'
-      preLoaderRoute: typeof AuthenticatedDreamsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/home': {
-      id: '/_authenticated/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof AuthenticatedHomeRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/onboarding': {
-      id: '/_authenticated/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthenticatedTasksRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings': {
@@ -221,11 +232,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/tasks': {
-      id: '/_authenticated/tasks'
-      path: '/tasks'
-      fullPath: '/tasks'
-      preLoaderRoute: typeof AuthenticatedTasksRouteImport
+    '/_authenticated/onboarding': {
+      id: '/_authenticated/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/friends': {
+      id: '/_authenticated/friends'
+      path: '/friends'
+      fullPath: '/friends'
+      preLoaderRoute: typeof AuthenticatedFriendsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dreams': {
+      id: '/_authenticated/dreams'
+      path: '/dreams'
+      fullPath: '/dreams'
+      preLoaderRoute: typeof AuthenticatedDreamsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics': {
+      id: '/_authenticated/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/logins': {
@@ -248,6 +287,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedDreamsRoute: typeof AuthenticatedDreamsRoute
+  AuthenticatedFriendsRoute: typeof AuthenticatedFriendsRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
@@ -258,6 +298,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedDreamsRoute: AuthenticatedDreamsRoute,
+  AuthenticatedFriendsRoute: AuthenticatedFriendsRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
@@ -272,6 +313,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  InviteCodeRoute: InviteCodeRoute,
   ApiPublicHooksSendRemindersRoute: ApiPublicHooksSendRemindersRoute,
 }
 export const routeTree = rootRouteImport
