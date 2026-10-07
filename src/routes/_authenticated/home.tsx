@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Plus, RotateCcw, Trophy } from "lucide-react";
-import { acceptPendingInvite } from "@/lib/friends";
 import { toast } from "sonner";
 import { getProfile, getTodaySummary, resetToday } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
