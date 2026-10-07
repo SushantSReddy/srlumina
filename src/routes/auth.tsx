@@ -60,6 +60,19 @@ function AuthPage() {
     }
   }
 
+  async function guest() {
+    setBusy(true);
+    const { error } = await supabase.auth.signInAnonymously({
+      options: { data: { display_name: "Guest" } },
+    });
+    if (error) {
+      toast.error(error.message);
+      setBusy(false);
+      return;
+    }
+    navigate({ to: "/home", replace: true });
+  }
+
   async function oauth(provider: "apple" | "google") {
     setBusy(true);
     const res = await lovable.auth.signInWithOAuth(provider, { redirect_uri: window.location.origin });
@@ -127,6 +140,15 @@ function AuthPage() {
               className="w-full rounded-2xl bg-foreground/[0.04] hover:bg-foreground/[0.07] border border-foreground/5 py-3.5 text-[15px] font-medium tap active:tap-active flex items-center justify-center gap-2.5 disabled:opacity-60 transition-colors"
             >
               <GoogleIcon /> Continue with Google
+            </button>
+
+            <button
+              type="button"
+              onClick={guest}
+              disabled={busy}
+              className="w-full rounded-2xl py-3 text-[14px] font-medium text-muted-foreground hover:text-foreground tap active:tap-active disabled:opacity-60 transition-colors"
+            >
+              Continue as guest
             </button>
 
             <div className="my-4 flex items-center gap-3 text-[11px] uppercase tracking-[0.14em] text-muted-foreground/70">
