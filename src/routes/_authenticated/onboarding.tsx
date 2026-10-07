@@ -20,7 +20,7 @@ import {
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
   component: Onboarding,
-  head: () => ({ meta: [{ title: "Set up — SOLVE" }, { name: "description", content: "Set up SOLVE: choose your JEE or NEET stream, class and target year." }, { property: "og:title", content: "Set up — SOLVE" }, { property: "og:description", content: "Choose your JEE or NEET stream, class and target year." }] }),
+  head: () => ({ meta: [{ title: "Set up — SR Lumina" }, { name: "description", content: "Set up SR Lumina: choose your JEE or NEET stream, class and target year." }, { property: "og:title", content: "Set up — SR Lumina" }, { property: "og:description", content: "Choose your JEE or NEET stream, class and target year." }] }),
 });
 
 function Onboarding() {

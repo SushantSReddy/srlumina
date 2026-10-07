@@ -6,10 +6,10 @@ import { acceptPendingInvite, PENDING_INVITE_KEY } from "@/lib/friends";
 export const Route = createFileRoute("/invite/$code")({
   head: () => ({
     meta: [
-      { title: "You're invited — SOLVE" },
-      { name: "description", content: "Join your friend on SOLVE and compete on solved questions." },
-      { property: "og:title", content: "You're invited — SOLVE" },
-      { property: "og:description", content: "Join your friend on SOLVE and compete on solved questions." },
+      { title: "You're invited — SR Lumina" },
+      { name: "description", content: "Join your friend on SR Lumina and compete on solved questions." },
+      { property: "og:title", content: "You're invited — SR Lumina" },
+      { property: "og:description", content: "Join your friend on SR Lumina and compete on solved questions." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

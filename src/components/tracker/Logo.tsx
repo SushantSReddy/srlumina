@@ -10,7 +10,7 @@ export function Logo({ size = 56 }: { size?: number }) {
         boxShadow:
           "0 10px 30px -10px color-mix(in oklab, var(--ios-indigo) 55%, transparent), inset 0 1px 0 color-mix(in oklab, white 25%, transparent)",
       }}
-      aria-label="SOLVE logo"
+      aria-label="SR Lumina logo"
     >
       <img
         src={logoAsset.url}
