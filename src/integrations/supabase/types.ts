@@ -62,6 +62,24 @@ export type Database = {
         }
         Relationships: []
       }
+      friendships: {
+        Row: {
+          created_at: string
+          friend_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          friend_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          friend_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       login_events: {
         Row: {
           email: string | null
@@ -96,6 +114,7 @@ export type Database = {
           dream_college: string | null
           dream_image_url: string | null
           id: string
+          invite_code: string | null
           reminder_enabled: boolean
           reminder_last_sent_on: string | null
           reminder_time: string
@@ -113,6 +132,7 @@ export type Database = {
           dream_college?: string | null
           dream_image_url?: string | null
           id: string
+          invite_code?: string | null
           reminder_enabled?: boolean
           reminder_last_sent_on?: string | null
           reminder_time?: string
@@ -130,6 +150,7 @@ export type Database = {
           dream_college?: string | null
           dream_image_url?: string | null
           id?: string
+          invite_code?: string | null
           reminder_enabled?: boolean
           reminder_last_sent_on?: string | null
           reminder_time?: string
@@ -377,6 +398,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_friend_by_code: { Args: { _code: string }; Returns: string }
+      friend_leaderboard: {
+        Args: { _days: number }
+        Returns: {
+          display_name: string
+          is_me: boolean
+          total: number
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -384,6 +415,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      my_invite_code: { Args: never; Returns: string }
     }
     Enums: {
       app_class_level:

@@ -1,8 +1,8 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Plus, RotateCcw } from "lucide-react";
+import { Plus, RotateCcw, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { getProfile, getTodaySummary, resetToday } from "@/lib/tracker.functions";
 import { BottomNav } from "@/components/tracker/BottomNav";
@@ -142,6 +142,14 @@ function Home() {
       {/* Today's tasks */}
       <section className="px-4 mt-6">
         <TodayTasksCard />
+      </section>
+
+      <section className="px-4 mt-4">
+        <Link to="/friends" className="glass rounded-2xl p-4 flex items-center gap-3 active:scale-[.98] transition-transform">
+          <Trophy className="h-5 w-5 text-primary" />
+          <span className="flex-1 font-semibold">Friends ranking</span>
+          <span className="text-xs text-muted-foreground">See who's ahead →</span>
+        </Link>
       </section>
 
       {/* Daily quote */}

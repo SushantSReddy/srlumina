@@ -116,6 +116,7 @@ function RootComponent() {
       router.invalidate();
       if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
       if (event === "SIGNED_IN" && session?.user) {
+        void import("@/lib/friends").then((m) => m.acceptPendingInvite());
         const key = `login-logged-${session.user.id}-${new Date().toDateString()}`;
         if (!sessionStorage.getItem(key)) {
           sessionStorage.setItem(key, "1");
