@@ -1,7 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { execFileSync } from "node:child_process";
 
-function permissionFor(id: string) {
+function permissionFor(id) {
   const sql = `SELECT EXISTS(SELECT 1 FROM public.friend_group_managers WHERE user_id = NULLIF('${id}', '')::uuid) AS allowed`;
   const result = JSON.parse(execFileSync("lovable", ["supabase", "query", sql, "--json"], { encoding: "utf8" }));
   return result.rows[0].allowed;
