@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Keep the first-visit book intro isolated in `src/components/intro/` and mount it only over the public index page; this preserves the existing scrolling landing experience and lets session/reduced-motion behavior remain independent.
+- Group removal permissions live in a protected manager table and are enforced by authenticated database RPCs; exclusion records prevent removed members reappearing through mutual friends without touching question logs.
