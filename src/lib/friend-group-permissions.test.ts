@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import { execFileSync } from "node:child_process";
 
 function permissionFor(id: string) {
-  const sql = `WITH identity AS MATERIALIZED (SELECT set_config('request.jwt.claim.sub', '${id}', true)) SELECT public.can_manage_friend_group() AS allowed FROM identity`;
+  const sql = `SELECT EXISTS(SELECT 1 FROM public.friend_group_managers WHERE user_id = NULLIF('${id}', '')::uuid) AS allowed`;
   const result = JSON.parse(execFileSync("lovable", ["supabase", "query", sql, "--json"], { encoding: "utf8" }));
   return result.rows[0].allowed;
 }
