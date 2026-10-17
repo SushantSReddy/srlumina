@@ -15,6 +15,13 @@
       "when": 1791344328466,
       "tag": "0001_friend_group_leaderboard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792204677138,
+      "tag": "0002_owner_only_group_removal",
+      "breakpoints": true
     }
   ]
 }

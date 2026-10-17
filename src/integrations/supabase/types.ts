@@ -62,6 +62,44 @@ export type Database = {
         }
         Relationships: []
       }
+      friend_group_managers: {
+        Row: {
+          user_id: string
+        }
+        Insert: {
+          user_id: string
+        }
+        Update: {
+          user_id?: string
+        }
+        Relationships: []
+      }
+      friend_group_removals: {
+        Row: {
+          member_id: string
+          owner_id: string
+          removed_at: string
+        }
+        Insert: {
+          member_id: string
+          owner_id: string
+          removed_at?: string
+        }
+        Update: {
+          member_id?: string
+          owner_id?: string
+          removed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "friend_group_removals_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "friend_group_managers"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       friendships: {
         Row: {
           created_at: string
@@ -399,6 +437,7 @@ export type Database = {
     }
     Functions: {
       add_friend_by_code: { Args: { _code: string }; Returns: string }
+      can_manage_friend_group: { Args: never; Returns: boolean }
       friend_leaderboard: {
         Args: { _days: number }
         Returns: {
@@ -416,6 +455,10 @@ export type Database = {
         Returns: boolean
       }
       my_invite_code: { Args: never; Returns: string }
+      remove_friend_from_group: {
+        Args: { _member_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_class_level:
