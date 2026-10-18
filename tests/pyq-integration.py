@@ -49,7 +49,7 @@ async def main():
   await page.get_by_role('button',name='Lifetime',exact=True).click();await page.wait_for_timeout(1500)
   assert 'TOTAL\n1' in await page.locator('body').inner_text()
   await page.goto('http://localhost:8080/tasks',wait_until='networkidle')
-  await page.get_by_role('button',name='Upcoming',exact=True).wait_for()
+  await page.get_by_text('Your day is clear. Nice.',exact=True).wait_for()
   await page.set_viewport_size({'width':390,'height':844})
   await page.goto(url,wait_until='networkidle');await page.get_by_label('Your answer').wait_for()
   assert await page.evaluate('document.documentElement.scrollWidth <= window.innerWidth')
