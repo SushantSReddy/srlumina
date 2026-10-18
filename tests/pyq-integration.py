@@ -14,7 +14,7 @@ async def main():
    return await page.evaluate('''async ([t,c])=>{const {supabase}=await import('/src/integrations/supabase/client.ts');let r=await supabase.from(t).select(c); return {data:r.data,error:r.error?.message}}''',[table,cols])
   before=await rows('question_logs','count'); total=sum(r['count'] for r in before['data'])
   assert total==1, total
-  assert (await rows('pyq_answer_keys','*'))['error'], 'Private keys exposed'
+  assert not (await rows('pyq_answer_keys','*'))['data'], 'Private keys exposed'
   own=await rows('pyq_attempts','user_id'); assert len({a['user_id'] for a in own['data']})==1
   s=await call('start_pyq_session',{'_exam':'jee_advanced'});assert not s['error'],s
   solution=await call('pyq_solution',{'_question':QUESTION});assert solution['data']['answer']=='96'
