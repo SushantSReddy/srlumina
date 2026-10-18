@@ -21,6 +21,8 @@ import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as InviteCodeRouteImport } from './routes/invite.$code'
 import { Route as AuthenticatedAdminLoginsRouteImport } from './routes/_authenticated/admin.logins'
+import { Route as AuthenticatedPyqIndexRouteImport } from './routes/_authenticated/pyq.index'
+import { Route as AuthenticatedPyqSessionIdRouteImport } from './routes/_authenticated/pyq.$sessionId'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +85,17 @@ const AuthenticatedAdminLoginsRoute =
     path: '/admin/logins',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPyqIndexRoute = AuthenticatedPyqIndexRouteImport.update({
+  id: '/pyq/',
+  path: '/pyq/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPyqSessionIdRoute =
+  AuthenticatedPyqSessionIdRouteImport.update({
+    id: '/pyq/$sessionId',
+    path: '/pyq/$sessionId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicHooksSendRemindersRoute =
   ApiPublicHooksSendRemindersRouteImport.update({
     id: '/api/public/hooks/send-reminders',
@@ -102,6 +115,8 @@ export interface FileRoutesByFullPath {
   '/tasks': typeof AuthenticatedTasksRoute
   '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
+  '/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
+  '/pyq/': typeof AuthenticatedPyqIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesByTo {
@@ -116,6 +131,8 @@ export interface FileRoutesByTo {
   '/tasks': typeof AuthenticatedTasksRoute
   '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
+  '/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
+  '/pyq': typeof AuthenticatedPyqIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesById {
@@ -132,6 +149,8 @@ export interface FileRoutesById {
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/invite/$code': typeof InviteCodeRoute
   '/_authenticated/admin/logins': typeof AuthenticatedAdminLoginsRoute
+  '/_authenticated/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
+  '/_authenticated/pyq/': typeof AuthenticatedPyqIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRouteTypes {
@@ -148,6 +167,8 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/invite/$code'
     | '/admin/logins'
+    | '/pyq/$sessionId'
+    | '/pyq/'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -162,6 +183,8 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/invite/$code'
     | '/admin/logins'
+    | '/pyq/$sessionId'
+    | '/pyq'
     | '/api/public/hooks/send-reminders'
   id:
     | '__root__'
@@ -177,6 +200,8 @@ export interface FileRouteTypes {
     | '/_authenticated/tasks'
     | '/invite/$code'
     | '/_authenticated/admin/logins'
+    | '/_authenticated/pyq/$sessionId'
+    | '/_authenticated/pyq/'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
 }
@@ -274,6 +299,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLoginsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pyq/': {
+      id: '/_authenticated/pyq/'
+      path: '/pyq'
+      fullPath: '/pyq/'
+      preLoaderRoute: typeof AuthenticatedPyqIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pyq/$sessionId': {
+      id: '/_authenticated/pyq/$sessionId'
+      path: '/pyq/$sessionId'
+      fullPath: '/pyq/$sessionId'
+      preLoaderRoute: typeof AuthenticatedPyqSessionIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/hooks/send-reminders': {
       id: '/api/public/hooks/send-reminders'
       path: '/api/public/hooks/send-reminders'
@@ -293,6 +332,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedAdminLoginsRoute: typeof AuthenticatedAdminLoginsRoute
+  AuthenticatedPyqSessionIdRoute: typeof AuthenticatedPyqSessionIdRoute
+  AuthenticatedPyqIndexRoute: typeof AuthenticatedPyqIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -304,6 +345,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedAdminLoginsRoute: AuthenticatedAdminLoginsRoute,
+  AuthenticatedPyqSessionIdRoute: AuthenticatedPyqSessionIdRoute,
+  AuthenticatedPyqIndexRoute: AuthenticatedPyqIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

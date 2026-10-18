@@ -1,4 +1,11 @@
 # Tasks
+- [x] Implement Phase 1 practice engine: filters, secure checking, solutions, bookmarks, resumable sessions.
+- [x] Implement Phase 2: atomic unique local-day progress and incorrect-attempt storage.
+- [x] Verify real numerical PYQ flow, duplicate requests, offline sync, progress, local dates, permissions, and existing group tests.
+- [ ] Populate verified JEE Main/NEET content and verify all choice/matching question formats — blocked on reviewed official content; only one official JEE Advanced numerical question currently available.
+- [ ] Phase 3 revision centre — deferred pending full Phase 1 content/type validation.
+- [ ] Phase 4 timed mocks — deferred pending full practice validation.
+- [ ] Phase 5 validated imports — deferred to its requested phase.
 - [x] Add owner-only group removal with confirmation.
 - [x] Verify sole manager and non-owner denial in a signed-in browser.
 - [ ] Verify actual removal from the owner's account — blocked until the user signs into that account in the preview.

@@ -11,3 +11,7 @@
 
 - Keep the first-visit book intro isolated in `src/components/intro/` and mount it only over the public index page; this preserves the existing scrolling landing experience and lets session/reduced-motion behavior remain independent.
 - Group removal permissions live in a protected manager table and are enforced by authenticated database RPCs; exclusion records prevent removed members reappearing through mutual friends without touching question logs.
+- PYQ practice uses authenticated `pyq.functions.ts` boundaries and transactional database RPCs; private answer keys are never selected into browser payloads except deliberate per-question solutions.
+- PYQ attempts and daily credits remain separate; a per-user transaction lock and unique user/question/day key make progress inserts idempotent and feed the existing question_logs services.
+- New study activity uses the profile study timezone; existing log dates and the established streak/goal behavior are preserved.
+- PYQ pages remain secondary protected pages reached from Home; reuse the existing theme, shell, navigation and controls rather than creating another app layout.

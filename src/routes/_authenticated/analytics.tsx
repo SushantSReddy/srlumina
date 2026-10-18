@@ -45,7 +45,7 @@ function Analytics() {
 
   const chartData = useMemo(
     () => (dataQ.data?.series ?? []).map((r) => ({
-      day: new Date(r.date).toLocaleDateString(undefined, { weekday: "short", day: "numeric" }),
+      day: new Date(`${r.date}T12:00:00`).toLocaleDateString(undefined, { weekday: "short", day: "numeric" }),
       count: r.count,
     })),
     [dataQ.data],

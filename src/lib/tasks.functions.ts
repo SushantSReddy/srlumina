@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
+import { userStudyDay } from "./study-day.server";
 
 type Subject = Database["public"]["Enums"]["app_subject"];
 type Priority = Database["public"]["Enums"]["app_task_priority"];
@@ -66,8 +67,9 @@ export const listTasks = createServerFn({ method: "GET" })
     const studyTasks = tasks.filter((t) => t.question_target && t.subject);
     const progress = new Map<string, number>();
     if (studyTasks.length) {
+      const today = await userStudyDay(context.supabase, context.userId);
       const dates = Array.from(
-        new Set(studyTasks.map((t) => t.due_on ?? new Date().toISOString().slice(0, 10))),
+        new Set(studyTasks.map((t) => t.due_on ?? today)),
       );
       const { data: logs } = await context.supabase
         .from("question_logs")
@@ -75,7 +77,7 @@ export const listTasks = createServerFn({ method: "GET" })
         .eq("user_id", context.userId)
         .in("logged_on", dates);
       for (const t of studyTasks) {
-        const day = t.due_on ?? new Date().toISOString().slice(0, 10);
+        const day = t.due_on ?? today;
         const sum = (logs ?? [])
           .filter(
             (l) =>

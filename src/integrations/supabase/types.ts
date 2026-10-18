@@ -158,6 +158,7 @@ export type Database = {
           reminder_time: string
           reminder_tz_offset: number
           stream: Database["public"]["Enums"]["app_stream"] | null
+          study_timezone: string
           target_year: number | null
           updated_at: string
         }
@@ -176,6 +177,7 @@ export type Database = {
           reminder_time?: string
           reminder_tz_offset?: number
           stream?: Database["public"]["Enums"]["app_stream"] | null
+          study_timezone?: string
           target_year?: number | null
           updated_at?: string
         }
@@ -194,6 +196,7 @@ export type Database = {
           reminder_time?: string
           reminder_tz_offset?: number
           stream?: Database["public"]["Enums"]["app_stream"] | null
+          study_timezone?: string
           target_year?: number | null
           updated_at?: string
         }
@@ -225,6 +228,263 @@ export type Database = {
           id?: string
           p256dh?: string
           user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pyq_answer_keys: {
+        Row: {
+          answer: Json
+          explanation: string
+          question_id: string
+          steps: Json
+          tolerance: number
+          verified_by_source: string
+        }
+        Insert: {
+          answer: Json
+          explanation: string
+          question_id: string
+          steps?: Json
+          tolerance?: number
+          verified_by_source: string
+        }
+        Update: {
+          answer?: Json
+          explanation?: string
+          question_id?: string
+          steps?: Json
+          tolerance?: number
+          verified_by_source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pyq_answer_keys_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: true
+            referencedRelation: "pyq_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pyq_attempts: {
+        Row: {
+          answer: Json
+          correct: boolean
+          counted: boolean
+          created_at: string
+          id: string
+          logged_on: string
+          question_id: string
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          answer: Json
+          correct: boolean
+          counted?: boolean
+          created_at?: string
+          id: string
+          logged_on: string
+          question_id: string
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          answer?: Json
+          correct?: boolean
+          counted?: boolean
+          created_at?: string
+          id?: string
+          logged_on?: string
+          question_id?: string
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pyq_attempts_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "pyq_questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pyq_attempts_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "pyq_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pyq_chapters: {
+        Row: {
+          id: string
+          name: string
+          subject: Database["public"]["Enums"]["app_subject"]
+        }
+        Insert: {
+          id?: string
+          name: string
+          subject: Database["public"]["Enums"]["app_subject"]
+        }
+        Update: {
+          id?: string
+          name?: string
+          subject?: Database["public"]["Enums"]["app_subject"]
+        }
+        Relationships: []
+      }
+      pyq_collections: {
+        Row: {
+          bookmarked: boolean
+          incorrect: boolean
+          question_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bookmarked?: boolean
+          incorrect?: boolean
+          question_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bookmarked?: boolean
+          incorrect?: boolean
+          question_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pyq_collections_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "pyq_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pyq_daily_credits: {
+        Row: {
+          logged_on: string
+          question_id: string
+          user_id: string
+        }
+        Insert: {
+          logged_on: string
+          question_id: string
+          user_id: string
+        }
+        Update: {
+          logged_on?: string
+          question_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pyq_daily_credits_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "pyq_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pyq_questions: {
+        Row: {
+          chapter_id: string
+          created_at: string
+          diagram_url: string | null
+          difficulty: string
+          exam: string
+          id: string
+          options: Json
+          prompt: string
+          question_type: string
+          source_label: string
+          source_question: string
+          source_url: string
+          verified: boolean
+          year: number
+        }
+        Insert: {
+          chapter_id: string
+          created_at?: string
+          diagram_url?: string | null
+          difficulty: string
+          exam: string
+          id?: string
+          options?: Json
+          prompt: string
+          question_type: string
+          source_label: string
+          source_question: string
+          source_url: string
+          verified?: boolean
+          year: number
+        }
+        Update: {
+          chapter_id?: string
+          created_at?: string
+          diagram_url?: string | null
+          difficulty?: string
+          exam?: string
+          id?: string
+          options?: Json
+          prompt?: string
+          question_type?: string
+          source_label?: string
+          source_question?: string
+          source_url?: string
+          verified?: boolean
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pyq_questions_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "pyq_chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pyq_sessions: {
+        Row: {
+          created_at: string
+          current_index: number
+          drafts: Json
+          filters: Json
+          finished: boolean
+          id: string
+          question_ids: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_index?: number
+          drafts?: Json
+          filters?: Json
+          finished?: boolean
+          id?: string
+          question_ids: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_index?: number
+          drafts?: Json
+          filters?: Json
+          finished?: boolean
+          id?: string
+          question_ids?: string[]
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -455,9 +715,29 @@ export type Database = {
         Returns: boolean
       }
       my_invite_code: { Args: never; Returns: string }
+      pyq_solution: { Args: { _question: string }; Returns: Json }
       remove_friend_from_group: {
         Args: { _member_id: string }
         Returns: undefined
+      }
+      start_pyq_session: {
+        Args: {
+          _chapter?: string
+          _difficulty?: string
+          _exam: string
+          _subject?: Database["public"]["Enums"]["app_subject"]
+          _year?: number
+        }
+        Returns: string
+      }
+      submit_pyq_attempt: {
+        Args: {
+          _answer: Json
+          _question: string
+          _request: string
+          _session: string
+        }
+        Returns: Json
       }
     }
     Enums: {
