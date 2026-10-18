@@ -42,6 +42,7 @@ function Practice({ data }: { data: Awaited<ReturnType<typeof import("@/lib/pyq.
   const [pending, setPending] = useState<Pending | null>(null);
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState(false);
+  const [loadedQuestion, setLoadedQuestion] = useState<string | null>(null);
   const [bookmarks, setBookmarks] = useState(() => new Set(data.collections.filter((c) => c.bookmarked).map((c) => c.question_id)));
   const [finished, setFinished] = useState(session.finished);
   const lock = useRef(false);
@@ -62,20 +63,21 @@ function Practice({ data }: { data: Awaited<ReturnType<typeof import("@/lib/pyq.
       }
     } catch { /* Ignore invalid local data. */ }
     setReady(true);
-  }, [storageKey, session.id, session.question_ids]);
+  }, [storageKey, session.id]);
   useEffect(() => {
     if (!ready || !question) return;
     const drafts = session.drafts && typeof session.drafts === "object" && !Array.isArray(session.drafts) ? session.drafts : {};
     const draft = localDrafts.current[question.id] ?? drafts[question.id];
     setAnswer(typeof draft === "string" || Array.isArray(draft) && draft.every((v) => typeof v === "string") ? draft as Answer : question.question_type === "numerical" || question.question_type === "integer" ? "" : []);
+    setLoadedQuestion(question.id);
     setResult(null); setSolution(null);
   }, [question?.id, ready]);
   useEffect(() => {
-    if (!ready || !question || pending) return;
+    if (!ready || !question || pending || loadedQuestion !== question.id || finished) return;
     localDrafts.current[question.id] = answer; store();
     const timer = setTimeout(() => { save({ data: { id: session.id, index, questionId: question.id, answer } }).catch(() => { /* Device draft remains available. */ }); }, 650);
     return () => clearTimeout(timer);
-  }, [answer, index, ready, question?.id, pending]);
+  }, [answer, index, ready, question?.id, pending, loadedQuestion, finished]);
   async function send(payload: Pending) {
     if (lock.current) return;
     lock.current = true; setBusy(true);
