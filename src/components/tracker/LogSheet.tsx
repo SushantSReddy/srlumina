@@ -95,6 +95,7 @@ export function LogSheet({
       qc.invalidateQueries({ queryKey: ["today"] });
       qc.invalidateQueries({ queryKey: ["streak"] });
       qc.invalidateQueries({ queryKey: ["analytics"] });
+      qc.invalidateQueries({ queryKey: ["tasks"] });
       onClose();
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Couldn't save"),

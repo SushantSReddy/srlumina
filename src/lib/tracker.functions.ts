@@ -2,6 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
+import { userStudyDay } from "./study-day.server";
+import { shiftDay } from "./study-day";
 
 type Subject = Database["public"]["Enums"]["app_subject"];
 type ExamLevel = Database["public"]["Enums"]["app_exam_level"];
@@ -159,6 +161,7 @@ export const logQuestions = createServerFn({ method: "POST" })
         user_id: context.userId,
         subject: data.subject as Subject,
         count: data.count,
+        logged_on: await userStudyDay(context.supabase, context.userId),
         source_id: data.source_id,
         chapter_id: data.chapter_id,
         exam_level: data.exam_level as ExamLevel | null,
@@ -175,7 +178,7 @@ export const resetToday = createServerFn({ method: "POST" })
     }).parse(input ?? {}),
   )
   .handler(async ({ data, context }) => {
-    const today = new Date().toISOString().slice(0, 10);
+    const today = await userStudyDay(context.supabase, context.userId);
     let q = context.supabase
       .from("question_logs")
       .delete()
@@ -187,14 +190,10 @@ export const resetToday = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-function todayISO() {
-  return new Date().toISOString().slice(0, 10);
-}
-
 export const getTodaySummary = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const today = todayISO();
+    const today = await userStudyDay(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("question_logs")
       .select("subject, count")
@@ -210,20 +209,20 @@ export const getTodaySummary = createServerFn({ method: "GET" })
 export const getStreak = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
+    const today = await userStudyDay(context.supabase, context.userId);
     const { data, error } = await context.supabase
       .from("question_logs")
       .select("logged_on")
       .eq("user_id", context.userId)
-      .order("logged_on", { ascending: false })
-      .limit(400);
+      .gte("logged_on", shiftDay(today, -399))
+      .order("logged_on", { ascending: false });
     if (error) throw new Error(error.message);
     const days = new Set((data ?? []).map((r) => r.logged_on));
     let streak = 0;
-    const d = new Date();
+    let day = today;
     // If nothing today, streak may still be alive from yesterday — count from today.
     while (streak < 400) {
-      const iso = d.toISOString().slice(0, 10);
-      if (days.has(iso)) { streak++; d.setDate(d.getDate() - 1); }
+      if (days.has(day)) { streak++; day = shiftDay(day, -1); }
       else break;
     }
     return { streak };
@@ -241,14 +240,13 @@ export const getAnalytics = createServerFn({ method: "POST" })
     }).parse(input),
   )
   .handler(async ({ data, context }) => {
+    const today = await userStudyDay(context.supabase, context.userId);
     let q = context.supabase
       .from("question_logs")
       .select("logged_on, subject, count, source_id, chapter_id, exam_level")
       .eq("user_id", context.userId);
     if (data.days > 0) {
-      const since = new Date();
-      since.setDate(since.getDate() - (data.days - 1));
-      q = q.gte("logged_on", since.toISOString().slice(0, 10));
+      q = q.gte("logged_on", shiftDay(today, -(data.days - 1)));
     }
     if (data.subject) q = q.eq("subject", data.subject as Subject);
     if (data.source_id) q = q.eq("source_id", data.source_id);
@@ -267,12 +265,8 @@ export const getAnalytics = createServerFn({ method: "POST" })
     // Aggregate per day
     const byDay = new Map<string, number>();
     if (data.days > 0) {
-      const since = new Date();
-      since.setDate(since.getDate() - (data.days - 1));
       for (let i = 0; i < data.days; i++) {
-        const d = new Date(since);
-        d.setDate(since.getDate() + i);
-        byDay.set(d.toISOString().slice(0, 10), 0);
+        byDay.set(shiftDay(today, -(data.days - 1) + i), 0);
       }
     }
     const bySubject: Record<string, number> = { physics: 0, chemistry: 0, math: 0, biology: 0 };
