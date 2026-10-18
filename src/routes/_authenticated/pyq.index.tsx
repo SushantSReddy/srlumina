@@ -13,7 +13,7 @@ import { MeshBackground } from "@/components/tracker/MeshBackground";
 import { browsePyq, startPyq, type PyqFilters } from "@/lib/pyq.functions";
 import { pyqBootstrapOptions } from "@/lib/pyq.queries";
 
-export const Route = createFileRoute("/_authenticated/pyq")({
+export const Route = createFileRoute("/_authenticated/pyq/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(pyqBootstrapOptions()),
   component: PyqPage,
   head: () => ({ meta: [
