@@ -17,10 +17,12 @@ import { Route as AuthenticatedDreamsRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedFriendsRouteImport } from './routes/_authenticated/friends'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
+import { Route as AuthenticatedPyqRouteImport } from './routes/_authenticated/pyq'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as InviteCodeRouteImport } from './routes/invite.$code'
 import { Route as AuthenticatedAdminLoginsRouteImport } from './routes/_authenticated/admin.logins'
+import { Route as AuthenticatedPyqSessionIdRouteImport } from './routes/_authenticated/pyq.$sessionId'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
 const IndexRoute = IndexRouteImport.update({
@@ -62,6 +64,11 @@ const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPyqRoute = AuthenticatedPyqRouteImport.update({
+  id: '/pyq',
+  path: '/pyq',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -83,6 +90,12 @@ const AuthenticatedAdminLoginsRoute =
     path: '/admin/logins',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPyqSessionIdRoute =
+  AuthenticatedPyqSessionIdRouteImport.update({
+    id: '/$sessionId',
+    path: '/$sessionId',
+    getParentRoute: () => AuthenticatedPyqRoute,
+  } as any)
 const ApiPublicHooksSendRemindersRoute =
   ApiPublicHooksSendRemindersRouteImport.update({
     id: '/api/public/hooks/send-reminders',
@@ -98,10 +111,12 @@ export interface FileRoutesByFullPath {
   '/friends': typeof AuthenticatedFriendsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/pyq': typeof AuthenticatedPyqRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
+  '/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesByTo {
@@ -112,10 +127,12 @@ export interface FileRoutesByTo {
   '/friends': typeof AuthenticatedFriendsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/pyq': typeof AuthenticatedPyqRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
   '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
+  '/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRoutesById {
@@ -128,10 +145,12 @@ export interface FileRoutesById {
   '/_authenticated/friends': typeof AuthenticatedFriendsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/pyq': typeof AuthenticatedPyqRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/invite/$code': typeof InviteCodeRoute
   '/_authenticated/admin/logins': typeof AuthenticatedAdminLoginsRoute
+  '/_authenticated/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
 export interface FileRouteTypes {
@@ -144,10 +163,12 @@ export interface FileRouteTypes {
     | '/friends'
     | '/home'
     | '/onboarding'
+    | '/pyq'
     | '/settings'
     | '/tasks'
     | '/invite/$code'
     | '/admin/logins'
+    | '/pyq/$sessionId'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -158,10 +179,12 @@ export interface FileRouteTypes {
     | '/friends'
     | '/home'
     | '/onboarding'
+    | '/pyq'
     | '/settings'
     | '/tasks'
     | '/invite/$code'
     | '/admin/logins'
+    | '/pyq/$sessionId'
     | '/api/public/hooks/send-reminders'
   id:
     | '__root__'
@@ -173,10 +196,12 @@ export interface FileRouteTypes {
     | '/_authenticated/friends'
     | '/_authenticated/home'
     | '/_authenticated/onboarding'
+    | '/_authenticated/pyq'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
     | '/invite/$code'
     | '/_authenticated/admin/logins'
+    | '/_authenticated/pyq/$sessionId'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
 }
@@ -246,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOnboardingRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pyq': {
+      id: '/_authenticated/pyq'
+      path: '/pyq'
+      fullPath: '/pyq'
+      preLoaderRoute: typeof AuthenticatedPyqRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings': {
       id: '/_authenticated/settings'
       path: '/settings'
@@ -274,6 +306,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminLoginsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pyq/$sessionId': {
+      id: '/_authenticated/pyq/$sessionId'
+      path: '/$sessionId'
+      fullPath: '/pyq/$sessionId'
+      preLoaderRoute: typeof AuthenticatedPyqSessionIdRouteImport
+      parentRoute: typeof AuthenticatedPyqRoute
+    }
     '/api/public/hooks/send-reminders': {
       id: '/api/public/hooks/send-reminders'
       path: '/api/public/hooks/send-reminders'
@@ -284,12 +323,24 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedPyqRouteChildren {
+  AuthenticatedPyqSessionIdRoute: typeof AuthenticatedPyqSessionIdRoute
+}
+
+const AuthenticatedPyqRouteChildren: AuthenticatedPyqRouteChildren = {
+  AuthenticatedPyqSessionIdRoute: AuthenticatedPyqSessionIdRoute,
+}
+
+const AuthenticatedPyqRouteWithChildren =
+  AuthenticatedPyqRoute._addFileChildren(AuthenticatedPyqRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedDreamsRoute: typeof AuthenticatedDreamsRoute
   AuthenticatedFriendsRoute: typeof AuthenticatedFriendsRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedPyqRoute: typeof AuthenticatedPyqRouteWithChildren
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedAdminLoginsRoute: typeof AuthenticatedAdminLoginsRoute
@@ -301,6 +352,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFriendsRoute: AuthenticatedFriendsRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedPyqRoute: AuthenticatedPyqRouteWithChildren,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedAdminLoginsRoute: AuthenticatedAdminLoginsRoute,
