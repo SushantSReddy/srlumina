@@ -117,3 +117,34 @@ export const bookmarkPyq = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const revisionFilters = z.object({
+  collection: z.enum(["all", "bookmarked", "incorrect"]).default("all"),
+  exam: pyqFilters.shape.exam.optional(), subject: pyqFilters.shape.subject,
+  chapter: pyqFilters.shape.chapter, page: z.number().int().min(0).max(10000).default(0),
+});
+export type RevisionFilters = z.infer<typeof revisionFilters>;
+export const browseRevision = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => revisionFilters.parse(input))
+  .handler(async ({ data, context }) => {
+    let query = context.supabase.from("pyq_collections")
+      .select("question_id,bookmarked,incorrect,updated_at,question:pyq_questions!inner(id,exam,year,chapter_id,difficulty,source_question,source_label,chapter:pyq_chapters!inner(id,name,subject))", { count: "exact" })
+      .eq("user_id", context.userId).eq("question.verified", true);
+    if (data.collection === "all") query = query.or("bookmarked.eq.true,incorrect.eq.true");
+    else query = query.eq(data.collection, true);
+    if (data.exam) query = query.eq("question.exam", data.exam);
+    if (data.subject) query = query.eq("question.chapter.subject", data.subject);
+    if (data.chapter) query = query.eq("question.chapter_id", data.chapter);
+    const { data: questions, error, count } = await query.order("updated_at", { ascending: false }).order("question_id").range(data.page * 50, data.page * 50 + 49);
+    if (error) throw new Error(error.message);
+    return { questions: questions ?? [], total: count ?? 0 };
+  });
+export const startRevision = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input) => z.object({ questionIds: z.array(z.string().uuid()).min(1).max(100), collection: revisionFilters.shape.collection }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { data: id, error } = await context.supabase.rpc("start_pyq_revision", { _questions: data.questionIds, _collection: data.collection });
+    if (error) throw new Error(error.message);
+    return { id };
+  });

@@ -23,6 +23,7 @@ import { Route as InviteCodeRouteImport } from './routes/invite.$code'
 import { Route as AuthenticatedAdminLoginsRouteImport } from './routes/_authenticated/admin.logins'
 import { Route as AuthenticatedPyqIndexRouteImport } from './routes/_authenticated/pyq.index'
 import { Route as AuthenticatedPyqSessionIdRouteImport } from './routes/_authenticated/pyq.$sessionId'
+import { Route as AuthenticatedPyqRevisionRouteImport } from './routes/_authenticated/pyq.revision'
 import { Route as ApiPublicHooksSendRemindersRouteImport } from './routes/api/public/hooks/send-reminders'
 
 const IndexRoute = IndexRouteImport.update({
@@ -96,6 +97,12 @@ const AuthenticatedPyqSessionIdRoute =
     path: '/pyq/$sessionId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPyqRevisionRoute =
+  AuthenticatedPyqRevisionRouteImport.update({
+    id: '/pyq/revision',
+    path: '/pyq/revision',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicHooksSendRemindersRoute =
   ApiPublicHooksSendRemindersRouteImport.update({
     id: '/api/public/hooks/send-reminders',
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
   '/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
+  '/pyq/revision': typeof AuthenticatedPyqRevisionRoute
   '/pyq/': typeof AuthenticatedPyqIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
@@ -132,6 +140,7 @@ export interface FileRoutesByTo {
   '/invite/$code': typeof InviteCodeRoute
   '/admin/logins': typeof AuthenticatedAdminLoginsRoute
   '/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
+  '/pyq/revision': typeof AuthenticatedPyqRevisionRoute
   '/pyq': typeof AuthenticatedPyqIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
@@ -150,6 +159,7 @@ export interface FileRoutesById {
   '/invite/$code': typeof InviteCodeRoute
   '/_authenticated/admin/logins': typeof AuthenticatedAdminLoginsRoute
   '/_authenticated/pyq/$sessionId': typeof AuthenticatedPyqSessionIdRoute
+  '/_authenticated/pyq/revision': typeof AuthenticatedPyqRevisionRoute
   '/_authenticated/pyq/': typeof AuthenticatedPyqIndexRoute
   '/api/public/hooks/send-reminders': typeof ApiPublicHooksSendRemindersRoute
 }
@@ -168,6 +178,7 @@ export interface FileRouteTypes {
     | '/invite/$code'
     | '/admin/logins'
     | '/pyq/$sessionId'
+    | '/pyq/revision'
     | '/pyq/'
     | '/api/public/hooks/send-reminders'
   fileRoutesByTo: FileRoutesByTo
@@ -184,6 +195,7 @@ export interface FileRouteTypes {
     | '/invite/$code'
     | '/admin/logins'
     | '/pyq/$sessionId'
+    | '/pyq/revision'
     | '/pyq'
     | '/api/public/hooks/send-reminders'
   id:
@@ -201,6 +213,7 @@ export interface FileRouteTypes {
     | '/invite/$code'
     | '/_authenticated/admin/logins'
     | '/_authenticated/pyq/$sessionId'
+    | '/_authenticated/pyq/revision'
     | '/_authenticated/pyq/'
     | '/api/public/hooks/send-reminders'
   fileRoutesById: FileRoutesById
@@ -313,6 +326,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPyqSessionIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pyq/revision': {
+      id: '/_authenticated/pyq/revision'
+      path: '/pyq/revision'
+      fullPath: '/pyq/revision'
+      preLoaderRoute: typeof AuthenticatedPyqRevisionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/hooks/send-reminders': {
       id: '/api/public/hooks/send-reminders'
       path: '/api/public/hooks/send-reminders'
@@ -333,6 +353,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedAdminLoginsRoute: typeof AuthenticatedAdminLoginsRoute
   AuthenticatedPyqSessionIdRoute: typeof AuthenticatedPyqSessionIdRoute
+  AuthenticatedPyqRevisionRoute: typeof AuthenticatedPyqRevisionRoute
   AuthenticatedPyqIndexRoute: typeof AuthenticatedPyqIndexRoute
 }
 
@@ -346,6 +367,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedAdminLoginsRoute: AuthenticatedAdminLoginsRoute,
   AuthenticatedPyqSessionIdRoute: AuthenticatedPyqSessionIdRoute,
+  AuthenticatedPyqRevisionRoute: AuthenticatedPyqRevisionRoute,
   AuthenticatedPyqIndexRoute: AuthenticatedPyqIndexRoute,
 }
 

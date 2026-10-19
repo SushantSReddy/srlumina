@@ -15,3 +15,5 @@
 - PYQ attempts and daily credits remain separate; a per-user transaction lock and unique user/question/day key make progress inserts idempotent and feed the existing question_logs services.
 - New study activity uses the profile study timezone; existing log dates and the established streak/goal behavior are preserved.
 - PYQ pages remain secondary protected pages reached from Home; reuse the existing theme, shell, navigation and controls rather than creating another app layout.
+
+- Revision sessions select only the authenticated student’s saved verified questions through a database RPC and reuse the existing practice engine; this preserves private keys and unique daily credits.

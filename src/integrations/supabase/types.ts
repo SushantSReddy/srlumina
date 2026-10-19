@@ -720,6 +720,10 @@ export type Database = {
         Args: { _member_id: string }
         Returns: undefined
       }
+      start_pyq_revision: {
+        Args: { _collection: string; _questions: string[] }
+        Returns: string
+      }
       start_pyq_session: {
         Args: {
           _chapter?: string
