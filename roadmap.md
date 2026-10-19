@@ -3,7 +3,7 @@
 - [x] Implement Phase 2: atomic unique local-day progress and incorrect-attempt storage.
 - [x] Verify real numerical PYQ flow, duplicate requests, offline sync, progress, local dates, permissions, and existing group tests.
 - [ ] Populate verified JEE Main/NEET content and verify all choice/matching question formats — blocked on reviewed official content; only one official JEE Advanced numerical question currently available.
-- [ ] Phase 3 revision centre — deferred pending full Phase 1 content/type validation.
+- [ ] Phase 3 revision centre — implement bookmarked/incorrect lists, filters and resumable reattempts; verify using the available official question without changing daily-credit rules.
 - [ ] Phase 4 timed mocks — deferred pending full practice validation.
 - [ ] Phase 5 validated imports — deferred to its requested phase.
 - [x] Add owner-only group removal with confirmation.
