@@ -17,3 +17,4 @@
 - PYQ pages remain secondary protected pages reached from Home; reuse the existing theme, shell, navigation and controls rather than creating another app layout.
 
 - Revision sessions select only the authenticated student’s saved verified questions through a database RPC and reuse the existing practice engine; this preserves private keys and unique daily credits.
+- Prepare content imports offline with provenance and answer-shape validation; keep raw batches and private keys outside served project files, and insert question/key pairs atomically without rewriting student records.
