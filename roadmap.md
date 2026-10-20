@@ -1,4 +1,5 @@
 # Tasks
+- [ ] Add all available authentic PYQs across JEE Main, JEE Advanced and NEET; import only matched, verified paper/answer-key content and report remaining coverage.
 - [x] Implement Phase 1 practice engine: filters, secure checking, solutions, bookmarks, resumable sessions.
 - [x] Implement Phase 2: atomic unique local-day progress and incorrect-attempt storage.
 - [x] Verify real numerical PYQ flow, duplicate requests, offline sync, progress, local dates, permissions, and existing group tests.
