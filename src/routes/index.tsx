@@ -37,11 +37,49 @@ function LandingPage() {
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [showIntro, setShowIntro] = useState(false);
 
+  
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/home", replace: true });
-      else setChecking(false);
-    });
+    let cancelled = false;
+    let timeoutId: number | undefined;
+
+    async function checkSession() {
+      try {
+        const result = await Promise.race([
+          supabase.auth.getSession(),
+          new Promise<never>((_, reject) => {
+            timeoutId = window.setTimeout(
+              () => reject(new Error("Session check timed out")),
+              3500,
+            );
+          }),
+        ]);
+
+        if (cancelled) return;
+
+        if (result.error) {
+          console.error("Session check failed:", result.error);
+        } else if (result.data.session) {
+          navigate({ to: "/home", replace: true });
+          return;
+        }
+      } catch (error) {
+        console.error("Session check failed:", error);
+      } finally {
+        if (timeoutId !== undefined) {
+          window.clearTimeout(timeoutId);
+        }
+        if (!cancelled) setChecking(false);
+      }
+    }
+
+    void checkSession();
+
+    return () => {
+      cancelled = true;
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId);
+      }
+    };
   }, [navigate]);
 
   useEffect(() => {
