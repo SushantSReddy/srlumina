@@ -36,6 +36,13 @@
       "when": 1792371890654,
       "tag": "0004_pyq_revision_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1793669460324,
+      "tag": "0005_toppers_mindset",
+      "breakpoints": true
     }
   ]
 }

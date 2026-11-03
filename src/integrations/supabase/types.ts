@@ -142,6 +142,153 @@ export type Database = {
         }
         Relationships: []
       }
+      mindset_assessments: {
+        Row: {
+          answers: Json
+          created_at: string
+          id: string
+          report: Json
+          score: number
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          created_at?: string
+          id?: string
+          report: Json
+          score: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          report?: Json
+          score?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mindset_challenge_runs: {
+        Row: {
+          active: boolean
+          completed_days: number[]
+          created_at: string
+          id: string
+          reflections: Json
+          started_on: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          active?: boolean
+          completed_days?: number[]
+          created_at?: string
+          id?: string
+          reflections?: Json
+          started_on: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          active?: boolean
+          completed_days?: number[]
+          created_at?: string
+          id?: string
+          reflections?: Json
+          started_on?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mindset_code_progress: {
+        Row: {
+          challenge_done: boolean
+          principle_key: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          challenge_done?: boolean
+          principle_key: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          challenge_done?: boolean
+          principle_key?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mindset_daily_os: {
+        Row: {
+          created_at: string
+          done_items: string[]
+          logged_on: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          done_items?: string[]
+          logged_on: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          done_items?: string[]
+          logged_on?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mindset_mistakes: {
+        Row: {
+          category: string
+          chapter: string
+          created_at: string
+          id: string
+          prevention: string
+          question_ref: string | null
+          reason: string
+          resolved: boolean
+          should_have_done: string
+          subject: Database["public"]["Enums"]["app_subject"]
+          user_id: string
+        }
+        Insert: {
+          category: string
+          chapter: string
+          created_at?: string
+          id?: string
+          prevention: string
+          question_ref?: string | null
+          reason: string
+          resolved?: boolean
+          should_have_done: string
+          subject: Database["public"]["Enums"]["app_subject"]
+          user_id: string
+        }
+        Update: {
+          category?: string
+          chapter?: string
+          created_at?: string
+          id?: string
+          prevention?: string
+          question_ref?: string | null
+          reason?: string
+          resolved?: boolean
+          should_have_done?: string
+          subject?: Database["public"]["Enums"]["app_subject"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
