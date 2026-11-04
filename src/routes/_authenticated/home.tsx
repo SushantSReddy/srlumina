@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Plus, RotateCcw, Trophy, BookOpen, ChevronRight } from "lucide-react";
+import { Plus, RotateCcw, Trophy, BookOpen, ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getProfile, getTodaySummary, resetToday } from "@/lib/tracker.functions";
