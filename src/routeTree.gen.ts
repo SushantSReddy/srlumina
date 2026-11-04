@@ -16,6 +16,7 @@ import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDreamsRouteImport } from './routes/_authenticated/dreams'
 import { Route as AuthenticatedFriendsRouteImport } from './routes/_authenticated/friends'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
+import { Route as AuthenticatedMindsetRouteImport } from './routes/_authenticated/mindset'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
@@ -58,6 +59,11 @@ const AuthenticatedFriendsRoute = AuthenticatedFriendsRouteImport.update({
 const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedMindsetRoute = AuthenticatedMindsetRouteImport.update({
+  id: '/mindset',
+  path: '/mindset',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/dreams': typeof AuthenticatedDreamsRoute
   '/friends': typeof AuthenticatedFriendsRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/mindset': typeof AuthenticatedMindsetRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/dreams': typeof AuthenticatedDreamsRoute
   '/friends': typeof AuthenticatedFriendsRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/mindset': typeof AuthenticatedMindsetRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/_authenticated/dreams': typeof AuthenticatedDreamsRoute
   '/_authenticated/friends': typeof AuthenticatedFriendsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/mindset': typeof AuthenticatedMindsetRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
@@ -172,6 +181,7 @@ export interface FileRouteTypes {
     | '/dreams'
     | '/friends'
     | '/home'
+    | '/mindset'
     | '/onboarding'
     | '/settings'
     | '/tasks'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/dreams'
     | '/friends'
     | '/home'
+    | '/mindset'
     | '/onboarding'
     | '/settings'
     | '/tasks'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dreams'
     | '/_authenticated/friends'
     | '/_authenticated/home'
+    | '/_authenticated/mindset'
     | '/_authenticated/onboarding'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
@@ -275,6 +287,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/mindset': {
+      id: '/_authenticated/mindset'
+      path: '/mindset'
+      fullPath: '/mindset'
+      preLoaderRoute: typeof AuthenticatedMindsetRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/onboarding': {
@@ -348,6 +367,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDreamsRoute: typeof AuthenticatedDreamsRoute
   AuthenticatedFriendsRoute: typeof AuthenticatedFriendsRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedMindsetRoute: typeof AuthenticatedMindsetRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
@@ -362,6 +382,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDreamsRoute: AuthenticatedDreamsRoute,
   AuthenticatedFriendsRoute: AuthenticatedFriendsRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedMindsetRoute: AuthenticatedMindsetRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
