@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Plus, RotateCcw, Trophy, BookOpen, ChevronRight } from "lucide-react";
+import { Plus, RotateCcw, Trophy, BookOpen, ChevronRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { getProfile, getTodaySummary, resetToday } from "@/lib/tracker.functions";
@@ -145,6 +145,13 @@ function Home() {
       <section className="px-4 mt-6">
         <Button asChild variant="outline" className="w-full h-auto glass rounded-2xl p-4 justify-start whitespace-normal">
           <Link to="/pyq"><BookOpen className="h-5 w-5 text-primary" /><span className="flex-1 text-left"><span className="block font-semibold">PYQ practice</span><span className="block text-xs text-muted-foreground mt-1">JEE Main · JEE Advanced · NEET</span></span><ChevronRight /></Link>
+        </Button>
+      </section>
+
+      {/* Topper's Mindset */}
+      <section className="px-4 mt-3">
+        <Button asChild variant="outline" className="w-full h-auto glass rounded-2xl p-4 justify-start whitespace-normal">
+          <Link to="/mindset"><Sparkles className="h-5 w-5 text-primary" /><span className="flex-1 text-left"><span className="block font-semibold">Topper's Mindset</span><span className="block text-xs text-muted-foreground mt-1">Principles · Daily OS · 7-day challenge · Mistake notebook</span></span><ChevronRight /></Link>
         </Button>
       </section>
       <section className="px-4 mt-6">
