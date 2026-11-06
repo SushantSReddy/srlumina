@@ -1,9 +1,11 @@
 # Tasks
-- [ ] Expand PYQ coverage across JEE Main, JEE Advanced and NEET using matched official papers/final keys; import verified content only and report remaining coverage.
+- [ ] First expand JEE Main PYQs using matched official papers/final keys; import and verify each batch before proceeding.
+- [ ] Then expand JEE Advanced PYQs using matched official papers/final keys; import and verify each batch.
+- [ ] After JEE Main and Advanced, expand NEET PYQs using matched official papers/final keys; report remaining coverage honestly.
 - [x] Implement Phase 1 practice engine: filters, secure checking, solutions, bookmarks, resumable sessions.
 - [x] Implement Phase 2: atomic unique local-day progress and incorrect-attempt storage.
 - [x] Verify real numerical PYQ flow, duplicate requests, offline sync, progress, local dates, permissions, and existing group tests.
-- [ ] Populate verified JEE Main/NEET content and verify all choice/matching question formats — blocked on reviewed official content; only one official JEE Advanced numerical question currently available.
+- [ ] Populate verified JEE Main content first, then JEE Advanced and NEET; verify all supported question formats — only one official JEE Advanced numerical question was previously available.
 - [ ] Phase 3 revision centre — implement bookmarked/incorrect lists, filters and resumable reattempts; verify using the available official question without changing daily-credit rules.
 - [ ] Phase 4 timed mocks — deferred pending full practice validation.
 - [ ] Phase 5 validated imports — deferred to its requested phase.
